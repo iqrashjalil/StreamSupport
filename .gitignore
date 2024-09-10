@@ -1,0 +1,61 @@
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+.env
+
+# Logs
+logs/
+*.log
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by testing tools
+coverage/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Next.js build output
+.next/
+
+# Parcel cache
+.cache/
+
+# SvelteKit build / dev output
+.svelte-kit/
+
+# Nuxt.js build output
+.nuxt/
+dist/
+
+# Build directory
+build/
+
+# Dependency directories
+jspm_packages/
+
+# Editor directories and files
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# MacOS
+.DS_Store
+
+# React Native
+*.hmap
+*.xcworkspace
+.gradle
+*.lock
+*.xcuserstate
+
+
