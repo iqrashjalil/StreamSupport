@@ -27,6 +27,10 @@ const userSchema = new mongoose.Schema({
   profilePic: {
     type: String,
   },
+  superchatLink: {
+    type: String,
+    default: "",
+  },
   role: {
     type: String,
     enum: ["admin", "streamer"],

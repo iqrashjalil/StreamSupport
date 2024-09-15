@@ -3,16 +3,24 @@ import mongoose from "mongoose";
 const withdrawSchema = new mongoose.Schema({
   streamer: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Users",
+    ref: "User",
     required: true,
   },
   withdrawAmount: {
     type: Number,
     required: true,
   },
-  bankDetails: {
+  bankName: {
     type: String,
-    required: [true, "Please Enter Bank Details"],
+    required: [true, "Please Enter Bank Name"],
+  },
+  accountTitle: {
+    type: String,
+    required: [true, "Please Enter Bank Account Title"],
+  },
+  bankAccountNumber: {
+    type: String,
+    required: [true, "Please Enter Bank Account Number"],
   },
   status: {
     type: String,
