@@ -8,12 +8,26 @@ import errorMiddleware from "./middlewares/error-middleware.js";
 import userRoutes from "./routes/User_Routes.js";
 import withdrawRoutes from "./routes/Withdraw_Routes.js";
 import donationRoutes from "./routes/Donation_Routes.js";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 4000;
 
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use(
+  cors({
+    origin: process.env.ORIGIN,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    credentials: true,
+  })
+);
 app.use(cookieParser());
 app.use(express.json());
+app.use(cors());
 
 app.use("/api/user", userRoutes);
 app.use("/api/withdraw", withdrawRoutes);

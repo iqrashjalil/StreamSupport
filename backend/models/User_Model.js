@@ -24,8 +24,13 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  totalDonations: {
+    type: Number,
+    default: 0,
+  },
   profilePic: {
     type: String,
+    required: [true, "Please Upload Your Profile Pic"],
   },
   superchatLink: {
     type: String,

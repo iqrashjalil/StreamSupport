@@ -13,8 +13,17 @@ import {
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import { Card, CardContent } from "@/components/ui/card";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { getDonationStats } from "../store/slices/Users_Slice.jsx";
+import { serverUrl } from "../serverUrl";
 
 const Home = () => {
+  const dispatch = useDispatch();
+  const { topStreamers } = useSelector((state) => state.users);
+  useEffect(() => {
+    dispatch(getDonationStats());
+  }, [dispatch]);
   return (
     <>
       <section>
@@ -70,9 +79,9 @@ const Home = () => {
           </div>
         </div>
       </section>
-      <section className="flex flex-col items-center mt-4">
+      <section className="flex flex-col items-center mt-10">
         <div>
-          <h1 className="text-xl font-bold uppercase text-neutral-50 font-rajdhani">
+          <h1 className="pl-2 text-xl font-bold uppercase md:text-4xl text-neutral-50 font-rajdhani">
             Accepting <span className="text-redMain">Payments</span> Securely
             Through
           </h1>
@@ -126,7 +135,6 @@ const Home = () => {
             <div className="flex col-span-full md:col-span-6">
               <figure className="relative isolate z-[1] flex justify-center items-center">
                 <div className="relative">
-                  {/* SVG Positioned as Background */}
                   <svg
                     className="hidden md:block md:absolute md:left-1/2 md:top-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2 md:w-[370px] lg:w-[400px] xl:w-[470px] aspect-[47/50] -z-10"
                     fill="none"
@@ -158,7 +166,6 @@ const Home = () => {
                     ></rect>
                   </svg>
 
-                  {/* Image */}
                   <img
                     className="relative z-[1] block mx-auto"
                     src={streamSupport}
@@ -170,8 +177,8 @@ const Home = () => {
           </div>
         </div>
       </section>
-      <section className="flex flex-col items-center justify-center">
-        <h1 className="text-xl font-bold uppercase text-neutral-50 font-rajdhani">
+      <section className="flex flex-col items-center justify-center mt-10">
+        <h1 className="pl-2 text-xl font-bold uppercase md:text-4xl text-neutral-50 font-rajdhani">
           StreamSupport&apos;s <span className="text-redMain">Leading</span>{" "}
           Streamers
         </h1>
@@ -185,22 +192,27 @@ const Home = () => {
             className="w-full "
           >
             <CarouselContent className="relative -ml-1">
-              {Array.from({ length: 8 }).map((_, index) => (
-                <CarouselItem
-                  key={index}
-                  className="pl-1 basis-1/2 md:basis-1/6 lg:basis-[12%]"
-                >
-                  <div className="p-1">
-                    <Card>
-                      <CardContent className="flex items-center justify-center p-6 aspect-square">
-                        <span className="text-2xl font-semibold">
-                          {index + 1}
-                        </span>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </CarouselItem>
-              ))}
+              {topStreamers &&
+                topStreamers.map((streamer, index) => (
+                  <CarouselItem
+                    key={index}
+                    className="pl-1 basis-1/2 md:basis-1/6 lg:basis-[10%]"
+                  >
+                    <div>
+                      <div className="relative group">
+                        <img
+                          src={`${serverUrl}/${streamer.profilePic}`}
+                          className="rounded"
+                          alt=""
+                        />
+                        <div className="absolute inset-0 transition-opacity duration-300 bg-black opacity-0 group-hover:opacity-60"></div>
+                      </div>
+                      <h1 className="mt-4 text-lg font-extrabold text-redMain font-rajdhani">
+                        {streamer.userName}
+                      </h1>
+                    </div>
+                  </CarouselItem>
+                ))}
             </CarouselContent>
             <CarouselPrevious className="absolute left-0 text-white bg-black" />
             <CarouselNext className="absolute right-0 text-white bg-black" />

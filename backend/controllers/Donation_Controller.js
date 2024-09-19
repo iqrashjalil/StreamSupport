@@ -150,10 +150,9 @@ const getDonationStats = catchAsyncError(async (req, res, next) => {
       },
     },
 
-    // Project the final stats
     {
       $project: {
-        _id: 0, // Remove _id from the result
+        _id: 0,
         topDonator: 1,
         totalDonatedByTopDonator: 1,
         totalDonations: 1,
@@ -162,7 +161,6 @@ const getDonationStats = catchAsyncError(async (req, res, next) => {
     },
   ]);
 
-  // If there are no donations
   if (stats.length === 0) {
     return next(new ErrorHandler("Donation not found", 404));
   }

@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import {
   Sheet,
   SheetContent,
@@ -10,19 +9,20 @@ import {
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
 import logo from "../assets/logo.png";
+import { useState } from "react";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <nav className="sticky font-rajdhani font-bold  text-white top-0 z-50 w-full border-border/40 bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-black/60 p-4">
-      <div className="container mx-auto flex justify-between items-center">
-        <div className="text-redMain font-bold">
+      <div className="container flex items-center justify-between mx-auto">
+        <div className="font-bold text-redMain">
           <img className="h-8" src={logo} alt="" />
         </div>
 
         <div className="block lg:hidden">
           <Sheet
-            className="border-none font-rajdhani font-bold"
+            className="font-bold border-none font-rajdhani"
             open={isOpen}
             onOpenChange={setIsOpen}
           >
@@ -49,7 +49,7 @@ const Navbar = () => {
                 </svg>
               </button>
             </SheetTrigger>
-            <SheetContent className="font-rajdhani font-bold bg-black">
+            <SheetContent className="font-bold bg-black font-rajdhani">
               <SheetHeader>
                 <SheetTitle className="flex justify-center text-redMain">
                   <img className="h-8" src={logo} alt="" />
@@ -60,7 +60,7 @@ const Navbar = () => {
                 <li>
                   <NavLink
                     href="#home"
-                    className="text-white  hover:text-redMain transition-all duration-150 block"
+                    className="block text-white transition-all duration-150 hover:text-redMain"
                   >
                     Home
                   </NavLink>
@@ -68,7 +68,7 @@ const Navbar = () => {
                 <li>
                   <NavLink
                     href="#about"
-                    className="text-white hover:text-redMain transition-all duration-150 block"
+                    className="block text-white transition-all duration-150 hover:text-redMain"
                   >
                     About
                   </NavLink>
@@ -76,7 +76,7 @@ const Navbar = () => {
                 <li>
                   <NavLink
                     href="#services"
-                    className="text-white hover:text-redMain transition-all duration-150 block"
+                    className="block text-white transition-all duration-150 hover:text-redMain"
                   >
                     Contact
                   </NavLink>
@@ -98,19 +98,19 @@ const Navbar = () => {
         <div className="hidden lg:flex lg:space-x-8 lg:items-center">
           <NavLink
             to={"/"}
-            className="text-white hover:text-redMain transition-all duration-150 block lg:inline-block nav-link"
+            className="block text-white transition-all duration-150 hover:text-redMain lg:inline-block nav-link"
           >
             Home
           </NavLink>
           <NavLink
             to={""}
-            className="text-white hover:text-redMain transition-all duration-150 block lg:inline-block nav-link"
+            className="block text-white transition-all duration-150 hover:text-redMain lg:inline-block nav-link"
           >
             About
           </NavLink>
           <NavLink
             to={""}
-            className="text-white hover:text-redMain transition-all duration-150 block lg:inline-block nav-link"
+            className="block text-white transition-all duration-150 hover:text-redMain lg:inline-block nav-link"
           >
             Contact
           </NavLink>

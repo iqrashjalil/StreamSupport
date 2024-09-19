@@ -2,12 +2,19 @@ import User from "../models/User_Model.js";
 import { catchAsyncError } from "../middlewares/catchAsyncError.js";
 import { ErrorHandler } from "../utils/error-handler.js";
 import sendToken from "../utils/jwtToken.js";
+import { renameSync, unlinkSync } from "fs";
 
 // Register Controller
 
 const register = catchAsyncError(async (req, res, next) => {
   const { userName, email, password } = req.body;
+  if (!req.file) {
+    return next(new ErrorHandler("Please upload an image", 400));
+  }
+  const date = Date.now();
+  let fileName = "uploads/profiles/" + date + req.file.originalname;
 
+  renameSync(req.file.path, fileName);
   if (!userName || !email || !password) {
     return next(new ErrorHandler("Please enter all fields", 400));
   }
@@ -19,6 +26,7 @@ const register = catchAsyncError(async (req, res, next) => {
     userName,
     email,
     password,
+    profilePic: fileName,
   });
 
   sendToken(user, 201, res);
@@ -121,6 +129,16 @@ const getAllUsers = catchAsyncError(async (req, res, next) => {
   });
 });
 
+const getTopStreamers = catchAsyncError(async (req, res, next) => {
+  const userId = req.params.id;
+
+  const streamers = await User.find({ role: "streamer" }).sort({
+    totalDonations: -1,
+  });
+
+  res.status(200).json({ success: true, topStreamers: streamers });
+});
+
 export default {
   register,
   login,
@@ -129,4 +147,5 @@ export default {
   updateProfile,
   deleteUser,
   getAllUsers,
+  getTopStreamers,
 };
