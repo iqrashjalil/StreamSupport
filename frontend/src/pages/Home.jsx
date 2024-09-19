@@ -1,5 +1,19 @@
-import React from "react";
 import hero from "../assets/hero.webp";
+import jazzcashLogo from "../assets/jazzcash.png";
+import easypaisaLogo from "../assets/easypaisa.png";
+import mastercardLogo from "../assets/mastercard.png";
+import visacardLogo from "../assets/visa.png";
+import streamSupport from "../assets/logo.png";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
+import { Card, CardContent } from "@/components/ui/card";
+
 const Home = () => {
   return (
     <>
@@ -37,11 +51,11 @@ const Home = () => {
             </div>
           </div>
           <div className="vv-hero-decoration-left absolute left-0 top-0 z-[5] h-full w-[calc(50vw-130px)] bg-redMain"></div>
-          <div className="absolute left-1/2 bottom-0 z-[5] ml-40 flex w-[50w]">
+          <div className="hidden left-1/2 bottom-0 z-[5] ml-40 flex w-[50w]">
             <div className="vv-hero-decoration-parallelogram h-14 w-28 bg-redMain"></div>
-            <div className="bg-black vv-hero-decoration-parallelogram h-14 w-28"></div>
+            <div className="dark:bg-gray-800 vv-hero-decoration-parallelogram h-14 w-28"></div>
             <div className="vv-hero-decoration-parallelogram h-14 w-28 bg-redMain"></div>
-            <div className="bg-black vv-hero-decoration-parallelogram h-14 w-28"></div>
+            <div className="dark:bg-gray-800 vv-hero-decoration-parallelogram h-14 w-28"></div>
             <div className="vv-hero-decoration-parallelogram h-14 w-28 bg-redMain"></div>
           </div>
           <img
@@ -50,19 +64,148 @@ const Home = () => {
             alt=""
           />
           <div className="left-0 top-0 block h-full w-full bg-[url('../../../assets/img/str2/samples/hero-bg.jpg')] bg-cover bg-center bg-no-repeat opacity-10 dark:opacity-100">
-            <div className="absolute inset-0 z-[1] bg-black mix-blend-color"></div>
+            <div className="absolute inset-0 z-[1] bg-#1f2937 mix-blend-color"></div>
             <div className="absolute inset-0 z-[2] mix-blend-multiply dark:bg-gray-800"></div>
             <div className="absolute inset-0 z-[3] opacity-40 mix-blend-screen dark:bg-[#283341]"></div>
           </div>
         </div>
       </section>
-      <section>
+      <section className="flex flex-col items-center mt-4">
         <div>
-          <h1>
-            Accept <span>Payments</span> Securely Through
+          <h1 className="text-xl font-bold uppercase text-neutral-50 font-rajdhani">
+            Accepting <span className="text-redMain">Payments</span> Securely
+            Through
           </h1>
         </div>
-        <div></div>
+        <div className="flex flex-wrap items-center justify-center mt-4 gap-x-60 gap-y-20">
+          <img className="w-40" src={jazzcashLogo} alt="" />
+          <img className="w-40 rounded-xl" src={easypaisaLogo} alt="" />
+          <img className="w-40" src={mastercardLogo} alt="" />
+          <img className="w-40" src={visacardLogo} alt="" />
+        </div>
+      </section>
+      <section className="py-14 pl-2 flex justify-center lg:py-[88px]">
+        <div className="container">
+          <div className="grid grid-cols-12 gap-x-5 md:gap-x-6 lg:gap-x-7.5 gap-y-12">
+            <div className="col-span-full md:col-span-6 relative z-[2] md:pt-6 lg:pt-8 xl:pt-10">
+              <div className="flex flex-row items-end justify-between not-prose mb-9 sm:mb-12 md:mb-14 lg:mb-16 xl:mb-20">
+                <div className="flex flex-col">
+                  <div className="text-1xl font-medium font-rajdhani uppercase tracking-tight text-redMain md:text-lg lg:text-xl xl:text-1.5xl">
+                    About Us
+                  </div>
+                  <h2 className="font-bold font-rajdhani uppercase leading-none tracking-tighter text-neutral-50 dark:text-white text-4xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-6.5xl xl:leading-[0.85em]">
+                    Live Stream Alert
+                    <br />
+                    With <span className="text-redMain">Extra Features</span>
+                  </h2>
+                </div>
+              </div>
+              <div className="lg:max-w-sm xl:max-w-[402px] xl:-mt-4">
+                <p className="font-bold text-neutral-50 font-rajdhani">
+                  <span className="text-lime-400">&#10003;</span> Fees As Low As
+                  Just <span className="text-xl text-redMain"> 10%</span>
+                </p>
+                <p className="font-bold text-neutral-50 font-rajdhani">
+                  <span className="text-lime-400">&#10003;</span> Premium
+                  Customization Options
+                </p>
+                <p className="font-bold capitalize text-neutral-50 font-rajdhani">
+                  <span className="text-lime-400">&#10003;</span> Seamless local
+                  and global payment options
+                </p>
+                <p className="font-bold capitalize text-neutral-50 font-rajdhani">
+                  <span className="text-lime-400">&#10003;</span> Quick And
+                  Secure Withdraw
+                </p>
+                <p className="font-bold capitalize text-neutral-50 font-rajdhani">
+                  <span className="text-lime-400">&#10003;</span> Advanced and
+                  refined features
+                </p>
+              </div>
+            </div>
+            <div className="flex col-span-full md:col-span-6">
+              <figure className="relative isolate z-[1] flex justify-center items-center">
+                <div className="relative">
+                  {/* SVG Positioned as Background */}
+                  <svg
+                    className="hidden md:block md:absolute md:left-1/2 md:top-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2 md:w-[370px] lg:w-[400px] xl:w-[470px] aspect-[47/50] -z-10"
+                    fill="none"
+                    viewBox="0 0 470 500"
+                  >
+                    <defs>
+                      <pattern
+                        id="dotted-pattern"
+                        x="0"
+                        y="0"
+                        width="26"
+                        height="26"
+                        patternUnits="userSpaceOnUse"
+                      >
+                        <rect
+                          x="0"
+                          y="0"
+                          width="3"
+                          height="3"
+                          className="text-[#70747b]"
+                          fill="currentColor"
+                        ></rect>
+                      </pattern>
+                    </defs>
+                    <rect
+                      width="470"
+                      height="500"
+                      fill="url(#dotted-pattern)"
+                    ></rect>
+                  </svg>
+
+                  {/* Image */}
+                  <img
+                    className="relative z-[1] block mx-auto"
+                    src={streamSupport}
+                    alt=""
+                  />
+                </div>
+              </figure>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section className="flex flex-col items-center justify-center">
+        <h1 className="text-xl font-bold uppercase text-neutral-50 font-rajdhani">
+          StreamSupport&apos;s <span className="text-redMain">Leading</span>{" "}
+          Streamers
+        </h1>
+        <div className="flex items-center justify-center w-full px-4 mt-4">
+          <Carousel
+            plugins={[
+              Autoplay({
+                delay: 2000,
+              }),
+            ]}
+            className="w-full "
+          >
+            <CarouselContent className="relative -ml-1">
+              {Array.from({ length: 8 }).map((_, index) => (
+                <CarouselItem
+                  key={index}
+                  className="pl-1 basis-1/2 md:basis-1/6 lg:basis-[12%]"
+                >
+                  <div className="p-1">
+                    <Card>
+                      <CardContent className="flex items-center justify-center p-6 aspect-square">
+                        <span className="text-2xl font-semibold">
+                          {index + 1}
+                        </span>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="absolute left-0 text-white bg-black" />
+            <CarouselNext className="absolute right-0 text-white bg-black" />
+          </Carousel>
+        </div>
       </section>
     </>
   );
