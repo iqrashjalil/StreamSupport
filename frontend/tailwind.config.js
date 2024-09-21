@@ -11,6 +11,7 @@ export default {
       },
       colors: {
         redMain: "#FF3131",
+        backgroundColor: "#1f2937",
       },
       fontFamily: {
         rajdhani: ["Rajdhani", "sans-serif"],

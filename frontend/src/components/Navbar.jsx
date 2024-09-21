@@ -7,11 +7,14 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 const Navbar = () => {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const { isAuthenticated } = useSelector((state) => state.users);
 
   return (
     <nav className="sticky font-rajdhani font-bold  text-white top-0 z-50 w-full border-border/40 bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-black/60 p-4">
@@ -59,7 +62,7 @@ const Navbar = () => {
               <ul className="space-y-4">
                 <li>
                   <NavLink
-                    href="#home"
+                    to={"/"}
                     className="block text-white transition-all duration-150 hover:text-redMain"
                   >
                     Home
@@ -67,7 +70,7 @@ const Navbar = () => {
                 </li>
                 <li>
                   <NavLink
-                    href="#about"
+                    to={"/about"}
                     className="block text-white transition-all duration-150 hover:text-redMain"
                   >
                     About
@@ -75,7 +78,7 @@ const Navbar = () => {
                 </li>
                 <li>
                   <NavLink
-                    href="#services"
+                    to={"/contact"}
                     className="block text-white transition-all duration-150 hover:text-redMain"
                   >
                     Contact
@@ -83,12 +86,18 @@ const Navbar = () => {
                 </li>
                 <div className="flex gap-2">
                   <Button
+                    onClick={() => navigate("/login")}
                     className="bg-transparent text-redMain hover:border-redMain hover:text-neutral-50 hover:bg-redMain"
                     variant="secondary"
                   >
                     Login
                   </Button>
-                  <Button variant="secondary">Register</Button>
+                  <Button
+                    onClick={() => navigate("/register")}
+                    variant="secondary"
+                  >
+                    Register
+                  </Button>
                 </div>{" "}
               </ul>
             </SheetContent>
@@ -103,26 +112,42 @@ const Navbar = () => {
             Home
           </NavLink>
           <NavLink
-            to={""}
+            to={"/about"}
             className="block text-white transition-all duration-150 hover:text-redMain lg:inline-block nav-link"
           >
             About
           </NavLink>
           <NavLink
-            to={""}
+            to={"/contact"}
             className="block text-white transition-all duration-150 hover:text-redMain lg:inline-block nav-link"
           >
             Contact
           </NavLink>
-          <div className="flex gap-2">
-            <Button
-              className="bg-transparent text-redMain hover:border-redMain hover:text-neutral-50 hover:bg-redMain"
-              variant="secondary"
-            >
-              Login
-            </Button>
-            <Button variant="secondary">Register</Button>
-          </div>{" "}
+          {isAuthenticated ? (
+            <div>
+              {" "}
+              <Button
+                onClick={() => navigate("/login")}
+                className="bg-transparent text-redMain hover:border-redMain hover:text-neutral-50 hover:bg-redMain"
+                variant="secondary"
+              >
+                Logout
+              </Button>
+            </div>
+          ) : (
+            <div className="flex gap-2">
+              <Button
+                onClick={() => navigate("/login")}
+                className="bg-transparent text-redMain hover:border-redMain hover:text-neutral-50 hover:bg-redMain"
+                variant="secondary"
+              >
+                Login
+              </Button>
+              <Button onClick={() => navigate("/register")} variant="secondary">
+                Register
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </nav>

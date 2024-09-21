@@ -20,14 +20,13 @@ const PORT = process.env.PORT || 4000;
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(
   cors({
-    origin: process.env.ORIGIN,
+    origin: "http://localhost:5173",
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
   })
 );
 app.use(cookieParser());
 app.use(express.json());
-app.use(cors());
 
 app.use("/api/user", userRoutes);
 app.use("/api/withdraw", withdrawRoutes);

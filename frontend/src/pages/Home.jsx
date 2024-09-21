@@ -3,7 +3,7 @@ import jazzcashLogo from "../assets/jazzcash.png";
 import easypaisaLogo from "../assets/easypaisa.png";
 import mastercardLogo from "../assets/mastercard.png";
 import visacardLogo from "../assets/visa.png";
-import streamSupport from "../assets/logo.png";
+import singlelogo from "../assets/singlelogo.png";
 import {
   Carousel,
   CarouselContent,
@@ -12,11 +12,12 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
-import { Card, CardContent } from "@/components/ui/card";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getDonationStats } from "../store/slices/Users_Slice.jsx";
 import { serverUrl } from "../serverUrl";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -60,13 +61,14 @@ const Home = () => {
             </div>
           </div>
           <div className="vv-hero-decoration-left absolute left-0 top-0 z-[5] h-full w-[calc(50vw-130px)] bg-redMain"></div>
-          <div className="hidden left-1/2 bottom-0 z-[5] ml-40 flex w-[50w]">
+          <div className="absolute left-1/2 bottom-0 z-[5] ml-40 flex w-[50w]">
             <div className="vv-hero-decoration-parallelogram h-14 w-28 bg-redMain"></div>
             <div className="dark:bg-gray-800 vv-hero-decoration-parallelogram h-14 w-28"></div>
             <div className="vv-hero-decoration-parallelogram h-14 w-28 bg-redMain"></div>
             <div className="dark:bg-gray-800 vv-hero-decoration-parallelogram h-14 w-28"></div>
             <div className="vv-hero-decoration-parallelogram h-14 w-28 bg-redMain"></div>
           </div>
+
           <img
             className="absolute md:hidden brightness-50 lg:brightness-125 lg:left-1/2 left-96 z-[6] -translate-x-[103%] lg:block"
             src={hero}
@@ -87,14 +89,24 @@ const Home = () => {
           </h1>
         </div>
         <div className="flex flex-wrap items-center justify-center mt-4 gap-x-60 gap-y-20">
-          <img className="w-40" src={jazzcashLogo} alt="" />
-          <img className="w-40 rounded-xl" src={easypaisaLogo} alt="" />
-          <img className="w-40" src={mastercardLogo} alt="" />
-          <img className="w-40" src={visacardLogo} alt="" />
+          <LazyLoadImage className="w-40" src={jazzcashLogo} effect="blur" />
+          <LazyLoadImage
+            className="w-40 rounded-xl"
+            src={easypaisaLogo}
+            effect="blur"
+          />
+          <LazyLoadImage
+            className="w-40"
+            src={mastercardLogo}
+            effect="blur"
+            placeholderSrc="path/to/placeholder/image"
+          />
+
+          <LazyLoadImage className="w-40" src={visacardLogo} effect="blur" />
         </div>
       </section>
       <section className="py-14 pl-2 flex justify-center lg:py-[88px]">
-        <div className="container">
+        <div className="container flex justify-center lg:block">
           <div className="grid grid-cols-12 gap-x-5 md:gap-x-6 lg:gap-x-7.5 gap-y-12">
             <div className="col-span-full md:col-span-6 relative z-[2] md:pt-6 lg:pt-8 xl:pt-10">
               <div className="flex flex-row items-end justify-between not-prose mb-9 sm:mb-12 md:mb-14 lg:mb-16 xl:mb-20">
@@ -166,10 +178,10 @@ const Home = () => {
                     ></rect>
                   </svg>
 
-                  <img
-                    className="relative z-[1] block mx-auto"
-                    src={streamSupport}
-                    alt=""
+                  <LazyLoadImage
+                    className="relative z-[1] w-96 block "
+                    src={singlelogo}
+                    effect="blur"
                   />
                 </div>
               </figure>
@@ -178,11 +190,11 @@ const Home = () => {
         </div>
       </section>
       <section className="flex flex-col items-center justify-center mt-10">
-        <h1 className="pl-2 text-xl font-bold uppercase md:text-4xl text-neutral-50 font-rajdhani">
+        <h1 className="pl-2 text-xl font-bold md:text-4xl text-neutral-50 font-rajdhani">
           StreamSupport&apos;s <span className="text-redMain">Leading</span>{" "}
           Streamers
         </h1>
-        <div className="flex items-center justify-center w-full px-4 mt-4">
+        <div className="container flex items-center justify-center px-4 mt-4">
           <Carousel
             plugins={[
               Autoplay({
@@ -200,10 +212,10 @@ const Home = () => {
                   >
                     <div>
                       <div className="relative group">
-                        <img
+                        <LazyLoadImage
                           src={`${serverUrl}/${streamer.profilePic}`}
                           className="rounded"
-                          alt=""
+                          effect="blur"
                         />
                         <div className="absolute inset-0 transition-opacity duration-300 bg-black opacity-0 group-hover:opacity-60"></div>
                       </div>

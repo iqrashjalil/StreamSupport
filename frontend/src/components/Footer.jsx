@@ -1,15 +1,12 @@
+import logo from "../assets/singlelogo.png";
 const Footer = () => {
   return (
     <footer className="bg-[#1f2937] font-rajdhani">
-      <div className="w-full max-w-screen-xl p-4 py-6 mx-auto lg:py-8">
+      <div className="w-full p-4 py-6 lg:py-8">
         <div className="md:flex md:justify-between">
           <div className="mb-6 md:mb-0">
-            <a href="https://flowbite.com/" className="flex items-center">
-              <img
-                src="https://flowbite.com/docs/images/logo.svg"
-                className="h-8 me-3"
-                alt="FlowBite Logo"
-              />
+            <a href="/" className="flex items-center">
+              <img src={logo} className="h-8 me-3" alt="FlowBite Logo" />
               <h1 className="self-center text-2xl font-extrabold font-rajdhani whitespace-nowrap text-neutral-50">
                 Stream<span className="text-redMain">Support</span>
               </h1>
@@ -22,8 +19,8 @@ const Footer = () => {
               </h2>
               <ul className="font-medium text-gray-500 dark:text-gray-400">
                 <li className="mb-4">
-                  <a href="https://flowbite.com/" className="hover:underline">
-                    Flowbite
+                  <a href="https://flowbite.com/" className="hover:underline ">
+                    Resource 1
                   </a>
                 </li>
                 <li>
@@ -31,7 +28,7 @@ const Footer = () => {
                     href="https://tailwindcss.com/"
                     className="hover:underline"
                   >
-                    Tailwind CSS
+                    Resource 2
                   </a>
                 </li>
               </ul>

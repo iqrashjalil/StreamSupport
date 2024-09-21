@@ -11,6 +11,8 @@ const register = catchAsyncError(async (req, res, next) => {
   if (!req.file) {
     return next(new ErrorHandler("Please upload an image", 400));
   }
+  console.log(req.body);
+
   const date = Date.now();
   let fileName = "uploads/profiles/" + date + req.file.originalname;
 
