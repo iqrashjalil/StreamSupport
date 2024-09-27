@@ -4,11 +4,15 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import { register } from "../../store/slices/Users_Slice";
-import { useDispatch } from "react-redux";
+import { register, resetSuccess } from "../../store/slices/Users_Slice";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { success, error } = useSelector((state) => state.users);
   const [formData, setFormData] = useState({
     userName: "",
     email: "",
@@ -50,6 +54,16 @@ const Register = () => {
     }
   }, [confirmPassword, formData.password]);
 
+  useEffect(() => {
+    if (success) {
+      toast.success("Logged In Successfully!");
+      navigate("/");
+    }
+    dispatch(resetSuccess());
+    if (error) {
+      toast.error(error);
+    }
+  }, [dispatch, error, navigate, success]);
   return (
     <div className="flex justify-center h-screen p-10 lg:p-20 font-rajdhani">
       <section className="lg:w-[50%] flex bg-gray-600 h-[40rem]">

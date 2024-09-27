@@ -2,25 +2,8 @@ import mongoose from "mongoose";
 import { catchAsyncError } from "../middlewares/catchAsyncError.js";
 import Donation from "../models/Donation_Model.js";
 import { ErrorHandler } from "../utils/error-handler.js";
-import crypto from "node:crypto";
-
-const merchantId = process.env.JAZZCASH_MERCHANT_ID;
-const password = process.env.JAZZCASH_PASSWORD;
-const integritySalt = process.env.JAZZCASH_INTEGRITY_SALT;
-const returnUrl = "https://your-frontend-url.com/payment-callback"; // Your frontend callback URL
-
-// Helper function to generate secure hash for payment
-const generateSecureHash = (paymentData) => {
-  const stringToHash = Object.values(paymentData)
-    .filter((val) => val)
-    .join("&");
-  const secureHash = crypto
-    .createHmac("sha256", integritySalt)
-    .update(stringToHash)
-    .digest("hex");
-  return secureHash;
-};
-// Give Donation
+import User from "../models/User_Model.js";
+import moment from "moment";
 
 const giveDonation = catchAsyncError(async (req, res, next) => {
   const { donatorName, amount, message } = req.body;
@@ -30,65 +13,17 @@ const giveDonation = catchAsyncError(async (req, res, next) => {
   if (!amount || amount <= 0) {
     return res.status(400).json({ message: "Invalid donation amount." });
   }
-
-  const orderId = `DONATION-${streamerId}-${Date.now()}`; // Generate unique order ID
-
-  const transactionDate = new Date()
-    .toISOString()
-    .slice(0, 19)
-    .replace("T", " ");
-
-  // Prepare JazzCash payment data for MWALLET
-  const paymentData = {
-    pp_Version: "1.1",
-    pp_TxnType: "MWALLET",
-    pp_Language: "EN",
-    pp_MerchantID: merchantId,
-    pp_Password: password,
-    pp_TxnRefNo: orderId,
-    pp_Amount: amount * 100, // Amount in paisa (multiply by 100)
-    pp_TxnCurrency: "PKR",
-    pp_TxnDateTime: transactionDate,
-    pp_TxnExpiryDateTime: new Date(Date.now() + 30 * 60000)
-      .toISOString()
-      .slice(0, 19)
-      .replace("T", " "), // 30 mins expiry
-    pp_BillReference: "Donation",
-    pp_Description: message || "Donation Payment",
-    pp_ReturnURL: returnUrl, // Callback URL after payment
-  };
-
-  // Generate secure hash for the payment
-  paymentData.pp_SecureHash = generateSecureHash(paymentData);
-
-  try {
-    // Call JazzCash API to initiate the MWALLET payment
-    const response = await axios.post(
-      "https://sandbox.jazzcash.com.pk/ApplicationAPI/API/2.0/Purchase/DoMWalletTransaction",
-      paymentData
-    );
-
-    if (response.data.pp_ResponseCode === "000") {
-      // JazzCash payment initiated successfully
-      res.status(200).json({
-        success: true,
-        paymentRedirectUrl: response.data.paymentRedirectUrl, // Send this URL to frontend to redirect user for payment
-        message: "Donation initiated, redirecting to JazzCash for payment.",
-      });
-    } else {
-      // Handle JazzCash payment initiation failure
-      res.status(400).json({
-        success: false,
-        message: "Failed to initiate JazzCash payment.",
-      });
-    }
-  } catch (error) {
-    console.error("Error initiating JazzCash payment:", error);
-    res.status(500).json({
-      success: false,
-      message: "Internal server error while initiating payment.",
-    });
-  }
+  const createDonation = await Donation.create({
+    donatorName,
+    amount,
+    message,
+    transactionStatus: "Ok",
+    streamer: streamerId,
+  });
+  await User.findByIdAndUpdate(streamerId, {
+    $inc: { wallet: amount, totalDonations: amount },
+  });
+  res.status(201).json({ success: true, donation: createDonation });
 });
 
 // Get All Donation of a Streamer
@@ -96,12 +31,31 @@ const giveDonation = catchAsyncError(async (req, res, next) => {
 const getAllDonation = catchAsyncError(async (req, res, next) => {
   const streamerId = req.params.id;
 
+  // Fetch donations for the specified streamer
   const donations = await Donation.find({ streamer: streamerId });
 
-  if (!donations) {
-    return next(new ErrorHandler("Donation not found", 404));
+  if (!donations || donations.length === 0) {
+    return next(new ErrorHandler("Donations not found", 404));
   }
-  res.status(200).json({ success: true, donations });
+
+  // Aggregate donations by donator and calculate total donations per donator
+  const donators = await Donation.aggregate([
+    { $match: { streamer: new mongoose.Types.ObjectId(streamerId) } }, // Match donations for the given streamer
+    {
+      $group: {
+        _id: "$donatorName", // Group by donator name
+        totalDonated: { $sum: "$amount" }, // Sum up the donation amounts for each donator
+      },
+    },
+    { $sort: { totalDonated: -1 } },
+    { $limit: 10 },
+  ]);
+
+  res.status(200).json({
+    success: true,
+    donations,
+    donators,
+  });
 });
 
 // Get Donation By Id
@@ -168,10 +122,239 @@ const getDonationStats = catchAsyncError(async (req, res, next) => {
   // Return the stats
   res.status(200).json({
     success: true,
-    topDonator: stats[0].topDonator,
-    totalDonatedByTopDonator: stats[0].totalDonatedByTopDonator,
-    totalDonations: stats[0].totalDonations,
-    averageDonation: stats[0].averageDonation,
+    donationsStats: {
+      topDonator: stats[0].topDonator,
+      totalDonatedByTopDonator: stats[0].totalDonatedByTopDonator,
+      totalDonations: stats[0].totalDonations,
+      averageDonation: stats[0].averageDonation,
+    },
+  });
+});
+
+const getCurrentWeek = () => {
+  const currentDate = new Date();
+  const startOfWeek = currentDate.getDate() - currentDate.getDay() + 1;
+  const startDate = new Date(currentDate);
+  startDate.setDate(startOfWeek);
+  startDate.setUTCHours(0, 0, 0, 0);
+
+  const endOfWeek = startOfWeek + 6;
+  const endDate = new Date(currentDate);
+  endDate.setDate(endOfWeek);
+  endDate.setUTCHours(23, 59, 59, 999);
+
+  return { startDate, endDate };
+};
+
+const getPreviousWeek = () => {
+  const currentDate = new Date();
+  const startOfPreviousWeek = currentDate.getDate() - currentDate.getDay() - 6;
+  const startDate = new Date(currentDate);
+  startDate.setDate(startOfPreviousWeek);
+  startDate.setUTCHours(0, 0, 0, 0);
+
+  const endOfPreviousWeek = startOfPreviousWeek + 6;
+  const endDate = new Date(currentDate);
+  endDate.setDate(endOfPreviousWeek);
+  endDate.setUTCHours(23, 59, 59, 999);
+
+  return { startDate, endDate };
+};
+
+const getWeekEarnings = catchAsyncError(async (req, res, next) => {
+  const streamerId = new mongoose.Types.ObjectId(req.params.id);
+
+  const currentWeekRange = getCurrentWeek();
+  const previousWeekRange = getPreviousWeek();
+
+  const currentWeekEarnings = await Donation.aggregate([
+    {
+      $match: {
+        streamer: streamerId,
+        createdAt: {
+          $gte: currentWeekRange.startDate,
+          $lte: currentWeekRange.endDate,
+        },
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        totalEarnings: { $sum: "$amount" },
+      },
+    },
+  ]);
+
+  const previousWeekEarnings = await Donation.aggregate([
+    {
+      $match: {
+        streamer: streamerId,
+        createdAt: {
+          $gte: previousWeekRange.startDate,
+          $lte: previousWeekRange.endDate,
+        },
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        totalEarnings: { $sum: "$amount" },
+      },
+    },
+  ]);
+
+  const currentTotal = currentWeekEarnings[0]?.totalEarnings || 0;
+  const previousTotal = previousWeekEarnings[0]?.totalEarnings || 0;
+
+  const difference = currentTotal - previousTotal;
+  const status = difference >= 0 ? "rise" : "fall";
+
+  res.status(200).json({
+    success: true,
+    earningStats: {
+      currentWeekEarnings: currentTotal,
+      previousWeekEarnings: previousTotal,
+      difference: difference,
+      percentageDifference:
+        previousTotal > 0
+          ? ((difference / previousTotal) * 100).toFixed(2)
+          : 100,
+      status: status,
+    },
+  });
+});
+
+// Get 1 Year Donations
+
+const getYearDonations = catchAsyncError(async (req, res, next) => {
+  const streamerId = new mongoose.Types.ObjectId(req.params.id);
+
+  const currentDate = new Date();
+  const twelveMonthsAgo = moment(currentDate)
+    .subtract(11, "months")
+    .startOf("month")
+    .toDate();
+
+  // Verify if donations exist in the date range before aggregating
+  const donationsCheck = await Donation.find({
+    streamer: streamerId,
+    createdAt: {
+      $gte: twelveMonthsAgo,
+      $lte: currentDate,
+    },
+  });
+
+  // Aggregation pipeline with filtering by streamer_id
+  const donations = await Donation.aggregate([
+    {
+      $match: {
+        streamer: streamerId, // Filter by the streamer_id
+        createdAt: {
+          $gte: twelveMonthsAgo, // Get donations from the last 12 months
+          $lte: currentDate,
+        },
+      },
+    },
+    {
+      $group: {
+        _id: {
+          year: { $year: "$createdAt" }, // Group by the 'createdAt' field
+          month: { $month: "$createdAt" }, // Group by the 'createdAt' field
+        },
+        totalAmount: { $sum: "$amount" }, // Sum donations per month
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        year: "$_id.year",
+        month: "$_id.month",
+        totalAmount: 1,
+      },
+    },
+    { $sort: { year: 1, month: 1 } }, // Sort by year and month
+  ]);
+
+  // Initialize an object to hold donation data for each month
+  const monthDonations = {
+    jan: 0,
+    feb: 0,
+    mar: 0,
+    apr: 0,
+    may: 0,
+    jun: 0,
+    jul: 0,
+    aug: 0,
+    sep: 0,
+    oct: 0,
+    nov: 0,
+    dec: 0,
+  };
+
+  // Map the aggregation results to the monthDonations object
+  donations.forEach((donation) => {
+    switch (donation.month) {
+      case 1:
+        monthDonations.jan += donation.totalAmount;
+        break;
+      case 2:
+        monthDonations.feb += donation.totalAmount;
+        break;
+      case 3:
+        monthDonations.mar += donation.totalAmount;
+        break;
+      case 4:
+        monthDonations.apr += donation.totalAmount;
+        break;
+      case 5:
+        monthDonations.may += donation.totalAmount;
+        break;
+      case 6:
+        monthDonations.jun += donation.totalAmount;
+        break;
+      case 7:
+        monthDonations.jul += donation.totalAmount;
+        break;
+      case 8:
+        monthDonations.aug += donation.totalAmount;
+        break;
+      case 9:
+        monthDonations.sep += donation.totalAmount;
+        break;
+      case 10:
+        monthDonations.oct += donation.totalAmount;
+        break;
+      case 11:
+        monthDonations.nov += donation.totalAmount;
+        break;
+      case 12:
+        monthDonations.dec += donation.totalAmount;
+        break;
+      default:
+        break;
+    }
+  });
+
+  // Return the result with month names as keys
+  res.status(200).json({ success: true, donations: monthDonations });
+});
+
+// Get Recent Donations
+const getRecentDonations = catchAsyncError(async (req, res, next) => {
+  const streamerId = req.params.id;
+
+  // Fetch the last 10 donations for a specific streamer, sorted by most recent first
+  const donations = await Donation.find({ streamer: streamerId })
+    .sort({ createdAt: -1 }) // Sort by createdAt in descending order (-1)
+    .limit(10); // Limit to the last 10 donations
+
+  if (!donations || donations.length === 0) {
+    return next(new ErrorHandler("No donations found", 404));
+  }
+
+  res.status(200).json({
+    success: true,
+    donations,
   });
 });
 
@@ -180,4 +363,7 @@ export default {
   getAllDonation,
   getDonationByid,
   getDonationStats,
+  getWeekEarnings,
+  getYearDonations,
+  getRecentDonations,
 };

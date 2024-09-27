@@ -7,9 +7,11 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../store/slices/Users_Slice";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 const Login = () => {
   const dispatch = useDispatch();
-  const { error } = useSelector((state) => state.users);
+  const navigate = useNavigate();
+  const { error, success } = useSelector((state) => state.users);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -17,7 +19,11 @@ const Login = () => {
     if (error) {
       toast.error(error);
     }
-  }, [error]);
+    if (success) {
+      toast.success("Logged In Successfully");
+      navigate("/");
+    }
+  }, [dispatch, error, navigate, success]);
   const handleLogin = () => {
     dispatch(login({ email, password }));
   };

@@ -9,13 +9,39 @@ import {
 import { Button } from "@/components/ui/button";
 import { NavLink, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { logout, resetSuccess } from "../store/slices/Users_Slice";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import { serverUrl } from "../serverUrl";
+import { BiSolidDownArrow } from "react-icons/bi";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  DropdownMenuShortcut,
+} from "@/components/ui/dropdown-menu";
+
 const Navbar = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
-  const { isAuthenticated } = useSelector((state) => state.users);
+  const { isAuthenticated, success, user } = useSelector(
+    (state) => state.users
+  );
 
+  const handleLogout = (e) => {
+    e.preventDefault();
+    dispatch(logout());
+  };
+  useEffect(() => {
+    if (success === true) {
+      dispatch(resetSuccess());
+    }
+  }, [dispatch, success]);
   return (
     <nav className="sticky font-rajdhani font-bold  text-white top-0 z-50 w-full border-border/40 bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-black/60 p-4">
       <div className="container flex items-center justify-between mx-auto">
@@ -23,7 +49,37 @@ const Navbar = () => {
           <img className="h-8" src={logo} alt="" />
         </div>
 
-        <div className="block lg:hidden">
+        <div className="flex items-center gap-2 lg:hidden">
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              {" "}
+              {user && (
+                <div className="flex items-center gap-1 cursor-pointer group">
+                  <div className="relative">
+                    <LazyLoadImage
+                      className="w-8 h-8 rounded-full "
+                      src={`${serverUrl}/${user?.profilePic}`}
+                    />
+                    <div className="absolute inset-0 transition-all duration-200 bg-black rounded-full opacity-0 group-hover:opacity-50"></div>
+                  </div>
+                  <BiSolidDownArrow className="transition-all duration-200 group-hover:text-redMain" />
+                </div>
+              )}
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>{user?.userName}</DropdownMenuLabel>
+              <DropdownMenuSeparator className="bg-neutral-600" />
+              <DropdownMenuItem onSelect={() => navigate("/streamerdashboard")}>
+                Dashboard
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                Wallet
+                <DropdownMenuShortcut>{user?.wallet}</DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuItem>Settings</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           <Sheet
             className="font-bold border-none font-rajdhani"
             open={isOpen}
@@ -84,21 +140,34 @@ const Navbar = () => {
                     Contact
                   </NavLink>
                 </li>
-                <div className="flex gap-2">
-                  <Button
-                    onClick={() => navigate("/login")}
-                    className="bg-transparent text-redMain hover:border-redMain hover:text-neutral-50 hover:bg-redMain"
-                    variant="secondary"
-                  >
-                    Login
-                  </Button>
-                  <Button
-                    onClick={() => navigate("/register")}
-                    variant="secondary"
-                  >
-                    Register
-                  </Button>
-                </div>{" "}
+                {isAuthenticated ? (
+                  <div>
+                    {" "}
+                    <Button
+                      onClick={handleLogout}
+                      className="bg-transparent text-redMain hover:border-redMain hover:text-neutral-50 hover:bg-redMain"
+                      variant="secondary"
+                    >
+                      Logout
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={() => navigate("/login")}
+                      className="bg-transparent text-redMain hover:border-redMain hover:text-neutral-50 hover:bg-redMain"
+                      variant="secondary"
+                    >
+                      Login
+                    </Button>
+                    <Button
+                      onClick={() => navigate("/register")}
+                      variant="secondary"
+                    >
+                      Register
+                    </Button>
+                  </div>
+                )}
               </ul>
             </SheetContent>
           </Sheet>
@@ -124,10 +193,41 @@ const Navbar = () => {
             Contact
           </NavLink>
           {isAuthenticated ? (
-            <div>
+            <div className="flex items-center gap-2">
               {" "}
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  {" "}
+                  {user && (
+                    <div className="flex items-center gap-1 cursor-pointer group">
+                      <div className="relative">
+                        <LazyLoadImage
+                          className="w-8 h-8 rounded-full "
+                          src={`${serverUrl}/${user?.profilePic}`}
+                        />
+                        <div className="absolute inset-0 transition-all duration-200 bg-black rounded-full opacity-0 group-hover:opacity-50"></div>
+                      </div>
+                      <BiSolidDownArrow className="transition-all duration-200 group-hover:text-redMain" />
+                    </div>
+                  )}
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuLabel>{user?.userName}</DropdownMenuLabel>
+                  <DropdownMenuSeparator className="bg-neutral-600" />
+                  <DropdownMenuItem
+                    onSelect={() => navigate("/streamerdashboard")}
+                  >
+                    Dashboard
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    Wallet{" "}
+                    <DropdownMenuShortcut>{user?.wallet}</DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>Settings</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <Button
-                onClick={() => navigate("/login")}
+                onClick={handleLogout}
                 className="bg-transparent text-redMain hover:border-redMain hover:text-neutral-50 hover:bg-redMain"
                 variant="secondary"
               >

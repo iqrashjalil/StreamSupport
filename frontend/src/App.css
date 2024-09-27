@@ -36,3 +36,26 @@ body {
   -webkit-clip-path: polygon(0 0, calc(100% - 484px) 0, 100% 100%, 0% 100%);
   clip-path: polygon(0 0, calc(100% - 484px) 0, 100% 100%, 0% 100%);
 }
+
+:-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.9);
+  border-radius: 10px;
+  background-color: #cccccc;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  background-color: #3f3f3f;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #d62929;
+  background-image: -webkit-linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 0, 0, 0.4) 50%,
+    transparent,
+    transparent
+  );
+}

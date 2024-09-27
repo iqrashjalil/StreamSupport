@@ -11,15 +11,21 @@ router
   .post(upload.single("profilePic"), User_Controller.register);
 router.route("/login").post(User_Controller.login);
 router.route("/getuser").get(authMiddleware, User_Controller.getUser);
-router.route("/logout").post(authMiddleware, User_Controller.logout);
+router.route("/logout").post(User_Controller.logout);
 router
   .route("/updateprofile")
-  .patch(authMiddleware, User_Controller.updateProfile);
-router
-  .route("/deleteprofile")
-  .delete(authMiddleware, User_Controller.deleteUser);
+  .patch(
+    authMiddleware,
+    upload.single("profilePic"),
+    User_Controller.updateProfile
+  );
+router.route("/deleteprofile").delete(
+  authMiddleware,
+
+  User_Controller.deleteUser
+);
 router
   .route("/getallusers")
   .get(authMiddleware, isAdmin, User_Controller.getAllUsers);
-router.route("/getTopStreamers").get(User_Controller.getTopStreamers);
+router.route("/gettopstreamers").get(User_Controller.getTopStreamers);
 export default router;

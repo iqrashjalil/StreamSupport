@@ -14,7 +14,7 @@ import {
 import Autoplay from "embla-carousel-autoplay";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { getDonationStats } from "../store/slices/Users_Slice.jsx";
+import { getTopStreamers } from "../store/slices/Users_Slice.jsx";
 import { serverUrl } from "../serverUrl";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
@@ -23,7 +23,7 @@ const Home = () => {
   const dispatch = useDispatch();
   const { topStreamers } = useSelector((state) => state.users);
   useEffect(() => {
-    dispatch(getDonationStats());
+    dispatch(getTopStreamers());
   }, [dispatch]);
   return (
     <>

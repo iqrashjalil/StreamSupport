@@ -7,6 +7,7 @@ const initialState = {
   error: null,
   user: null,
   isAuthenticated: false,
+  success: false,
 };
 
 export const register = createAsyncThunk(
@@ -55,20 +56,39 @@ export const login = createAsyncThunk(
   }
 );
 
-export const getDonationStats = createAsyncThunk(
-  "users/getDonationStats",
+export const logout = createAsyncThunk(
+  "users/logout",
+  async (_, { rejectWithValue }) => {
+    try {
+      const config = {
+        withCredentials: true,
+      };
+      const { data } = await axios.post(
+        `${serverUrl}/api/user/logout`,
+        {},
+        config
+      );
+      return data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
+export const getTopStreamers = createAsyncThunk(
+  "users/getTopStreamers",
   async (_, { rejectWithValue }) => {
     try {
       const config = {
         withCredentials: true,
       };
       const { data } = await axios.get(
-        `${serverUrl}/api/user/getTopStreamers`,
+        `${serverUrl}/api/user/gettopstreamers`,
         config
       );
       return data;
     } catch (error) {
-      console.log(error);
       return rejectWithValue(error.response.data.message);
     }
   }
@@ -91,24 +111,55 @@ export const getUser = createAsyncThunk(
   }
 );
 
+// Update Profile
+
+export const updateProfile = createAsyncThunk(
+  "users/updateProfile",
+  async (formdata, { rejectWithValue }) => {
+    console.log(formdata);
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
+      };
+      const { data } = await axios.patch(
+        `${serverUrl}/api/user/updateprofile`,
+        formdata,
+        config
+      );
+      console.log(data);
+      return data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  }
+);
+
 const usersSlice = createSlice({
   name: "users",
   initialState,
-  reducers: {},
+  reducers: {
+    resetSuccess: (state) => {
+      state.success = false;
+    },
+  },
   extraReducers: (builder) => {
     builder
-      .addCase(getDonationStats.pending, (state) => {
+      .addCase(getTopStreamers.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getDonationStats.fulfilled, (state, action) => {
+      .addCase(getTopStreamers.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
         state.topStreamers = action.payload.topStreamers;
       })
-      .addCase(getDonationStats.rejected, (state, action) => {
+      .addCase(getTopStreamers.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload.error;
+        state.error = action.payload;
       })
       .addCase(register.pending, (state) => {
         state.loading = true;
@@ -117,21 +168,23 @@ const usersSlice = createSlice({
       .addCase(register.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        state.user = action.payload;
+        state.user = action.payload.user;
         state.isAuthenticated = true;
+        state.success = action.payload.success;
       })
       .addCase(register.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload.error;
+        state.error = action.payload;
       })
       .addCase(login.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(login.fulfilled, (state) => {
+      .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
         state.isAuthenticated = true;
+        state.success = action.payload.success;
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -144,14 +197,45 @@ const usersSlice = createSlice({
       .addCase(getUser.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        state.isAuthenticated = true;
         state.user = action.payload.user;
+        state.isAuthenticated = true;
       })
-      .addCase(getUser.rejected, (state) => {
+      .addCase(getUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(logout.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(logout.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
+        state.isAuthenticated = false;
+        state.success = action.payload.success;
+        state.user = null;
+      })
+      .addCase(logout.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(updateProfile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.success = action.payload.success;
+        state.user = action.payload.user;
+      })
+      .addCase(updateProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });
+
+export const { resetSuccess } = usersSlice.actions;
 
 export default usersSlice.reducer;

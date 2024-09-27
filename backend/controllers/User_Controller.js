@@ -2,6 +2,7 @@ import User from "../models/User_Model.js";
 import { catchAsyncError } from "../middlewares/catchAsyncError.js";
 import { ErrorHandler } from "../utils/error-handler.js";
 import sendToken from "../utils/jwtToken.js";
+import bcrypt from "bcrypt";
 import { renameSync, unlinkSync } from "fs";
 
 // Register Controller
@@ -72,15 +73,43 @@ const getUser = catchAsyncError(async (req, res, next) => {
 
 const updateProfile = catchAsyncError(async (req, res, next) => {
   const userId = req.user._id;
-  const updatedFields = req.body;
-  const updatedUser = await User.findByIdAndUpdate(userId, updatedFields, {
-    new: true,
+  const { userName, email, password } = req.body;
+
+  // Object to store fields to update
+  const updateFields = {};
+
+  // Conditionally add fields only if they are non-empty
+  if (userName) updateFields.userName = userName;
+  if (email) updateFields.email = email; // Only update email if it's non-empty
+  if (password) {
+    updateFields.password = await bcrypt.hash(password, 10);
+  }
+  // Handle profile picture if provided
+  if (req.file) {
+    try {
+      const date = Date.now();
+      const fileName = "uploads/profiles/" + date + req.file.originalname;
+      renameSync(req.file.path, fileName);
+      updateFields.profilePic = fileName;
+    } catch (error) {
+      return next(new ErrorHandler("Error uploading profile picture", 500));
+    }
+  }
+
+  // Update the user in the database
+  const updatedUser = await User.findByIdAndUpdate(userId, updateFields, {
+    new: true, // Return the updated document
   });
+
   if (!updatedUser) {
     return next(new ErrorHandler("User not found", 404));
   }
 
-  res.status(200).json({ success: true, user: updatedUser });
+  // Respond with the updated user
+  res.status(200).json({
+    success: true,
+    user: updatedUser,
+  });
 });
 
 // Delete User
