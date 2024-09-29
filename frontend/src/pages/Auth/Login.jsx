@@ -42,7 +42,7 @@ const Login = () => {
             <div className="mt-4 text-neutral-50">
               <Label>Email</Label>
               <Input
-                className=""
+                className="border-gray-400"
                 name="email"
                 type="email"
                 placeholder="Enter Email"
@@ -56,7 +56,7 @@ const Login = () => {
               <Input
                 name="password"
                 type="password"
-                className="outline-none focus:border-redMain"
+                className="border-gray-400"
                 placeholder="Enter Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}

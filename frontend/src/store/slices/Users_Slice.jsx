@@ -8,6 +8,7 @@ const initialState = {
   user: null,
   isAuthenticated: false,
   success: false,
+  isSidebarOpen: false,
 };
 
 export const register = createAsyncThunk(
@@ -145,6 +146,9 @@ const usersSlice = createSlice({
     resetSuccess: (state) => {
       state.success = false;
     },
+    toggleSidebar: (state) => {
+      state.isSidebarOpen = !state.isSidebarOpen;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -236,6 +240,6 @@ const usersSlice = createSlice({
   },
 });
 
-export const { resetSuccess } = usersSlice.actions;
+export const { resetSuccess, toggleSidebar } = usersSlice.actions;
 
 export default usersSlice.reducer;

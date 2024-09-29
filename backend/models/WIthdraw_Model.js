@@ -10,6 +10,11 @@ const withdrawSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  cnic: {
+    type: Number,
+    required: [true, "Please Enter CNIC Number"],
+    maxlength: [13, "CNIC cannot exceed 13 characters"],
+  },
   bankName: {
     type: String,
     required: [true, "Please Enter Bank Name"],

@@ -80,7 +80,7 @@ const Register = () => {
             <div className="mt-4 text-neutral-50">
               <Label>Username</Label>
               <Input
-                className="placeholder-black]"
+                className="border-gray-400"
                 name="userName"
                 type="text"
                 placeholder="Enter Username"
@@ -90,7 +90,7 @@ const Register = () => {
             <div className="mt-4 text-neutral-50">
               <Label>Email</Label>
               <Input
-                className="placeholder-black]"
+                className="border-gray-400"
                 name="email"
                 type="email"
                 placeholder="Enter Email"
@@ -102,7 +102,7 @@ const Register = () => {
               <Input
                 type="file"
                 name="profilePic"
-                className="placeholder-black]"
+                className="border-gray-400"
                 onChange={handleChange}
               />
             </div>
@@ -111,7 +111,7 @@ const Register = () => {
               <Input
                 name="password"
                 type="password"
-                className="placeholder-black]"
+                className="border-gray-400"
                 placeholder="Enter Password"
                 onChange={handleChange}
               />
@@ -120,7 +120,7 @@ const Register = () => {
               <Label>Confirm Password</Label>
               <Input
                 type="password"
-                className="placeholder-black]"
+                className="border-gray-400"
                 placeholder="Confirm Password"
                 onChange={handleConfirmPasswordChange}
               />

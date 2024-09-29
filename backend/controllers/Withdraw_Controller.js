@@ -1,11 +1,11 @@
 import { catchAsyncError } from "../middlewares/catchAsyncError.js";
 import Withdraw from "../models/WIthdraw_Model.js";
 import { ErrorHandler } from "../utils/error-handler.js";
-
+import User from "../models/User_Model.js";
 // Request Withdraw
 
 const addWithdrawReuest = catchAsyncError(async (req, res, next) => {
-  const { withdrawAmount, bankName, accountTitle, bankAccountNumber } =
+  const { withdrawAmount, cnic, bankName, accountTitle, bankAccountNumber } =
     req.body;
 
   const streamerId = req.user._id;
@@ -14,8 +14,8 @@ const addWithdrawReuest = catchAsyncError(async (req, res, next) => {
     !withdrawAmount ||
     !bankName ||
     !accountTitle ||
-    !bankAccountNumber ||
-    !streamerId
+    !cnic ||
+    !bankAccountNumber
   ) {
     return next(new ErrorHandler("Please enter all fields", 400));
   }
@@ -26,10 +26,17 @@ const addWithdrawReuest = catchAsyncError(async (req, res, next) => {
   const withdraw = await Withdraw.create({
     streamer: streamerId,
     withdrawAmount,
+    cnic,
     bankName,
     accountTitle,
     bankAccountNumber,
   });
+
+  await User.findByIdAndUpdate(
+    streamerId,
+    { $inc: { wallet: -withdrawAmount } },
+    { new: true }
+  );
 
   res.status(201).json({ success: true, withdraw });
 });
@@ -86,7 +93,7 @@ const updateWithdrawRequest = catchAsyncError(async (req, res, next) => {
   res.status(200).json({ success: true, withdraw });
 });
 
-// Get WIthdraw Request with Id:
+// Get Withdraw Request with Id:
 
 const getWithdrawRequest = catchAsyncError(async (req, res, next) => {
   const withdrawId = req.params.id;

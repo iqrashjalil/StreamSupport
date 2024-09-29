@@ -25,7 +25,7 @@ router
   .delete(authMiddleware, withdraw_Controller.deleteWithdrawRequest);
 
 router
-  .route("/getwithdrawhistory")
+  .route("/getuserwithdrawrequests")
   .get(authMiddleware, withdraw_Controller.getWithdrawHistory);
 
 export default router;

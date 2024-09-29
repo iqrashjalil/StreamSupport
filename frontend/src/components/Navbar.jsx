@@ -7,11 +7,15 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { logout, resetSuccess } from "../store/slices/Users_Slice";
+import {
+  logout,
+  resetSuccess,
+  toggleSidebar,
+} from "../store/slices/Users_Slice";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { serverUrl } from "../serverUrl";
 import { BiSolidDownArrow } from "react-icons/bi";
@@ -28,10 +32,17 @@ import {
 const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const { isAuthenticated, success, user } = useSelector(
     (state) => state.users
   );
+
+  // You can define paths where the hamburger icon should be visible (e.g., on dashboard pages)
+  const isDashboardPage =
+    location.pathname.startsWith("/streamerdashboard") ||
+    location.pathname.startsWith("/editprofile") ||
+    location.pathname === "/wallet";
 
   const handleLogout = (e) => {
     e.preventDefault();
@@ -45,7 +56,29 @@ const Navbar = () => {
   return (
     <nav className="sticky font-rajdhani font-bold  text-white top-0 z-50 w-full border-border/40 bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-black/60 p-4">
       <div className="container flex items-center justify-between mx-auto">
-        <div className="font-bold text-redMain">
+        <div className="flex items-center gap-2 font-bold text-redMain">
+          {isDashboardPage && (
+            <button
+              onClick={() => dispatch(toggleSidebar())}
+              className="flex lg:hidden text-redMain focus:outline-none"
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d={isOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16m-7 6h7"}
+                ></path>
+              </svg>
+            </button>
+          )}
+
           <img className="h-8" src={logo} alt="" />
         </div>
 

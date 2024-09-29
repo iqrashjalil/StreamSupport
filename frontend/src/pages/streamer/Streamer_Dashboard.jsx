@@ -149,10 +149,10 @@ const Streamer_Dashboard = () => {
   };
   return (
     <div className="flex w-full">
-      <section className="w-[15%]">
+      <section className="w-[15%] block">
         <Sidebar />
       </section>
-      <section className="p-5 w-[85%] font-rajdhani">
+      <section className="p-5 w-full lg:w-[85%] font-rajdhani">
         <div className="flex flex-wrap justify-center gap-10">
           <div className="h-40 p-5 bg-gray-600 border border-gray-500 rounded w-80">
             <div className="flex items-center justify-center w-12 h-12 bg-gray-700 rounded-full">
