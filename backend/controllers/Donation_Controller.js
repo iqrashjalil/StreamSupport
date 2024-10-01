@@ -31,14 +31,25 @@ const giveDonation = catchAsyncError(async (req, res, next) => {
 const getAllDonation = catchAsyncError(async (req, res, next) => {
   const streamerId = req.params.id;
 
-  // Fetch donations for the specified streamer
+  // Fetch all donations for the specified streamer
   const donations = await Donation.find({ streamer: streamerId });
 
   if (!donations || donations.length === 0) {
     return next(new ErrorHandler("Donations not found", 404));
   }
 
-  // Aggregate donations by donator and calculate total donations per donator
+  // Get the current date
+  const now = new Date();
+
+  // Get the start of the current week (Monday)
+  const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay() + 1));
+  startOfWeek.setHours(0, 0, 0, 0); // Set to the beginning of the day
+
+  // Get the end of the current week (Sunday)
+  const endOfWeek = new Date(now.setDate(now.getDate() - now.getDay() + 7));
+  endOfWeek.setHours(23, 59, 59, 999); // Set to the end of the day
+
+  // Aggregate all-time donations by donator and calculate total donations per donator
   const donators = await Donation.aggregate([
     { $match: { streamer: new mongoose.Types.ObjectId(streamerId) } }, // Match donations for the given streamer
     {
@@ -47,14 +58,34 @@ const getAllDonation = catchAsyncError(async (req, res, next) => {
         totalDonated: { $sum: "$amount" }, // Sum up the donation amounts for each donator
       },
     },
-    { $sort: { totalDonated: -1 } },
-    { $limit: 10 },
+    { $sort: { totalDonated: -1 } }, // Sort by the highest donation
+    { $limit: 10 }, // Limit to top 10 donators
   ]);
 
+  // Aggregate top 10 donators for the current week
+  const weeklyTopDonators = await Donation.aggregate([
+    {
+      $match: {
+        streamer: new mongoose.Types.ObjectId(streamerId),
+        createdAt: { $gte: startOfWeek, $lte: endOfWeek },
+      },
+    },
+    {
+      $group: {
+        _id: "$donatorName",
+        totalDonated: { $sum: "$amount" }, // Sum the donations made by each donator in the current week
+      },
+    },
+    { $sort: { totalDonated: -1 } }, // Sort by total donated
+    { $limit: 10 }, // Limit to top 10 donators
+  ]);
+
+  // Return the all-time donations, top donators, and weekly top donators
   res.status(200).json({
     success: true,
     donations,
-    donators,
+    donators, // Top 10 all-time donators
+    top10CurrentWeekDonators: weeklyTopDonators, // Top 10 donators for the current week
   });
 });
 

@@ -8,6 +8,7 @@ import errorMiddleware from "./middlewares/error-middleware.js";
 import userRoutes from "./routes/User_Routes.js";
 import withdrawRoutes from "./routes/Withdraw_Routes.js";
 import donationRoutes from "./routes/Donation_Routes.js";
+import bankdetailRoutes from "./routes/Bankdetail_Routes.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -31,6 +32,7 @@ app.use(express.json());
 app.use("/api/user", userRoutes);
 app.use("/api/withdraw", withdrawRoutes);
 app.use("/api/donation", donationRoutes);
+app.use("/api/bankdetail", bankdetailRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

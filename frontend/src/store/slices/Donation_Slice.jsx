@@ -156,6 +156,7 @@ const donationSlice = createSlice({
         state.error = null;
         state.allDonations = action.payload.donations;
         state.topDonators = action.payload.donators;
+        state.currenWeekTopDonators = action.payload.top10CurrentWeekDonators;
       })
       .addCase(getAllDonations.rejected, (state, action) => {
         state.loading = false;

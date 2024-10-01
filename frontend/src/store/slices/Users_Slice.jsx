@@ -26,6 +26,8 @@ export const register = createAsyncThunk(
         formdata,
         config
       );
+      localStorage.setItem("isAuthenticated", true);
+      localStorage.setItem("role", data.user.role);
       return data;
     } catch (error) {
       console.log(error);
@@ -49,6 +51,8 @@ export const login = createAsyncThunk(
         formdata,
         config
       );
+      localStorage.setItem("isAuthenticated", true);
+      localStorage.setItem("role", data.user.role);
       return data;
     } catch (error) {
       console.log(error);
@@ -69,6 +73,8 @@ export const logout = createAsyncThunk(
         {},
         config
       );
+      localStorage.removeItem("isAuthenticated");
+      localStorage.removeItem("role");
       return data;
     } catch (error) {
       console.log(error);

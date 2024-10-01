@@ -50,8 +50,8 @@ const Streamer_Dashboard = () => {
     donationsStats,
     yearDonations,
     topDonators,
-    allDonations,
     recentDonations,
+    currenWeekTopDonators,
   } = useSelector((state) => state.donations);
   const id = user?._id;
 
@@ -239,7 +239,7 @@ const Streamer_Dashboard = () => {
           </div>
           <div className="lg:w-[30%] w-fulls rounded p-4 bg-gray-600">
             <Table>
-              <TableCaption>A list of your Top Donators.</TableCaption>
+              <TableCaption>A list of your Top Supporter.</TableCaption>
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-[50%]">Name</TableHead>
@@ -269,15 +269,15 @@ const Streamer_Dashboard = () => {
             </Table>
           </div>
         </div>
-        <div className="p-5 mt-10 bg-gray-600 rounded">
-          <div>
+        <div className="flex flex-col justify-center gap-10 mt-10 lg:flex-row ">
+          <div className="lg:w-[60%] p-5 w-full rounded bg-gray-600">
             <Table>
               <TableCaption>List of Recent Superchats.</TableCaption>
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-[10%]">Name</TableHead>
-                  <TableHead className="w-[10%]">Amount Superchated</TableHead>
-                  <TableHead className="w-[70%]">Message</TableHead>
+                  <TableHead className="w-[20%]">Amount Superchated</TableHead>
+                  <TableHead className="w-[60%]">Message</TableHead>
                   <TableHead className="w-[10%]">Transaction Status</TableHead>
                 </TableRow>
               </TableHeader>
@@ -299,6 +299,39 @@ const Streamer_Dashboard = () => {
 
                     <TableCell className="font-medium">
                       {donator.transactionStatus}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+              <TableFooter></TableFooter>
+            </Table>
+          </div>
+          <div className="lg:w-[30%] w-full rounded p-4 bg-gray-600">
+            <Table>
+              <TableCaption>
+                A list of your Top Supporters of Current Week
+              </TableCaption>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[50%]">Name</TableHead>
+                  <TableHead className="w-[50%]">Amount Superchated</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {currenWeekTopDonators?.map((donator, index) => (
+                  <TableRow key={index}>
+                    <TableCell className="flex items-center gap-2 font-medium">
+                      {donator._id}
+                      {index === 0 && (
+                        <span>
+                          <FaCrown className="text-yellow-400" />
+                        </span>
+                      )}
+                      {index === 1 && <span>🥈</span>}
+                      {index === 2 && <span>🥉</span>}
+                    </TableCell>
+                    <TableCell className="font-medium">
+                      {donator.totalDonated}
                     </TableCell>
                   </TableRow>
                 ))}

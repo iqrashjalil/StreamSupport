@@ -48,10 +48,8 @@ const Withdraw = () => {
       bankName,
     };
 
-    console.log(withdrawData);
-
-    // Dispatch the form data
     dispatch(addWithdrawRequest(withdrawData));
+    dispatch(getUserWithdrawRequests());
   };
 
   useEffect(() => {
@@ -184,8 +182,11 @@ const Withdraw = () => {
               </div>
             </div>
           </div>
-          <div className="flex justify-end">
-            <Button className="p-5 mt-6 rounded-none " variant="secondary">
+          <div className="justify-end sm:flex">
+            <Button
+              className="w-full p-5 mt-6 rounded sm:w-auto"
+              variant="secondary"
+            >
               Submit Withdraw Request
             </Button>
           </div>

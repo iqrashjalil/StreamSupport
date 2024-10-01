@@ -1,21 +1,20 @@
 import { Navigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
 const Protected_Route = ({ children, roleRequired }) => {
-  const { isAuthenticated, user } = useSelector((state) => state.users);
+  const role = localStorage.getItem("role");
+  const isAuthenticated = localStorage.getItem("isAuthenticated") || false;
 
   if (!isAuthenticated) {
     toast.error("You Must Be Logged In To Access");
     return <Navigate to="/login" />;
   }
 
-  if (roleRequired && user.role !== roleRequired) {
+  if (roleRequired && role !== roleRequired) {
     toast.error("You Are Not Allowed To Access");
     return <Navigate to="/" />;
   }
 
-  // If authenticated and has the correct role, render the route
   return children;
 };
 

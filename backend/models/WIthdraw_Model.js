@@ -14,6 +14,13 @@ const withdrawSchema = new mongoose.Schema({
     type: Number,
     required: [true, "Please Enter CNIC Number"],
     maxlength: [13, "CNIC cannot exceed 13 characters"],
+    validate: {
+      validator: function (v) {
+        // Check if the CNIC has exactly 13 numeric characters
+        return /^[0-9]{13}$/.test(v); // Adjust this if you allow hyphens
+      },
+      message: "CNIC cannot exceed 13 numbers",
+    },
   },
   bankName: {
     type: String,
