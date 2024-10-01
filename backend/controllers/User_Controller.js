@@ -1,4 +1,5 @@
 import User from "../models/User_Model.js";
+import alertSettings from "../models/Alert_Model.js";
 import { catchAsyncError } from "../middlewares/catchAsyncError.js";
 import { ErrorHandler } from "../utils/error-handler.js";
 import sendToken from "../utils/jwtToken.js";
@@ -25,12 +26,23 @@ const register = catchAsyncError(async (req, res, next) => {
   if (userExist) {
     return next(new ErrorHandler("User already exists", 400));
   }
-  const user = await User.create({
+  const user = new User({
     userName,
     email,
     password,
-    profilePic: fileName,
+    profilePic: fileName, // Make sure to hash the password before saving
   });
+
+  const defaultAlertSettings = new alertSettings({
+    streamer: user._id,
+    overlayLink: `https://www.localhost:5173/overlay/${user._id}`,
+    superchatLink: `https://www.localhost:5173/supechat/${user._id}`,
+  });
+
+  const savedAlertSettings = await defaultAlertSettings.save();
+
+  user.alertSettings = savedAlertSettings._id;
+  await user.save();
 
   sendToken(user, 201, res);
 });
@@ -61,7 +73,7 @@ const logout = catchAsyncError(async (req, res, next) => {
 
 const getUser = catchAsyncError(async (req, res, next) => {
   const userId = req.user._id;
-  const user = await User.findById(userId);
+  const user = await User.findById(userId).populate("alertSettings");
   if (!user) {
     return next(new ErrorHandler("User not found", 404));
   }

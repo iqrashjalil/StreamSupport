@@ -32,14 +32,14 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please Upload Your Profile Pic"],
   },
-  superchatLink: {
-    type: String,
-    default: "",
-  },
   role: {
     type: String,
     enum: ["admin", "streamer"],
     default: "streamer",
+  },
+  alertSettings: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "alertSettings",
   },
 });
 

@@ -16,6 +16,14 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { FaBell } from "react-icons/fa";
+import { MdAudiotrack } from "react-icons/md";
 
 const Sidebar = () => {
   const dispatch = useDispatch();
@@ -27,26 +35,56 @@ const Sidebar = () => {
       <div className="fixed hidden lg:flex flex-col justify-between h-[92.5vh] p-2 font-rajdhani w-[15%] bg-gray-600">
         <div>
           <ul className="flex flex-col gap-2">
-            <li className="flex items-center gap-2 p-2 text-lg transition-all duration-200 rounded group hover:bg-gray-700 text-neutral-50">
+            <NavLink
+              className="flex items-center gap-2 p-2 text-lg transition-all duration-200 rounded group hover:bg-gray-700 text-neutral-50"
+              to={"/streamerdashboard"}
+            >
               <BiSolidDashboard className="text-2xl transition-all duration-200 group-hover:text-redMain" />{" "}
-              <NavLink to={"/streamerdashboard"}>Dashboard</NavLink>
-            </li>
-            <li className="flex items-center gap-2 p-2 text-lg transition-all duration-200 rounded group hover:bg-gray-700 text-neutral-50">
-              <IoMdSettings className="text-2xl transition-all duration-200 group-hover:text-redMain" />{" "}
-              <NavLink>Settings</NavLink>
-            </li>
-            <li className="flex items-center gap-2 p-2 text-lg transition-all duration-200 rounded group hover:bg-gray-700 text-neutral-50">
+              Dashboard
+            </NavLink>
+            <Accordion type="single" collapsible>
+              <AccordionItem value="item-1">
+                <AccordionTrigger className="flex items-center gap-2 p-2 text-lg transition-all duration-200 rounded group hover:bg-gray-700 text-neutral-50">
+                  <span className="flex gap-2">
+                    <IoMdSettings className="text-2xl transition-all duration-200 group-hover:text-redMain" />{" "}
+                    Settings
+                  </span>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <NavLink
+                    className="flex items-center gap-2 p-2 ml-5 text-lg transition-all duration-200 rounded group hover:bg-gray-700 text-neutral-50"
+                    to={"/alertsettings"}
+                  >
+                    <FaBell className="text-2xl transition-all duration-200 group-hover:text-redMain" />{" "}
+                    Alert Settings
+                  </NavLink>
+                  <NavLink
+                    className="flex items-center gap-2 p-2 ml-5 text-lg transition-all duration-200 rounded group hover:bg-gray-700 text-neutral-50"
+                    to={"/settings"}
+                  >
+                    <MdAudiotrack className="text-2xl transition-all duration-200 group-hover:text-redMain" />{" "}
+                    Audio Alert Settings
+                  </NavLink>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+
+            <NavLink
+              className="flex items-center gap-2 p-2 text-lg transition-all duration-200 rounded group hover:bg-gray-700 text-neutral-50"
+              to={"/wallet"}
+            >
+              {" "}
               <FaWallet className="text-2xl transition-all duration-200 group-hover:text-redMain" />{" "}
-              <NavLink to={"/wallet"}>Wallet</NavLink>
-            </li>
-            <li className="flex items-center gap-2 p-2 text-lg transition-all duration-200 rounded group hover:bg-gray-700 text-neutral-50">
+              Wallet
+            </NavLink>
+            <NavLink className="flex items-center gap-2 p-2 text-lg transition-all duration-200 rounded group hover:bg-gray-700 text-neutral-50">
               <FaHandsHelping className="text-2xl transition-all duration-200 group-hover:text-redMain" />{" "}
-              <NavLink>Help</NavLink>
-            </li>
-            <li className="flex items-center gap-2 p-2 text-lg transition-all duration-200 rounded group hover:bg-gray-700 text-neutral-50">
+              Help
+            </NavLink>
+            <NavLink className="flex items-center gap-2 p-2 text-lg transition-all duration-200 rounded group hover:bg-gray-700 text-neutral-50">
               <BiSolidHelpCircle className="text-2xl transition-all duration-200 group-hover:text-redMain" />{" "}
-              <NavLink>Faq</NavLink>
-            </li>
+              Faq
+            </NavLink>
           </ul>
         </div>
         <div className="flex items-center justify-between w-full p-1 bg-gray-700 rounded h-14 ">

@@ -14,6 +14,7 @@ import Streamer_Dashboard from "./pages/streamer/Streamer_Dashboard";
 import Edit_Profile from "./pages/Edit_Profile";
 import Protected_Route from "./Protected_Route";
 import Wallet from "./pages/streamer/Wallet";
+import Alert_Settings from "./pages/streamer/Alert_Settings";
 
 function App() {
   const dispatch = useDispatch();
@@ -26,7 +27,13 @@ function App() {
     }
   }, [isAuthenticated, dispatch]);
 
-  const noFooterRoutes = ["/streamerdashboard", "/editprofile/:id", "/wallet"];
+  const noFooterRoutes = [
+    "/streamerdashboard",
+    "/editprofile/:id",
+    "/wallet",
+    "/alertsettings",
+    "/audioalertsettings",
+  ];
 
   const isNoFooterRoute = noFooterRoutes.some((route) => {
     return matchPath({ path: route, exact: true }, location.pathname);
@@ -63,6 +70,14 @@ function App() {
           element={
             <Protected_Route roleRequired="streamer">
               <Wallet />
+            </Protected_Route>
+          }
+        />
+        <Route
+          path="/alertsettings"
+          element={
+            <Protected_Route roleRequired="streamer">
+              <Alert_Settings />
             </Protected_Route>
           }
         />

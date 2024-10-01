@@ -42,7 +42,8 @@ const Navbar = () => {
   const isDashboardPage =
     location.pathname.startsWith("/streamerdashboard") ||
     location.pathname.startsWith("/editprofile") ||
-    location.pathname === "/wallet";
+    location.pathname === "/wallet" ||
+    location.pathname === "/settings";
 
   const handleLogout = (e) => {
     e.preventDefault();
@@ -60,7 +61,7 @@ const Navbar = () => {
           {isDashboardPage && (
             <button
               onClick={() => dispatch(toggleSidebar())}
-              className="flex lg:hidden text-redMain focus:outline-none"
+              className="flex lg:hidden text-neutral-50 focus:outline-none"
             >
               <svg
                 className="w-6 h-6"

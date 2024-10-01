@@ -9,6 +9,7 @@ import userRoutes from "./routes/User_Routes.js";
 import withdrawRoutes from "./routes/Withdraw_Routes.js";
 import donationRoutes from "./routes/Donation_Routes.js";
 import bankdetailRoutes from "./routes/Bankdetail_Routes.js";
+import alertRoutes from "./routes/Alert_Routes.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -33,6 +34,7 @@ app.use("/api/user", userRoutes);
 app.use("/api/withdraw", withdrawRoutes);
 app.use("/api/donation", donationRoutes);
 app.use("/api/bankdetail", bankdetailRoutes);
+app.use("/api/alert", alertRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
