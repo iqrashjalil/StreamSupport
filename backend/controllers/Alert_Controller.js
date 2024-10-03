@@ -17,7 +17,7 @@ const updateAlertSettings = catchAsyncError(async (req, res, next) => {
   if (!newAlertSettings) {
     return next(new ErrorHandler("Alert settings not found", 404));
   }
-  res.status(200).json({ success: true, newAlertSettings });
+  res.status(200).json({ success: true, message: "Alert Settings Updated" });
 });
 
 // Update Image in Alert
@@ -42,7 +42,7 @@ const updateAlertImage = catchAsyncError(async (req, res, next) => {
     return next(new ErrorHandler("Alert settings not found", 404));
   }
 
-  res.status(200).json({ success: true, newAlertSettings });
+  res.status(200).json({ success: true, message: "Alert Image Updated" });
 });
 
 // Update Alert Sound
@@ -67,7 +67,7 @@ const updateAlertSound = catchAsyncError(async (req, res, next) => {
     return next(new ErrorHandler("Alert settings not found", 404));
   }
 
-  res.status(200).json({ success: true, newAlertSettings });
+  res.status(200).json({ success: true, message: "Alert Sound Updated " });
 });
 
 // Add Audio Alerts
