@@ -60,7 +60,7 @@ const Sidebar = () => {
                   </NavLink>
                   <NavLink
                     className="flex items-center gap-2 p-2 ml-5 text-lg transition-all duration-200 rounded group hover:bg-gray-700 text-neutral-50"
-                    to={"/settings"}
+                    to={"/audioalertsettings"}
                   >
                     <MdAudiotrack className="text-2xl transition-all duration-200 group-hover:text-redMain" />{" "}
                     Audio Alert Settings

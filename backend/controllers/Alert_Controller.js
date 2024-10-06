@@ -1,7 +1,9 @@
+import mongoose from "mongoose";
 import { catchAsyncError } from "../middlewares/catchAsyncError.js";
 import alertSettings from "../models/Alert_Model.js";
 import { ErrorHandler } from "../utils/error-handler.js";
 import { renameSync, unlinkSync } from "fs";
+import fs from "fs";
 
 // Update Alert Settings
 
@@ -49,17 +51,25 @@ const updateAlertImage = catchAsyncError(async (req, res, next) => {
 
 const updateAlertSound = catchAsyncError(async (req, res, next) => {
   const streamerId = req.user._id;
+  let userName = req.user.userName; // Assuming you have the username available in req.user
+  userName = userName.replace(/\s+/g, "_");
   if (!req.file) {
     return next(new ErrorHandler("Please upload an audio file", 400));
   }
 
-  const date = Date.now();
-  let fileName = "uploads/alertSound/" + date + req.file.originalname;
+  const filePath = `uploads/alertSound/${userName}/alertSound.${
+    req.file.mimetype.split("/")[1]
+  }`; // Extracting file extension from mimetype
 
-  renameSync(req.file.path, fileName);
+  // Ensure the directory exists, create it if necessary
+  fs.mkdirSync(`uploads/alertSound/${userName}`, { recursive: true });
+
+  // Move and rename the file
+  renameSync(req.file.path, filePath);
+
   const newAlertSettings = await alertSettings.findOneAndUpdate(
     { streamer: streamerId },
-    { alertSound: fileName },
+    { alertSound: filePath },
     { new: true }
   );
 
@@ -98,12 +108,54 @@ const addAudioAlerts = catchAsyncError(async (req, res, next) => {
     return next(new ErrorHandler("Alert settings not found", 404));
   }
 
-  res.status(200).json({ success: true, newAlertSettings });
+  res.status(200).json({ success: true, message: "Audio Alert Uploaded" });
 });
 
+// Update Audio Alert
+
+const updateAudioAlert = catchAsyncError(async (req, res, next) => {
+  const streamerId = req.user._id;
+  const audioAlertId = req.params.id;
+
+  const updatedAudioAlertData = req.body;
+
+  const updatedAlertSettings = await alertSettings.findOneAndUpdate(
+    { streamer: streamerId, "audioAlerts._id": audioAlertId },
+    { $set: { "audioAlerts.$": updatedAudioAlertData } },
+    { new: true }
+  );
+
+  if (!updatedAlertSettings) {
+    return next(new ErrorHandler("Alert settings not found", 404));
+  }
+
+  res.status(200).json({ success: true, message: "Audio Alert Updated" });
+});
+
+// Delete Aduio Alert
+
+const deleteAudioAlert = catchAsyncError(async (req, res, next) => {
+  const streamerId = req.user._id;
+  const audioAlertId = req.params.id;
+  const objectId = new mongoose.Types.ObjectId(audioAlertId);
+  const updatedAlertSettings = await alertSettings.findOneAndUpdate(
+    { streamer: streamerId },
+    { $pull: { audioAlerts: { _id: objectId } } },
+    { new: true }
+  );
+  console.log(updatedAlertSettings);
+
+  if (!updatedAlertSettings) {
+    return next(new ErrorHandler("Alert settings not found", 404));
+  }
+
+  res.status(200).json({ success: true, message: "Audio Alert Deleted" });
+});
 export default {
   updateAlertSettings,
   updateAlertImage,
   updateAlertSound,
   addAudioAlerts,
+  updateAudioAlert,
+  deleteAudioAlert,
 };

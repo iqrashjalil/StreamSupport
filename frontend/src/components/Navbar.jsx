@@ -103,9 +103,18 @@ const Navbar = () => {
             <DropdownMenuContent>
               <DropdownMenuLabel>{user?.userName}</DropdownMenuLabel>
               <DropdownMenuSeparator className="bg-neutral-600" />
-              <DropdownMenuItem onSelect={() => navigate("/streamerdashboard")}>
-                Dashboard
-              </DropdownMenuItem>
+              {user && user?.role == "admin" ? (
+                <DropdownMenuItem onSelect={() => navigate("/admindashboard")}>
+                  Dashboard
+                </DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem
+                  onSelect={() => navigate("/streamerdashboard")}
+                >
+                  Dashboard
+                </DropdownMenuItem>
+              )}
+
               <DropdownMenuItem>
                 Wallet
                 <DropdownMenuShortcut>{user?.wallet}</DropdownMenuShortcut>
@@ -248,11 +257,19 @@ const Navbar = () => {
                 <DropdownMenuContent>
                   <DropdownMenuLabel>{user?.userName}</DropdownMenuLabel>
                   <DropdownMenuSeparator className="bg-neutral-600" />
-                  <DropdownMenuItem
-                    onSelect={() => navigate("/streamerdashboard")}
-                  >
-                    Dashboard
-                  </DropdownMenuItem>
+                  {user && user?.role == "admin" ? (
+                    <DropdownMenuItem
+                      onSelect={() => navigate("/admindashboard")}
+                    >
+                      Dashboard
+                    </DropdownMenuItem>
+                  ) : (
+                    <DropdownMenuItem
+                      onSelect={() => navigate("/streamerdashboard")}
+                    >
+                      Dashboard
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuItem>
                     Wallet{" "}
                     <DropdownMenuShortcut>{user?.wallet}</DropdownMenuShortcut>

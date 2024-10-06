@@ -59,3 +59,31 @@ body {
     transparent
   );
 }
+
+audio::-webkit-media-controls-panel {
+  background-color: #6b7280;
+}
+audio::-webkit-media-controls-play-button {
+  background-color: red;
+  border-radius: 50%;
+}
+
+audio::-webkit-media-controls-current-time-display {
+  color: white;
+}
+
+audio::-webkit-media-controls-time-remaining-display {
+  color: white;
+}
+
+audio::-webkit-media-controls-volume-slider {
+  background-color: red;
+  border-radius: 50px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+audio::-webkit-media-controls-mute-button {
+  background-color: red;
+  border-radius: 50%;
+}

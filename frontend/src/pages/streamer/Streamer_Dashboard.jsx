@@ -161,7 +161,13 @@ const Streamer_Dashboard = () => {
             <h1 className="text-xl text-neutral-50">
               Rs:
               <span className="text-3xl font-extrabold">
-                {new Intl.NumberFormat().format(donationsStats?.totalDonations)}
+                {new Intl.NumberFormat().format(
+                  `${
+                    isNaN(donationsStats?.totalDonations)
+                      ? "0"
+                      : donationsStats?.totalDonations
+                  }`
+                )}
               </span>
             </h1>
             <div className="flex justify-between">
@@ -176,7 +182,11 @@ const Streamer_Dashboard = () => {
               Rs:{" "}
               <span className="text-3xl font-extrabold">
                 {new Intl.NumberFormat().format(
-                  donationsStats?.averageDonation
+                  `${
+                    isNaN(donationsStats?.averageDonation)
+                      ? "0"
+                      : donationsStats?.averageDonation
+                  }`
                 )}
               </span>
             </h1>

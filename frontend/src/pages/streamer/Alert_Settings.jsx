@@ -30,8 +30,8 @@ const Alert_Settings = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.users);
   const { message, error } = useSelector((state) => state.alertSettings);
-  // const [showTooltip, setShowTooltip] = useState(false);
-  // const [showDurationTooltip, setShowDurationTooltip] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [showDurationTooltip, setShowDurationTooltip] = useState(false);
   const [alertAnimation, setAlertAnimation] = useState(
     user?.alertSettings?.alertAnimation
   );
@@ -54,10 +54,9 @@ const Alert_Settings = () => {
     }
   };
 
-  // const [alertDuration, setAlertDuration] = useState([0]);
-  // const [volume, setVolume] = useState([0]);
+  const [alertDuration, setAlertDuration] = useState([0]);
+  const [volume, setVolume] = useState([0]);
 
-  // Set initial values from user.alertSettings on component mount
   useEffect(() => {
     if (user?.alertSettings) {
       setAlertAnimation(user.alertSettings.alertAnimation || "fade in");
@@ -68,15 +67,14 @@ const Alert_Settings = () => {
         minMoneyForMessage: user.alertSettings.minMoneyForMessage || 50,
       });
       if (user?.alertSettings) {
-        // Check if the textToSpeechAlert is explicitly a string "true"
         setIsTextToSpeechAlert(user?.alertSettings?.textToSpeechALert);
+        setVolume([user?.alertSettings?.speechVolume]);
       }
     }
   }, [user]);
   const handleSwitchChange = (checked) => {
     setIsTextToSpeechAlert(checked);
 
-    // Dispatch action with the appropriate value
     dispatch(
       updateAlertSettings({
         textToSpeechALert: checked ? "true" : "false",
@@ -97,17 +95,11 @@ const Alert_Settings = () => {
     }
   };
 
-  // const handleSliderChange = (type, value) => {
-  //   if (type === "alertDuration") {
-  //     setAlertDuration(value);
-  //   }
-  //   if (type === "speechVolume") {
-  //     setVolume(value);
-  //   }
-  //   // Dispatch the updated values to Redux
-  //   dispatch(updateAlertSettings({ [type]: value }));
-  // };
-  // Handle Dropdown Changes
+  const handleSliderChange = (speechVolume, value) => {
+    setVolume(value);
+    dispatch(updateAlertSettings({ speechVolume: `${value}` }));
+  };
+
   const handleDropdownChange = (type, value) => {
     if (type === "alertAnimation") setAlertAnimation(value);
     if (type === "textAnimation") setTextAnimation(value);
@@ -154,7 +146,7 @@ const Alert_Settings = () => {
             <h1 className="text-neutral-50">Alert Image</h1>{" "}
             <Dialog>
               <DialogTrigger asChild>
-                <button className="flex items-center hover:bg-transparent border-2 border-transparent hover:border-redMain duration-200 transition-all justify-center w-[60%] lg:w-[50%] gap-5 p-2 font-semibold bg-gray-500 rounded cursor-pointer text-neutral-50">
+                <button className="flex items-center hover:bg-transparent border-2 border-transparent hover:border-redMain duration-200 transition-all justify-center w-[50%] gap-5 p-2 font-semibold bg-gray-500 rounded cursor-pointer text-neutral-50">
                   Edit Image
                 </button>
               </DialogTrigger>
@@ -363,57 +355,71 @@ const Alert_Settings = () => {
               </h1>
             </div>
             <div className="flex flex-col gap-5">
-              <div className="flex items-center justify-between p-5 border-b border-gray-500">
-                <h1 className="text-neutral-50"> Alert Sound</h1>
-                <label
-                  htmlFor="alertSound"
-                  className="flex  font-semibold items-center gap-5 cursor-pointer justify-center w-[60%] lg:w-[50%]  p-2 bg-gray-500 rounded text-neutral-50"
-                >
-                  Upload Alert Sound{" "}
-                  <FaMusic
-                    className="text-xl "
-                    style={{ color: "#EE82EE", fontSize: "1.25rem" }}
+              <div className="p-5 border-b border-gray-500">
+                <div className="flex items-center justify-between">
+                  <h1 className="text-neutral-50"> Alert Sound</h1>
+                  <label
+                    htmlFor="alertSound"
+                    className="flex  font-semibold items-center gap-5 cursor-pointer justify-center w-[60%] lg:w-[50%]  p-2 bg-gray-500 rounded text-neutral-50"
+                  >
+                    Upload Alert Sound{" "}
+                    <FaMusic
+                      className="text-xl "
+                      style={{ color: "#EE82EE", fontSize: "1.25rem" }}
+                    />
+                  </label>
+
+                  <input
+                    onChange={handleSoundChange}
+                    id="alertSound"
+                    className="hidden"
+                    type="file"
                   />
-                </label>
-                <input
-                  onChange={handleSoundChange}
-                  id="alertSound"
-                  className="hidden"
-                  type="file"
-                />
+                </div>
+                <div className="mt-4">
+                  {user && (
+                    <audio className="w-full" controls>
+                      <source
+                        src={`${serverUrl}/${user?.alertSettings?.alertSound}`}
+                        type="audio/mpeg"
+                      />
+                      Your browser does not support the audio tag.
+                    </audio>
+                  )}
+                </div>
               </div>
               <div className="flex items-center justify-between gap-5 px-5">
                 <h1 className="text-neutral-50">Enable Text To Speech</h1>{" "}
                 <div>
                   <Switch
-                    checked={isTextToSpeechAlert} // Controlled component
+                    checked={isTextToSpeechAlert}
                     onCheckedChange={handleSwitchChange}
                   />
                 </div>
               </div>
               <div className="flex items-center justify-between gap-5 p-5 border-t border-gray-500">
                 <h1 className="text-neutral-50">Volume</h1>{" "}
-                {/* <div className="relative w-[50%]">
-                 
-                  <Slider
-                
-                    max={100}
-                    step={1}
-                    onChange={(e) =>
-                      handleSliderChange("speechVolume", e.target.value)
-                    }
-                    onMouseEnter={() => setShowTooltip(true)}
-                    onMouseLeave={() => setShowTooltip(false)}
-                    onMouseDown={() => setShowTooltip(true)}
-                    onMouseUp={() => setShowTooltip(false)}
-                    className="relative cursor-pointer"
-                  />
-
+                <div className="relative w-[50%]">
+                  {user && (
+                    <Slider
+                      max={100}
+                      step={1}
+                      defaultValue={[user?.alertSettings?.speechVolume]}
+                      onValueChange={(value) =>
+                        handleSliderChange("speechVolume", value[0])
+                      }
+                      onMouseEnter={() => setShowTooltip(true)}
+                      onMouseLeave={() => setShowTooltip(false)}
+                      onMouseDown={() => setShowTooltip(true)}
+                      onMouseUp={() => setShowTooltip(false)}
+                      className="relative cursor-pointer"
+                    />
+                  )}
                   {showTooltip && (
                     <div
                       className="absolute p-2 text-sm text-white transform -translate-x-1/2 bg-black rounded-md shadow-md -top-[50px]"
                       style={{
-                        left: `${volume[0]}%`,
+                        left: `${volume}%`,
                       }}
                     >
                       {volume}
@@ -421,7 +427,7 @@ const Alert_Settings = () => {
                       <div className="absolute left-1/2 transform -translate-x-1/2 -bottom-[6px] w-3 h-3 bg-black rotate-45"></div>
                     </div>
                   )}
-                </div> */}
+                </div>
               </div>
             </div>
           </div>

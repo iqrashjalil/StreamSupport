@@ -33,4 +33,11 @@ router
     alert_Controller.addAudioAlerts
   );
 
+router
+  .route("/updateaudioalert/:id")
+  .patch(authMiddleware, alert_Controller.updateAudioAlert);
+router
+  .route("/deleteaudioalert/:id")
+  .patch(authMiddleware, alert_Controller.deleteAudioAlert);
+
 export default router;

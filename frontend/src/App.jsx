@@ -15,7 +15,7 @@ import Edit_Profile from "./pages/Edit_Profile";
 import Protected_Route from "./Protected_Route";
 import Wallet from "./pages/streamer/Wallet";
 import Alert_Settings from "./pages/streamer/Alert_Settings";
-
+import AudioAlert_Settings from "./pages/streamer/AudioAlert_Settings";
 function App() {
   const dispatch = useDispatch();
   const location = useLocation();
@@ -32,6 +32,7 @@ function App() {
     "/editprofile/:id",
     "/wallet",
     "/alertsettings",
+    "/audioalertsettings",
     "/audioalertsettings",
   ];
 
@@ -81,8 +82,15 @@ function App() {
             </Protected_Route>
           }
         />
+        <Route
+          path="/audioalertsettings"
+          element={
+            <Protected_Route roleRequired="streamer">
+              <AudioAlert_Settings />
+            </Protected_Route>
+          }
+        />
       </Routes>
-      {/* Only show Footer if the current route is NOT in the noFooterRoutes */}
       {!isNoFooterRoute && <Footer />}
     </>
   );

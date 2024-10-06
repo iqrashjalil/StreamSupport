@@ -14,6 +14,7 @@ const alertSchema = new mongoose.Schema({
   },
   alertSound: {
     type: String,
+    default: "uploads/alertSound/defaultSound.mp3",
   },
   alertImage: {
     type: String,
@@ -51,12 +52,14 @@ const alertSchema = new mongoose.Schema({
     {
       title: {
         type: String,
+        default: "NoNamed Audio",
       },
       soundFile: {
         type: String,
       },
       money: {
         type: Number,
+        default: 50,
       },
     },
   ],
