@@ -89,10 +89,10 @@ const AudioAlert_Settings = () => {
 
   return (
     <div className="flex w-full">
-      <section className="w-[15%] block">
+      <section className="w-[15%] hidden lg:block">
         <Sidebar />
       </section>
-      <section className="p-5 w-full lg:w-[85%] flex gap-[10%] font-rajdhani">
+      <section className="p-5 w-full lg:w-[85%] flex md:flex-row justify-center flex-col gap-10 lg:gap-[10%] font-rajdhani">
         <div className="lg:w-[45%] bg-gray-600 rounded">
           <div className="flex justify-center p-5 border-b border-gray-500">
             <h1 className="text-lg font-extrabold text-neutral-50">
@@ -202,7 +202,7 @@ const AudioAlert_Settings = () => {
           </div>
         </div>
 
-        <div className="w-[45%] bg-gray-600 rounded">
+        <div className="w-full md:w-[45%] bg-gray-600 rounded">
           {" "}
           <div className="flex justify-center p-5 border-b border-gray-500">
             <h1 className="text-lg font-extrabold text-neutral-50">

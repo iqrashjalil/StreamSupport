@@ -166,7 +166,7 @@ const getAllUsers = catchAsyncError(async (req, res, next) => {
   res.status(200).json({
     success: true,
     users,
-    totalUsers, // Useful for frontend to determine if more users need to be loaded
+    totalUsers,
     page,
     totalPages: Math.ceil(totalUsers / limit),
   });

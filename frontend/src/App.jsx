@@ -16,6 +16,8 @@ import Protected_Route from "./Protected_Route";
 import Wallet from "./pages/streamer/Wallet";
 import Alert_Settings from "./pages/streamer/Alert_Settings";
 import AudioAlert_Settings from "./pages/streamer/AudioAlert_Settings";
+import Admin_Dashboard from "./pages/Admin/Admin_Dashboard";
+import All_Users from "./pages/Admin/All_Users";
 function App() {
   const dispatch = useDispatch();
   const location = useLocation();
@@ -34,6 +36,8 @@ function App() {
     "/alertsettings",
     "/audioalertsettings",
     "/audioalertsettings",
+    "/admindashboard",
+    "/allusers",
   ];
 
   const isNoFooterRoute = noFooterRoutes.some((route) => {
@@ -60,7 +64,7 @@ function App() {
         <Route
           path="/editprofile/:id"
           element={
-            <Protected_Route roleRequired="streamer">
+            <Protected_Route>
               <Edit_Profile />
             </Protected_Route>
           }
@@ -87,6 +91,23 @@ function App() {
           element={
             <Protected_Route roleRequired="streamer">
               <AudioAlert_Settings />
+            </Protected_Route>
+          }
+        />
+
+        <Route
+          path="/admindashboard"
+          element={
+            <Protected_Route roleRequired="admin">
+              <Admin_Dashboard />
+            </Protected_Route>
+          }
+        />
+        <Route
+          path="/allusers"
+          element={
+            <Protected_Route roleRequired="admin">
+              <All_Users />
             </Protected_Route>
           }
         />

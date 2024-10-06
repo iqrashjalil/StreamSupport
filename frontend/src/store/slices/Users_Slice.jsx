@@ -145,6 +145,37 @@ export const updateProfile = createAsyncThunk(
   }
 );
 
+export const getAllUsers = createAsyncThunk(
+  "users/getAllUsers",
+  async ({ page, searchQuery }, { rejectWithValue }) => {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      };
+
+      // Construct the URL with query parameters
+      let url = `${serverUrl}/api/user/getallusers?`;
+      if (page) {
+        url += `page=${page}&`; // Append page number if available
+      }
+      if (searchQuery) {
+        url += `searchQuery=${searchQuery}`; // Append search query if available
+      }
+
+      // Make the API request
+      const { data } = await axios.get(url, config);
+
+      return data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  }
+);
+
 const usersSlice = createSlice({
   name: "users",
   initialState,
@@ -240,6 +271,23 @@ const usersSlice = createSlice({
         state.user = action.payload.user;
       })
       .addCase(updateProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Get All Users
+      .addCase(getAllUsers.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getAllUsers.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.totalUsers = action.payload.totalUsers;
+        state.allUsers = action.payload.users;
+        state.totalPages = action.payload.totalPages;
+        state.currentPage = action.payload.page;
+      })
+      .addCase(getAllUsers.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
