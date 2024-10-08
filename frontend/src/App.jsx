@@ -18,6 +18,7 @@ import Alert_Settings from "./pages/streamer/Alert_Settings";
 import AudioAlert_Settings from "./pages/streamer/AudioAlert_Settings";
 import Admin_Dashboard from "./pages/Admin/Admin_Dashboard";
 import All_Users from "./pages/Admin/All_Users";
+import Withdraw_Requests from "./pages/Admin/Withdraw_Requests";
 function App() {
   const dispatch = useDispatch();
   const location = useLocation();
@@ -38,6 +39,7 @@ function App() {
     "/audioalertsettings",
     "/admindashboard",
     "/allusers",
+    "/allwithdraws",
   ];
 
   const isNoFooterRoute = noFooterRoutes.some((route) => {
@@ -108,6 +110,14 @@ function App() {
           element={
             <Protected_Route roleRequired="admin">
               <All_Users />
+            </Protected_Route>
+          }
+        />
+        <Route
+          path="/allwithdraws"
+          element={
+            <Protected_Route roleRequired="admin">
+              <Withdraw_Requests />
             </Protected_Route>
           }
         />

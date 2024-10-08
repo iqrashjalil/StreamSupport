@@ -26,9 +26,7 @@ import {
 
 const All_Users = () => {
   const dispatch = useDispatch();
-  const { allUsers, totalPages, currentPage } = useSelector(
-    (state) => state.users
-  );
+  const { allUsers, totalPages } = useSelector((state) => state.users);
   const [searchQuery, setSearchQuery] = useState();
   const searchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -140,7 +138,7 @@ const All_Users = () => {
 
   return (
     <div className="flex w-full">
-      <section className="w-[15%] block">
+      <section className="w-[15%] hidden lg:block">
         <Sidebar />
       </section>
       <section className="p-5 w-full lg:w-[85%] font-rajdhani">
@@ -149,17 +147,37 @@ const All_Users = () => {
             A list of your Top Supporters of Current Week
           </TableCaption>
           <TableHeader>
-            <div className="relative">
-              <Input
-                value={searchQuery}
-                onChange={searchChange}
-                placeholder="Enter Name To Search"
-              />
-              <FaSearch
-                onClick={handleSearch}
-                className="absolute top-0 right-0 p-2 text-[40px] cursor-pointer bg-gray-500 text-redMain"
-              />
-            </div>
+            <TableRow className="hidden border-none md:flex">
+              <TableCell colSpan={2} className="w-full text-right ">
+                <div className="relative">
+                  <Input
+                    value={searchQuery}
+                    onChange={searchChange}
+                    placeholder="Enter Name To Search"
+                  />
+                  <FaSearch
+                    onClick={handleSearch}
+                    className="absolute top-0 right-0 p-2 text-[40px] cursor-pointer bg-gray-500 text-redMain"
+                  />
+                </div>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell colSpan={4} className="w-full text-right md:hidden ">
+                <div className="relative">
+                  <Input
+                    value={searchQuery}
+                    onChange={searchChange}
+                    placeholder="Enter Name To Search"
+                  />
+                  <FaSearch
+                    onClick={handleSearch}
+                    className="absolute top-0 right-0 p-2 text-[40px] cursor-pointer bg-gray-500 text-redMain"
+                  />
+                </div>
+              </TableCell>
+            </TableRow>
+
             <TableRow>
               <TableHead className="w-[25%]">Name</TableHead>
               <TableHead className="w-[25%]">Email</TableHead>
@@ -173,7 +191,9 @@ const All_Users = () => {
                 <TableRow key={index}>
                   <TableCell className="font-medium">{user.userName}</TableCell>
                   <TableCell className="font-medium">{user.email}</TableCell>
-                  <TableCell className="font-medium">{user.wallet}</TableCell>
+                  <TableCell className="text-xl font-bold">
+                    {new Intl.NumberFormat().format(user.wallet)}
+                  </TableCell>
                   <TableCell
                     className={`font-medium ${
                       user.role === "admin"

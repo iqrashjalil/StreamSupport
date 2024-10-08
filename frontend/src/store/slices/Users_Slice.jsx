@@ -156,21 +156,18 @@ export const getAllUsers = createAsyncThunk(
         withCredentials: true,
       };
 
-      // Construct the URL with query parameters
       let url = `${serverUrl}/api/user/getallusers?`;
       if (page) {
-        url += `page=${page}&`; // Append page number if available
+        url += `page=${page}&`;
       }
       if (searchQuery) {
-        url += `searchQuery=${searchQuery}`; // Append search query if available
+        url += `searchQuery=${searchQuery}`;
       }
 
-      // Make the API request
       const { data } = await axios.get(url, config);
 
       return data;
     } catch (error) {
-      console.log(error);
       return rejectWithValue(error.response?.data?.message || error.message);
     }
   }

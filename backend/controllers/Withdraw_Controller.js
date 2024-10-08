@@ -44,8 +44,26 @@ const addWithdrawReuest = catchAsyncError(async (req, res, next) => {
 // Get All Withdraw Requests
 
 const getAllWithdrawRequests = catchAsyncError(async (req, res, next) => {
-  const withdraws = await Withdraw.find().populate("streamer");
-  res.status(200).json({ success: true, withdraws });
+  const { page = 1 } = req.query; // Get search query and page from request params
+
+  // Set default limit to 10 users per page
+  const limit = 10;
+  const skip = (page - 1) * limit;
+
+  const withdraws = await Withdraw.find()
+    .skip(skip)
+    .limit(limit)
+    .populate("streamer");
+
+  const totalWithdraws = await Withdraw.countDocuments();
+  const pendingRequests = await Withdraw.find({ status: "Pending" });
+  res.status(200).json({
+    success: true,
+    totalWithdraws: totalWithdraws,
+    pendingRequests: pendingRequests.length,
+    totalPages: Math.ceil(totalWithdraws / limit),
+    withdraws: withdraws,
+  });
 });
 
 // Approve Withdraw Request
@@ -55,11 +73,10 @@ const updateWithdrawRequest = catchAsyncError(async (req, res, next) => {
   const { status, rejectReason } = req.body;
 
   // Ensure status is either "Approved" or "Rejected"
-  if (!["Approved", "Rejected"].includes(status)) {
+  if (!["Approved", "Rejected", "Pending"].includes(status)) {
     return next(new ErrorHandler("Invalid status provided", 400));
   }
 
-  // Prepare the update fields based on status
   let updateFields = {};
 
   if (status === "Approved") {
@@ -68,7 +85,6 @@ const updateWithdrawRequest = catchAsyncError(async (req, res, next) => {
       approvedAt: Date.now(),
     };
   } else if (status === "Rejected") {
-    // Reject reason must be provided if status is Rejected
     if (!rejectReason) {
       return next(
         new ErrorHandler("Reject reason is required for Rejected status", 400)
@@ -90,7 +106,7 @@ const updateWithdrawRequest = catchAsyncError(async (req, res, next) => {
     return next(new ErrorHandler("Withdraw request not found", 404));
   }
 
-  res.status(200).json({ success: true, withdraw });
+  res.status(200).json({ success: true, message: "Status Updated" });
 });
 
 // Get Withdraw Request with Id:

@@ -4,13 +4,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllUsers } from "../../store/slices/Users_Slice";
 import { BsCurrencyDollar } from "react-icons/bs";
 import { IoPeople } from "react-icons/io5";
+import { getAllWithdrawRequests } from "../../store/slices/Withdraw_Slice";
 
 const Admin_Dashboard = () => {
   const { totalUsers } = useSelector((state) => state.users);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getAllUsers());
+    dispatch(getAllUsers({ page: 1 }));
+    dispatch(getAllWithdrawRequests());
   }, [dispatch]);
+
   return (
     <div className="flex w-full">
       <section className="w-[15%] block">

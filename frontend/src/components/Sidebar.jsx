@@ -95,7 +95,7 @@ const Sidebar = () => {
                         : "hover:bg-gray-700 text-neutral-50"
                     }`
                   }
-                  to={"/help"}
+                  to={"/allwithdraws"}
                 >
                   {({ isActive }) => (
                     <>
@@ -106,7 +106,7 @@ const Sidebar = () => {
                             : "text-white group-hover:text-redMain"
                         }`}
                       />
-                      Help
+                      Withdraw Requests
                     </>
                   )}
                 </NavLink>

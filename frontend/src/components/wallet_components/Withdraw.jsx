@@ -16,7 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   addWithdrawRequest,
   getUserWithdrawRequests,
-  resetSuccess,
+  resetMessage,
 } from "../../store/slices/Withdraw_Slice";
 import { toast } from "react-toastify";
 
@@ -55,7 +55,7 @@ const Withdraw = () => {
   useEffect(() => {
     if (success) {
       toast.success("Withdraw Rquest Successfully Added");
-      dispatch(resetSuccess());
+      dispatch(resetMessage());
     }
     if (error) {
       toast.error(error);
