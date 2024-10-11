@@ -6,6 +6,7 @@ const initialState = {
   loading: false,
   error: null,
   success: false,
+  recentDonations: [],
 };
 
 export const getWeekEarnings = createAsyncThunk(
@@ -82,13 +83,37 @@ export const getAllDonations = createAsyncThunk(
 
 export const getRecentDonations = createAsyncThunk(
   "donations/getRecentDonations",
-  async (id, { rejectWithValue }) => {
+  async ({ id, page }, { rejectWithValue }) => {
+    try {
+      const config = {
+        withCredentials: true,
+      };
+
+      let url = `${serverUrl}/api/donation/getrecentdonations/${id}?`;
+      if (page) {
+        url += `page=${page}`;
+      }
+
+      const { data } = await axios.get(url, config);
+      console.log(data);
+      return data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
+// Get All Users Donation Year
+export const getYearDonationsOfAllUsers = createAsyncThunk(
+  "donations/getYearDonationsOfAllUsers",
+  async (_, { rejectWithValue }) => {
     try {
       const config = {
         withCredentials: true,
       };
       const { data } = await axios.get(
-        `${serverUrl}/api/donation/getrecentdonations/${id}`,
+        `${serverUrl}/api/donation/getyeardonationsofallusers`,
         config
       );
       return data;
@@ -170,8 +195,24 @@ const donationSlice = createSlice({
         state.loading = false;
         state.error = null;
         state.recentDonations = action.payload.donations;
+        state.totalDonationCount = action.payload.totalSuperchats;
+        state.totalPages = action.payload.totalPages;
       })
       .addCase(getRecentDonations.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(getYearDonationsOfAllUsers.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getYearDonationsOfAllUsers.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.recentDonations = action.payload.donations;
+        state.allUsersYearlyDonations = action.payload.donations;
+      })
+      .addCase(getYearDonationsOfAllUsers.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

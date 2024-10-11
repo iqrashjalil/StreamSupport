@@ -8,7 +8,7 @@ router
   .route("/addbankdetail")
   .post(authMiddleware, Bankdetail_Controller.addBankDetails);
 router
-  .route("/getbankdetail")
+  .route("/getbankdetail/:id")
   .get(authMiddleware, Bankdetail_Controller.getBankDetails);
 router
   .route("/deletebankdetail/:id")

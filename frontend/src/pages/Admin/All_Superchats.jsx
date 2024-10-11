@@ -11,9 +11,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useEffect, useState } from "react";
-import { getAllUsers } from "../../store/slices/Users_Slice";
-import { Input } from "@/components/ui/input";
-import { FaSearch } from "react-icons/fa";
 import {
   Pagination,
   PaginationContent,
@@ -23,28 +20,21 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { Button } from "@/components/ui/button";
-import { FaEye } from "react-icons/fa6";
-import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { getRecentDonations } from "../../store/slices/Donation_Slice";
 
-const All_Users = () => {
-  const navigate = useNavigate();
+const All_Superchats = () => {
+  const { id } = useParams();
   const dispatch = useDispatch();
-  const { allUsers, totalPages } = useSelector((state) => state.users);
-  const [searchQuery, setSearchQuery] = useState();
-  const searchChange = (e) => {
-    setSearchQuery(e.target.value);
-  };
-  const handleSearch = () => {
-    dispatch(getAllUsers({ searchQuery: searchQuery }));
-  };
-  // State to manage the current page
+  const { totalPages, recentDonations } = useSelector(
+    (state) => state.donations
+  );
+
   const [page, setPage] = useState(1);
 
-  // Fetch users on page change
   useEffect(() => {
-    dispatch(getAllUsers({ page: page })); // Pass the page as a query parameter
-  }, [dispatch, page]);
+    dispatch(getRecentDonations({ id, page: page }));
+  }, [dispatch, id, page]);
 
   // Handle previous page
   const handlePreviousPage = () => {
@@ -62,20 +52,21 @@ const All_Users = () => {
 
   // Handle specific page click
   const handlePageClick = (pageNumber) => {
-    setPage(pageNumber);
-  };
-
-  const handleViewClick = (id) => {
-    navigate(`/userprofile/${id}`);
+    if (pageNumber > 0 && pageNumber <= totalPages) {
+      setPage(pageNumber);
+    }
   };
 
   // Function to render pagination items dynamically
   const renderPaginationItems = () => {
     const items = [];
 
+    // Prevent rendering pagination if total pages are less than 2
     if (totalPages < 2) {
       return null;
     }
+
+    // Handle first page scenario
     if (page === 1) {
       items.push(
         <PaginationItem key={1}>
@@ -85,23 +76,54 @@ const All_Users = () => {
           >
             1
           </PaginationLink>
-        </PaginationItem>,
-        <PaginationItem key={2}>
-          <PaginationLink onClick={() => handlePageClick(2)}>2</PaginationLink>
-        </PaginationItem>,
-        <PaginationItem key={3}>
-          <PaginationLink onClick={() => handlePageClick(3)}>3</PaginationLink>
-        </PaginationItem>,
-        totalPages > 3 && <PaginationEllipsis key="ellipsis" />
+        </PaginationItem>
       );
+
+      // Add the next page if it exists
+      if (totalPages > 1) {
+        items.push(
+          <PaginationItem key={2}>
+            <PaginationLink onClick={() => handlePageClick(2)}>
+              2
+            </PaginationLink>
+          </PaginationItem>
+        );
+      }
+
+      // Add the third page if total pages are greater than 2
+      if (totalPages > 2) {
+        items.push(
+          <PaginationItem key={3}>
+            <PaginationLink onClick={() => handlePageClick(3)}>
+              3
+            </PaginationLink>
+          </PaginationItem>
+        );
+      }
+
+      // If there are more than 3 pages, add an ellipsis
+      if (totalPages > 3) {
+        items.push(<PaginationEllipsis key="ellipsis" />);
+      }
+
+      // Handle last page scenario
     } else if (page === totalPages) {
+      if (totalPages > 3) {
+        items.push(<PaginationEllipsis key="ellipsis" />);
+      }
+
+      // Render the last two pages
+      if (totalPages >= 2) {
+        items.push(
+          <PaginationItem key={totalPages - 2}>
+            <PaginationLink onClick={() => handlePageClick(totalPages - 2)}>
+              {totalPages - 2}
+            </PaginationLink>
+          </PaginationItem>
+        );
+      }
+
       items.push(
-        totalPages > 3 && <PaginationEllipsis key="ellipsis" />,
-        <PaginationItem key={totalPages - 2}>
-          <PaginationLink onClick={() => handlePageClick(totalPages - 2)}>
-            {totalPages - 2}
-          </PaginationLink>
-        </PaginationItem>,
         <PaginationItem key={totalPages - 1}>
           <PaginationLink onClick={() => handlePageClick(totalPages - 1)}>
             {totalPages - 1}
@@ -116,9 +138,14 @@ const All_Users = () => {
           </PaginationLink>
         </PaginationItem>
       );
+
+      // Handle middle pages
     } else {
+      if (page > 2) {
+        items.push(<PaginationEllipsis key="ellipsis-left" />);
+      }
+
       items.push(
-        page > 2 && <PaginationEllipsis key="ellipsis-left" />,
         <PaginationItem key={page - 1}>
           <PaginationLink onClick={() => handlePageClick(page - 1)}>
             {page - 1}
@@ -136,9 +163,12 @@ const All_Users = () => {
           <PaginationLink onClick={() => handlePageClick(page + 1)}>
             {page + 1}
           </PaginationLink>
-        </PaginationItem>,
-        page < totalPages - 1 && <PaginationEllipsis key="ellipsis-right" />
+        </PaginationItem>
       );
+
+      if (page < totalPages - 1) {
+        items.push(<PaginationEllipsis key="ellipsis-right" />);
+      }
     }
 
     return items;
@@ -155,72 +185,32 @@ const All_Users = () => {
             A list of your Top Supporters of Current Week
           </TableCaption>
           <TableHeader>
-            <TableRow className="hidden border-none md:flex">
-              <TableCell colSpan={2} className="w-full text-right ">
-                <div className="relative">
-                  <Input
-                    value={searchQuery}
-                    onChange={searchChange}
-                    placeholder="Enter Name To Search"
-                  />
-                  <FaSearch
-                    onClick={handleSearch}
-                    className="absolute top-0 right-0 p-2 text-[40px] cursor-pointer bg-gray-500 text-redMain"
-                  />
-                </div>
-              </TableCell>
-            </TableRow>
             <TableRow>
-              <TableCell colSpan={4} className="w-full text-right md:hidden ">
-                <div className="relative">
-                  <Input
-                    value={searchQuery}
-                    onChange={searchChange}
-                    placeholder="Enter Name To Search"
-                  />
-                  <FaSearch
-                    onClick={handleSearch}
-                    className="absolute top-0 right-0 p-2 text-[40px] cursor-pointer bg-gray-500 text-redMain"
-                  />
-                </div>
-              </TableCell>
-            </TableRow>
-
-            <TableRow>
-              <TableHead className="w-[20%]">Name</TableHead>
-              <TableHead className="w-[20%]">Email</TableHead>
-              <TableHead className="w-[20%]">Wallet</TableHead>
-              <TableHead className="w-[20%]">Role</TableHead>
-              <TableHead className="w-[20%]">Actions</TableHead>
+              <TableHead className="w-[10%]">Name</TableHead>
+              <TableHead className="w-[20%]">Amount</TableHead>
+              <TableHead className="w-[60%]">Message</TableHead>
+              <TableHead className="w-[10%]">Tranasction Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {allUsers &&
-              allUsers.map((user, index) => (
+            {Array.isArray(recentDonations) &&
+              recentDonations?.map((superchat, index) => (
                 <TableRow key={index}>
-                  <TableCell className="font-medium">{user.userName}</TableCell>
-                  <TableCell className="font-medium">{user.email}</TableCell>
-                  <TableCell className="text-xl font-bold">
-                    {new Intl.NumberFormat().format(user.wallet)}
+                  <TableCell className="font-medium">
+                    {superchat.donatorName}
                   </TableCell>
-                  <TableCell
-                    className={`font-medium ${
-                      user.role === "admin"
-                        ? "text-redMain font-extrabold"
-                        : "text-lime-400"
-                    }`}
-                  >
-                    {user.role}
+                  <TableCell className="flex gap-2 font-medium">
+                    Rs:
+                    <span className="bg-green-500 text-neutral-50 font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
+                      {superchat.amount}
+                    </span>
                   </TableCell>
                   <TableCell className="font-medium">
-                    {" "}
-                    <Button
-                      onClick={() => handleViewClick(user._id)}
-                      variant="secondary"
-                      className="gap-1 bg-blue-600 border-blue-600 hover:bg-blue-700 hover:border-blue-700"
-                    >
-                      View <FaEye />
-                    </Button>
+                    {superchat.message}
+                  </TableCell>
+
+                  <TableCell className="font-medium">
+                    {superchat.transactionStatus}
                   </TableCell>
                 </TableRow>
               ))}
@@ -262,4 +252,4 @@ const All_Users = () => {
   );
 };
 
-export default All_Users;
+export default All_Superchats;

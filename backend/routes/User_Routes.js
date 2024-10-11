@@ -28,4 +28,5 @@ router
   .route("/getallusers")
   .get(authMiddleware, isAdmin, User_Controller.getAllUsers);
 router.route("/gettopstreamers").get(User_Controller.getTopStreamers);
+router.route("/getsingleuser/:id").get(User_Controller.getSingleUser);
 export default router;

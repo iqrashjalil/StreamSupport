@@ -37,13 +37,13 @@ export const addBankdetail = createAsyncThunk(
 // Get Bank Detail
 export const getBankdetail = createAsyncThunk(
   "bankdetails/getBankdetail",
-  async (_, { rejectWithValue }) => {
+  async (id, { rejectWithValue }) => {
     try {
       const config = {
         withCredentials: true,
       };
       const { data } = await axios.get(
-        `${serverUrl}/api/bankdetail/getbankdetail`,
+        `${serverUrl}/api/bankdetail/getbankdetail/${id}`,
         config
       );
       return data;

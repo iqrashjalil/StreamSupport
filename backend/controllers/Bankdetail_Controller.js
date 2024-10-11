@@ -25,7 +25,7 @@ const addBankDetails = catchAsyncError(async (req, res, next) => {
 // Get bank details
 
 const getBankDetails = catchAsyncError(async (req, res, next) => {
-  const streamerId = req.user._id;
+  const streamerId = req.params.id;
 
   const bankdetail = await Bankdetail.find({ streamer: streamerId });
 

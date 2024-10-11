@@ -59,15 +59,15 @@ const Edit_Profile = () => {
       <section className="w-[15%]">
         <Sidebar />
       </section>
-      <section className="p-5 w-[85%] font-rajdhani">
+      <section className="p-5 lg:w-[85%] w-full font-rajdhani">
         <h1 className="flex justify-center mt-10 text-4xl font-extrabold text-redMain">
           Edit Profile
         </h1>
         <form
-          className="flex justify-center w-full gap-10"
+          className="flex flex-col-reverse justify-center w-full gap-10 md:flex-row"
           onSubmit={handleSubmit}
         >
-          <div className="flex flex-col gap-10 w-[45%]">
+          <div className="flex flex-col gap-10 w-full md:w-[45%]">
             <div>
               <Label className="text-neutral-50">Username</Label>
               <Input
@@ -110,7 +110,7 @@ const Edit_Profile = () => {
               Update Profile
             </Button>
           </div>
-          <div className="w-[45%] flex justify-center items-center gap-5">
+          <div className="md:w-[45%] w-full flex justify-center items-center gap-5">
             <div className="flex items-center justify-center p-1 border-2 border-redMain w-96 h-96">
               <LazyLoadImage
                 className="w-full h-full "

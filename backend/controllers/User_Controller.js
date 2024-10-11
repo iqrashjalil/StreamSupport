@@ -175,11 +175,38 @@ const getAllUsers = catchAsyncError(async (req, res, next) => {
 const getTopStreamers = catchAsyncError(async (req, res, next) => {
   const userId = req.params.id;
 
-  const streamers = await User.find({ role: "streamer" }).sort({
-    totalDonations: -1,
-  });
+  const streamers = await User.find({ role: "streamer" })
+    .sort({
+      totalDonations: -1,
+    })
+    .limit(10);
 
-  res.status(200).json({ success: true, topStreamers: streamers });
+  const totalBalanace = await User.aggregate([
+    {
+      $group: {
+        _id: null,
+        totalWalletBalance: { $sum: "$wallet" },
+      },
+    },
+  ]);
+
+  res.status(200).json({
+    success: true,
+    topStreamers: streamers,
+    totalBalance:
+      totalBalanace.length > 0 ? totalBalanace[0].totalWalletBalance : 0,
+  });
+});
+
+// Get Single User
+
+const getSingleUser = catchAsyncError(async (req, res, next) => {
+  const userId = req.params.id;
+  const user = await User.findById(userId).populate("alertSettings");
+  if (!user) {
+    return next(new ErrorHandler("User not found", 404));
+  }
+  res.status(200).json({ success: true, user });
 });
 
 export default {
@@ -191,4 +218,5 @@ export default {
   deleteUser,
   getAllUsers,
   getTopStreamers,
+  getSingleUser,
 };

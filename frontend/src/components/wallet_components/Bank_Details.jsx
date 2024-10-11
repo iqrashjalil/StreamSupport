@@ -26,6 +26,7 @@ const Bank_Details = () => {
   const { message, error, bankDetails } = useSelector(
     (state) => state.bankdetails
   );
+  const { user } = useSelector((state) => state.users);
 
   const isNumeric = (input) => {
     const regex = /^\d+$/;
@@ -51,13 +52,13 @@ const Bank_Details = () => {
     }
 
     dispatch(addBankdetail(bankDetails));
-    dispatch(getBankdetail());
+    dispatch(getBankdetail(user?._id));
   };
 
   const handleDelete = async (id) => {
     try {
-      await dispatch(deleteBankdetail(id)).unwrap(); // Wait for delete to complete
-      dispatch(getBankdetail()); // Fetch updated bank details after deletion
+      await dispatch(deleteBankdetail(id)).unwrap();
+      dispatch(getBankdetail(user?._id));
     } catch (error) {
       toast.error(error);
     }
@@ -74,8 +75,8 @@ const Bank_Details = () => {
   }, [dispatch, error, message]);
 
   useEffect(() => {
-    dispatch(getBankdetail());
-  }, [dispatch]);
+    dispatch(getBankdetail(user?._id));
+  }, [dispatch, user?._id]);
   return (
     <div>
       <div>

@@ -173,6 +173,28 @@ export const getAllUsers = createAsyncThunk(
   }
 );
 
+// Update Profile
+
+export const getSingleUser = createAsyncThunk(
+  "users/getSingleUser",
+  async (id, { rejectWithValue }) => {
+    try {
+      const config = {
+        withCredentials: true,
+      };
+      const { data } = await axios.get(
+        `${serverUrl}/api/user/getsingleuser/${id}`,
+        config
+      );
+      console.log(data);
+      return data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  }
+);
+
 const usersSlice = createSlice({
   name: "users",
   initialState,
@@ -194,6 +216,7 @@ const usersSlice = createSlice({
         state.loading = false;
         state.error = null;
         state.topStreamers = action.payload.topStreamers;
+        state.totalBalance = action.payload.totalBalance;
       })
       .addCase(getTopStreamers.rejected, (state, action) => {
         state.loading = false;
@@ -285,6 +308,20 @@ const usersSlice = createSlice({
         state.currentPage = action.payload.page;
       })
       .addCase(getAllUsers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Get Single User
+      .addCase(getSingleUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getSingleUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.userDetails = action.payload.user;
+      })
+      .addCase(getSingleUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

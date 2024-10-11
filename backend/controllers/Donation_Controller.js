@@ -370,22 +370,140 @@ const getYearDonations = catchAsyncError(async (req, res, next) => {
   res.status(200).json({ success: true, donations: monthDonations });
 });
 
+// Get Year Donations for Admin Of All Users
+
+const getYearDonationsOfAllUsers = catchAsyncError(async (req, res, next) => {
+  const currentDate = new Date();
+  const twelveMonthsAgo = moment(currentDate)
+    .subtract(11, "months")
+    .startOf("month")
+    .toDate();
+
+  // Verify if donations exist in the date range before aggregating
+  const donationsCheck = await Donation.find({
+    createdAt: {
+      $gte: twelveMonthsAgo,
+      $lte: currentDate,
+    },
+  });
+
+  // Aggregation pipeline with filtering by streamer_id
+  const donations = await Donation.aggregate([
+    {
+      $match: {
+        createdAt: {
+          $gte: twelveMonthsAgo, // Get donations from the last 12 months
+          $lte: currentDate,
+        },
+      },
+    },
+    {
+      $group: {
+        _id: {
+          year: { $year: "$createdAt" }, // Group by the 'createdAt' field
+          month: { $month: "$createdAt" }, // Group by the 'createdAt' field
+        },
+        totalAmount: { $sum: "$amount" }, // Sum donations per month
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        year: "$_id.year",
+        month: "$_id.month",
+        totalAmount: 1,
+      },
+    },
+    { $sort: { year: 1, month: 1 } }, // Sort by year and month
+  ]);
+
+  // Initialize an object to hold donation data for each month
+  const monthDonations = {
+    jan: 0,
+    feb: 0,
+    mar: 0,
+    apr: 0,
+    may: 0,
+    jun: 0,
+    jul: 0,
+    aug: 0,
+    sep: 0,
+    oct: 0,
+    nov: 0,
+    dec: 0,
+  };
+
+  // Map the aggregation results to the monthDonations object
+  donations.forEach((donation) => {
+    switch (donation.month) {
+      case 1:
+        monthDonations.jan += donation.totalAmount;
+        break;
+      case 2:
+        monthDonations.feb += donation.totalAmount;
+        break;
+      case 3:
+        monthDonations.mar += donation.totalAmount;
+        break;
+      case 4:
+        monthDonations.apr += donation.totalAmount;
+        break;
+      case 5:
+        monthDonations.may += donation.totalAmount;
+        break;
+      case 6:
+        monthDonations.jun += donation.totalAmount;
+        break;
+      case 7:
+        monthDonations.jul += donation.totalAmount;
+        break;
+      case 8:
+        monthDonations.aug += donation.totalAmount;
+        break;
+      case 9:
+        monthDonations.sep += donation.totalAmount;
+        break;
+      case 10:
+        monthDonations.oct += donation.totalAmount;
+        break;
+      case 11:
+        monthDonations.nov += donation.totalAmount;
+        break;
+      case 12:
+        monthDonations.dec += donation.totalAmount;
+        break;
+      default:
+        break;
+    }
+  });
+
+  res.status(200).json({ success: true, donations: monthDonations });
+});
+
 // Get Recent Donations
 const getRecentDonations = catchAsyncError(async (req, res, next) => {
   const streamerId = req.params.id;
+  const { page = 1 } = req.query;
 
-  // Fetch the last 10 donations for a specific streamer, sorted by most recent first
+  const limit = 10;
+  const skip = (page - 1) * limit;
+
   const donations = await Donation.find({ streamer: streamerId })
-    .sort({ createdAt: -1 }) // Sort by createdAt in descending order (-1)
-    .limit(10); // Limit to the last 10 donations
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit);
 
   if (!donations || donations.length === 0) {
     return next(new ErrorHandler("No donations found", 404));
   }
-
+  const totalSuperchats = await Donation.countDocuments({
+    streamer: streamerId,
+  });
   res.status(200).json({
     success: true,
     donations,
+    totalSuperchats: totalSuperchats,
+    totalPages: Math.ceil(totalSuperchats / limit),
   });
 });
 
@@ -397,4 +515,5 @@ export default {
   getWeekEarnings,
   getYearDonations,
   getRecentDonations,
+  getYearDonationsOfAllUsers,
 };

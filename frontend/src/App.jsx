@@ -19,6 +19,9 @@ import AudioAlert_Settings from "./pages/streamer/AudioAlert_Settings";
 import Admin_Dashboard from "./pages/Admin/Admin_Dashboard";
 import All_Users from "./pages/Admin/All_Users";
 import Withdraw_Requests from "./pages/Admin/Withdraw_Requests";
+import User_Profile from "./pages/Admin/User_Profile";
+import All_Superchats from "./pages/Admin/All_Superchats";
+import Give_Donation from "./pages/Give_Donation";
 function App() {
   const dispatch = useDispatch();
   const location = useLocation();
@@ -40,6 +43,8 @@ function App() {
     "/admindashboard",
     "/allusers",
     "/allwithdraws",
+    "/userprofile/:id",
+    "/recentsuperchats/:id",
   ];
 
   const isNoFooterRoute = noFooterRoutes.some((route) => {
@@ -121,6 +126,23 @@ function App() {
             </Protected_Route>
           }
         />
+        <Route
+          path="/userprofile/:id"
+          element={
+            <Protected_Route roleRequired="admin">
+              <User_Profile />
+            </Protected_Route>
+          }
+        />
+        <Route
+          path="/recentsuperchats/:id"
+          element={
+            <Protected_Route roleRequired="admin">
+              <All_Superchats />
+            </Protected_Route>
+          }
+        />
+        <Route path="/superchat/:id" element={<Give_Donation />} />
       </Routes>
       {!isNoFooterRoute && <Footer />}
     </>

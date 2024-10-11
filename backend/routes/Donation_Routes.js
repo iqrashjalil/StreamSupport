@@ -17,4 +17,7 @@ router
 router
   .route("/getrecentdonations/:id")
   .get(authMiddleware, Donation_Controller.getRecentDonations);
+router
+  .route("/getyeardonationsofallusers")
+  .get(authMiddleware, isAdmin, Donation_Controller.getYearDonationsOfAllUsers);
 export default router;
