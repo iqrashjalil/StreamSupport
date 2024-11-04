@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   logout,
@@ -19,15 +19,6 @@ import {
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { serverUrl } from "../serverUrl";
 import { BiSolidDownArrow } from "react-icons/bi";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-  DropdownMenuShortcut,
-} from "@/components/ui/dropdown-menu";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -37,8 +28,8 @@ const Navbar = () => {
   const { isAuthenticated, success, user, loading } = useSelector(
     (state) => state.users
   );
-
-  // You can define paths where the hamburger icon should be visible (e.g., on dashboard pages)
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
   const isDashboardPage =
     location.pathname.startsWith("/streamerdashboard") ||
     location.pathname.startsWith("/editprofile") ||
@@ -50,6 +41,26 @@ const Navbar = () => {
     e.preventDefault();
     dispatch(logout());
   };
+
+  const handleDropdownOpen = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // Check if the click is outside the dropdown
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    // Bind the event listener
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      // Unbind the event listener on cleanup
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   useEffect(() => {
     if (success === true) {
       dispatch(resetSuccess());
@@ -95,48 +106,65 @@ const Navbar = () => {
               </div>
 
               <div className="flex items-center gap-2 lg:hidden">
-                <DropdownMenu>
-                  <DropdownMenuTrigger>
-                    {" "}
-                    {user && (
-                      <div className="flex items-center gap-1 cursor-pointer group">
-                        <div className="relative">
-                          <LazyLoadImage
-                            className="w-8 h-8 rounded-full "
-                            src={`${serverUrl}/${user?.profilePic}`}
-                          />
-                          <div className="absolute inset-0 transition-all duration-200 bg-black rounded-full opacity-0 group-hover:opacity-50"></div>
-                        </div>
-                        <BiSolidDownArrow className="transition-all duration-200 group-hover:text-redMain" />
-                      </div>
-                    )}
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuLabel>{user?.userName}</DropdownMenuLabel>
-                    <DropdownMenuSeparator className="bg-neutral-600" />
-                    {user && user?.role == "admin" ? (
-                      <DropdownMenuItem
-                        onSelect={() => navigate("/admindashboard")}
-                      >
-                        Dashboard
-                      </DropdownMenuItem>
-                    ) : (
-                      <DropdownMenuItem
-                        onSelect={() => navigate("/streamerdashboard")}
-                      >
-                        Dashboard
-                      </DropdownMenuItem>
-                    )}
+                {user && (
+                  <div
+                    onClick={handleDropdownOpen}
+                    className="flex items-center gap-1 cursor-pointer group"
+                  >
+                    <div className="relative">
+                      <LazyLoadImage
+                        className="w-8 h-8 rounded-full "
+                        src={`${serverUrl}/${user?.profilePic}`}
+                      />
+                      <div className="absolute inset-0 transition-all duration-200 bg-black rounded-full opacity-0 group-hover:opacity-50"></div>
+                    </div>
+                    <BiSolidDownArrow className="transition-all duration-200 group-hover:text-redMain" />
+                  </div>
+                )}
+                {isDropdownOpen ? (
+                  <div
+                    ref={dropdownRef}
+                    className="absolute px-3 py-2 bg-black rounded right-6 w-28 top-16"
+                  >
+                    <ul className="flex flex-col gap-2">
+                      {user && user?.role == "admin" ? (
+                        <NavLink
+                          className="p-1 text-sm font-medium text-gray-300 rounded hover:bg-gray-700"
+                          to={"/admindashboard"}
+                          onClick={handleDropdownOpen}
+                        >
+                          Dashboard
+                        </NavLink>
+                      ) : (
+                        <NavLink
+                          className="p-1 text-sm font-medium text-gray-300 rounded hover:bg-gray-700"
+                          to={"/streamerdashboard"}
+                          onClick={handleDropdownOpen}
+                        >
+                          Dashboard
+                        </NavLink>
+                      )}
 
-                    <DropdownMenuItem>
-                      Wallet
-                      <DropdownMenuShortcut>
-                        {user?.wallet}
-                      </DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>Settings</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                      <NavLink
+                        className="flex justify-between p-1 text-sm font-medium text-gray-300 rounded hover:bg-gray-700 "
+                        to={"/wallet"}
+                        onClick={handleDropdownOpen}
+                      >
+                        Wallet <span>{user?.wallet}</span>
+                      </NavLink>
+
+                      <NavLink
+                        className="p-1 text-sm font-medium text-gray-300 rounded hover:bg-gray-700"
+                        to={"/alertsettings"}
+                        onClick={handleDropdownOpen}
+                      >
+                        Settings
+                      </NavLink>
+                    </ul>
+                  </div>
+                ) : (
+                  ""
+                )}
 
                 <Sheet
                   className="font-bold border-none font-rajdhani"
@@ -254,48 +282,66 @@ const Navbar = () => {
                 </NavLink>
                 {isAuthenticated ? (
                   <div className="flex items-center gap-2">
-                    {" "}
-                    <DropdownMenu>
-                      <DropdownMenuTrigger>
-                        {" "}
-                        {user && (
-                          <div className="flex items-center gap-1 cursor-pointer group">
-                            <div className="relative">
-                              <LazyLoadImage
-                                className="w-8 h-8 rounded-full "
-                                src={`${serverUrl}/${user?.profilePic}`}
-                              />
-                              <div className="absolute inset-0 transition-all duration-200 bg-black rounded-full opacity-0 group-hover:opacity-50"></div>
-                            </div>
-                            <BiSolidDownArrow className="transition-all duration-200 group-hover:text-redMain" />
-                          </div>
-                        )}
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        <DropdownMenuLabel>{user?.userName}</DropdownMenuLabel>
-                        <DropdownMenuSeparator className="bg-neutral-600" />
-                        {user && user?.role == "admin" ? (
-                          <DropdownMenuItem
-                            onSelect={() => navigate("/admindashboard")}
+                    {user && (
+                      <div
+                        onClick={handleDropdownOpen}
+                        className="flex items-center gap-1 cursor-pointer group"
+                      >
+                        <div className="relative">
+                          <LazyLoadImage
+                            className="w-8 h-8 rounded-full "
+                            src={`${serverUrl}/${user?.profilePic}`}
+                          />
+                          <div className="absolute inset-0 transition-all duration-200 bg-black rounded-full opacity-0 group-hover:opacity-50"></div>
+                        </div>
+                        <BiSolidDownArrow className="transition-all duration-200 group-hover:text-redMain" />
+                      </div>
+                    )}
+                    {isDropdownOpen ? (
+                      <div
+                        ref={dropdownRef}
+                        className="absolute px-3 py-2 bg-black rounded w-28 top-16"
+                      >
+                        <ul className="flex flex-col gap-2">
+                          {user && user?.role == "admin" ? (
+                            <NavLink
+                              className="p-1 text-sm font-medium text-gray-300 rounded hover:bg-gray-700"
+                              to={"/admindashboard"}
+                              onClick={handleDropdownOpen}
+                            >
+                              Dashboard
+                            </NavLink>
+                          ) : (
+                            <NavLink
+                              className="p-1 text-sm font-medium text-gray-300 rounded hover:bg-gray-700"
+                              to={"/streamerdashboard"}
+                              onClick={handleDropdownOpen}
+                            >
+                              Dashboard
+                            </NavLink>
+                          )}
+
+                          <NavLink
+                            className="flex justify-between p-1 text-sm font-medium text-gray-300 rounded hover:bg-gray-700 "
+                            to={"/wallet"}
+                            onClick={handleDropdownOpen}
                           >
-                            Dashboard
-                          </DropdownMenuItem>
-                        ) : (
-                          <DropdownMenuItem
-                            onSelect={() => navigate("/streamerdashboard")}
+                            Wallet <span>{user?.wallet}</span>
+                          </NavLink>
+
+                          <NavLink
+                            className="p-1 text-sm font-medium text-gray-300 rounded hover:bg-gray-700"
+                            to={"/alertsettings"}
+                            onClick={handleDropdownOpen}
                           >
-                            Dashboard
-                          </DropdownMenuItem>
-                        )}
-                        <DropdownMenuItem>
-                          Wallet{" "}
-                          <DropdownMenuShortcut>
-                            {user?.wallet}
-                          </DropdownMenuShortcut>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>Settings</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                            Settings
+                          </NavLink>
+                        </ul>
+                      </div>
+                    ) : (
+                      ""
+                    )}
+
                     <Button
                       onClick={handleLogout}
                       className="bg-transparent text-redMain hover:border-redMain hover:text-neutral-50 hover:bg-redMain"

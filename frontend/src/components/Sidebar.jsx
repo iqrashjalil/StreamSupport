@@ -243,14 +243,19 @@ const Sidebar = () => {
                   <NavLink
                     onClick={() => dispatch(toggleSidebar())}
                     className={({ isActive }) =>
-                      `flex gap-2 p-2 bg-gray-500 rounded ${
+                      `flex justify-between gap-2 p-2 bg-gray-500 rounded ${
                         isActive ? activeLinkClass : ""
                       }`
                     }
                     to={"/wallet"}
                   >
-                    <FaWallet className="text-2xl transition-all duration-200 group-hover:text-redMain" />
-                    Wallet
+                    <span className="flex gap-2">
+                      <FaWallet className="text-2xl transition-all duration-200 group-hover:text-redMain" />
+                      Wallet{" "}
+                    </span>
+                    <span>
+                      {new Intl.NumberFormat().format(`${user?.wallet}`)}
+                    </span>
                   </NavLink>
 
                   <NavLink
@@ -375,7 +380,7 @@ const Sidebar = () => {
 
                 <NavLink
                   className={({ isActive }) =>
-                    `flex items-center gap-2  p-2 text-lg transition-all duration-200 rounded group ${
+                    `flex items-center justify-between gap-2  p-2 text-lg transition-all duration-200 rounded group ${
                       isActive
                         ? "bg-gray-700 text-neutral-50"
                         : "hover:bg-gray-700 text-neutral-50"
@@ -385,14 +390,19 @@ const Sidebar = () => {
                 >
                   {({ isActive }) => (
                     <>
-                      <FaWallet
-                        className={`text-2xl transition-all duration-200 ${
-                          isActive
-                            ? "text-redMain"
-                            : "text-white group-hover:text-redMain"
-                        }`}
-                      />
-                      Wallet
+                      <span className="flex gap-2">
+                        <FaWallet
+                          className={`text-2xl flex justify-between transition-all duration-200 ${
+                            isActive
+                              ? "text-redMain"
+                              : "text-white group-hover:text-redMain"
+                          }`}
+                        />
+                        Wallet{" "}
+                      </span>
+                      <span>
+                        {new Intl.NumberFormat().format(`${user?.wallet}`)}
+                      </span>
                     </>
                   )}
                 </NavLink>
@@ -553,14 +563,19 @@ const Sidebar = () => {
                   <NavLink
                     onClick={() => dispatch(toggleSidebar())}
                     className={({ isActive }) =>
-                      `flex gap-2 p-2 bg-gray-500 rounded ${
+                      `flex justify-between gap-2 p-2 bg-gray-500 rounded ${
                         isActive ? activeLinkClass : ""
                       }`
                     }
                     to={"/wallet"}
                   >
-                    <FaWallet className="text-2xl transition-all duration-200 group-hover:text-redMain" />
-                    Wallet
+                    <span className="flex gap-2">
+                      <FaWallet className="text-2xl transition-all duration-200 group-hover:text-redMain" />
+                      Wallet{" "}
+                    </span>
+                    <span>
+                      {new Intl.NumberFormat().format(`${user?.wallet}`)}
+                    </span>
                   </NavLink>
 
                   <NavLink

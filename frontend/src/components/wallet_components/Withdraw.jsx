@@ -77,36 +77,6 @@ const Withdraw = () => {
           <div className="flex flex-col sm:flex-row gap-10 sm:gap-[4%]">
             <div className="sm:w-[48%] w-full flex flex-col gap-10">
               <div className="flex flex-col mt-1">
-                <Label className="text-neutral-50">
-                  Select beneficiary From Added Banks
-                </Label>
-                <select
-                  className="p-2 mt-1 bg-transparent border-2 border-gray-600 focus:bg-gray-600 text-neutral-50"
-                  id="beneficiaryBanks"
-                  name="beneficiaryBanks"
-                >
-                  <option value="">Select Bank</option>
-                </select>
-              </div>
-              <div>
-                <Label className="text-neutral-50">Account Title</Label>
-                <Input name="accountTitle" />
-              </div>
-              <div>
-                <Label className="text-neutral-50">CNIC</Label>
-                <Input name="cnic" />
-              </div>
-            </div>
-            <div className="sm:w-[48%] w-full flex flex-col gap-10">
-              <div>
-                <Label className="text-neutral-50">Account Number</Label>
-                <Input name="bankAccountNumber" />
-              </div>
-              <div>
-                <Label className="text-neutral-50">Withdraw Amount</Label>
-                <Input name="withdrawAmount" />
-              </div>
-              <div className="flex flex-col mt-1">
                 <Label className="text-neutral-50">Select Bank</Label>
                 <select
                   className="p-2 mt-1 bg-transparent border-2 border-gray-600 focus:bg-gray-600 text-neutral-50"
@@ -179,6 +149,24 @@ const Withdraw = () => {
                   <option value="UPaisa">UPaisa</option>
                   <option value="PayMax">PayMax</option>
                 </select>
+              </div>
+              <div>
+                <Label className="text-neutral-50">Account Title</Label>
+                <Input name="accountTitle" />
+              </div>
+              <div>
+                <Label className="text-neutral-50">CNIC</Label>
+                <Input name="cnic" />
+              </div>
+            </div>
+            <div className="sm:w-[48%] w-full flex flex-col gap-10">
+              <div>
+                <Label className="text-neutral-50">Account Number</Label>
+                <Input name="bankAccountNumber" />
+              </div>
+              <div>
+                <Label className="text-neutral-50">Withdraw Amount</Label>
+                <Input name="withdrawAmount" />
               </div>
             </div>
           </div>

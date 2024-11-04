@@ -164,7 +164,7 @@ const Streamer_Dashboard = () => {
             <div className="flex flex-wrap justify-center gap-10">
               <div className="h-40 p-5 bg-gray-600 border border-gray-500 rounded w-80">
                 <div className="flex items-center justify-center w-12 h-12 bg-gray-700 rounded-full">
-                  <FaHeart className="text-2xl text-neutral-50" />
+                  <FaHeart className="text-2xl text-redMain" />
                 </div>
                 <h1 className="text-xl text-neutral-50">
                   Rs:
@@ -186,7 +186,7 @@ const Streamer_Dashboard = () => {
               </div>
               <div className="h-40 p-5 bg-gray-600 border border-gray-500 rounded w-80">
                 <div className="flex items-center justify-center w-12 h-12 bg-gray-700 rounded-full">
-                  <BsCurrencyDollar className="text-3xl text-neutral-50" />
+                  <BsCurrencyDollar className="text-3xl text-lime-500" />
                 </div>{" "}
                 <h1 className="text-xl text-neutral-50">
                   Rs:{" "}
@@ -208,7 +208,7 @@ const Streamer_Dashboard = () => {
               </div>
               <div className="h-40 p-5 bg-gray-600 border border-gray-500 rounded w-80">
                 <div className="flex items-center justify-center w-12 h-12 bg-gray-700 rounded-full">
-                  <FaHeart className="text-2xl text-neutral-50" />
+                  <FaHeart className="text-2xl text-redMain" />
                 </div>{" "}
                 <h1 className="text-xl text-neutral-50">
                   Rs:{" "}
@@ -226,7 +226,7 @@ const Streamer_Dashboard = () => {
               </div>
               <div className="h-40 p-5 bg-gray-600 border border-gray-500 rounded w-80">
                 <div className="flex items-center justify-center w-12 h-12 bg-gray-700 rounded-full">
-                  <BsCurrencyDollar className="text-3xl text-neutral-50" />
+                  <BsCurrencyDollar className="text-3xl text-lime-500" />
                 </div>{" "}
                 <h1 className="text-xl text-neutral-50">
                   Rs:{" "}
