@@ -12,9 +12,10 @@ import {
   updateProfile,
 } from "../store/slices/Users_Slice";
 import { toast } from "react-toastify";
+import Loader from "../components/Loader/Loader";
 
 const Edit_Profile = () => {
-  const { user, success, error } = useSelector((state) => state.users);
+  const { loading, user, success, error } = useSelector((state) => state.users);
   const dispatch = useDispatch();
   const [selectedImage, setSelectedImage] = useState(null);
   const [formData, setFormData] = useState({
@@ -55,72 +56,78 @@ const Edit_Profile = () => {
     }
   }, [dispatch, user]);
   return (
-    <div className="flex w-full">
-      <section className="w-[15%]">
-        <Sidebar />
-      </section>
-      <section className="p-5 lg:w-[85%] w-full font-rajdhani">
-        <h1 className="flex justify-center mt-10 text-4xl font-extrabold text-redMain">
-          Edit Profile
-        </h1>
-        <form
-          className="flex flex-col-reverse justify-center w-full gap-10 md:flex-row"
-          onSubmit={handleSubmit}
-        >
-          <div className="flex flex-col gap-10 w-full md:w-[45%]">
-            <div>
-              <Label className="text-neutral-50">Username</Label>
-              <Input
-                value={formData.userName}
-                name="userName"
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <Label className="text-neutral-50">Email</Label>
-              <Input
-                value={formData.email}
-                name="email"
-                onChange={handleChange}
-              />
-            </div>
-
-            <div>
-              <Label className="text-neutral-50">Password</Label>
-              <Input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <Label className="text-neutral-50">Profile Photo</Label>
-              <Input
-                type="file"
-                onChange={handleImageChange}
-                name="profilePic"
-              />
-            </div>
-            <Button
-              className="border-2 border-red-800 rounded-none"
-              variant="secondary"
-              type="submit"
+    <>
+      {loading ? (
+        <Loader />
+      ) : (
+        <div className="flex w-full">
+          <section className="w-[15%]">
+            <Sidebar />
+          </section>
+          <section className="p-5 lg:w-[85%] w-full font-rajdhani">
+            <h1 className="flex justify-center mt-10 text-4xl font-extrabold text-redMain">
+              Edit Profile
+            </h1>
+            <form
+              className="flex flex-col-reverse justify-center w-full gap-10 md:flex-row"
+              onSubmit={handleSubmit}
             >
-              Update Profile
-            </Button>
-          </div>
-          <div className="md:w-[45%] w-full flex justify-center items-center gap-5">
-            <div className="flex items-center justify-center p-1 border-2 border-redMain w-96 h-96">
-              <LazyLoadImage
-                className="w-full h-full "
-                src={selectedImage || `${serverUrl}/${user?.profilePic}`}
-              />
-            </div>
-          </div>
-        </form>
-      </section>
-    </div>
+              <div className="flex flex-col gap-10 w-full md:w-[45%]">
+                <div>
+                  <Label className="text-neutral-50">Username</Label>
+                  <Input
+                    value={formData.userName}
+                    name="userName"
+                    onChange={handleChange}
+                  />
+                </div>
+                <div>
+                  <Label className="text-neutral-50">Email</Label>
+                  <Input
+                    value={formData.email}
+                    name="email"
+                    onChange={handleChange}
+                  />
+                </div>
+
+                <div>
+                  <Label className="text-neutral-50">Password</Label>
+                  <Input
+                    type="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div>
+                  <Label className="text-neutral-50">Profile Photo</Label>
+                  <Input
+                    type="file"
+                    onChange={handleImageChange}
+                    name="profilePic"
+                  />
+                </div>
+                <Button
+                  className="border-2 border-red-800 rounded-none"
+                  variant="secondary"
+                  type="submit"
+                >
+                  Update Profile
+                </Button>
+              </div>
+              <div className="md:w-[45%] w-full flex justify-center items-center gap-5">
+                <div className="flex items-center justify-center p-1 border-2 border-redMain w-96 h-96">
+                  <LazyLoadImage
+                    className="w-full h-full "
+                    src={selectedImage || `${serverUrl}/${user?.profilePic}`}
+                  />
+                </div>
+              </div>
+            </form>
+          </section>
+        </div>
+      )}
+    </>
   );
 };
 

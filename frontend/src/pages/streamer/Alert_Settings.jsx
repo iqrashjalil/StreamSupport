@@ -25,10 +25,11 @@ import {
 } from "@/components/ui/dialog";
 import { serverUrl } from "../../serverUrl";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import Loader from "../../components/Loader/Loader";
 
 const Alert_Settings = () => {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.users);
+  const { loading, user } = useSelector((state) => state.users);
   const { message, error } = useSelector((state) => state.alertSettings);
   const [showTooltip, setShowTooltip] = useState(false);
   const [showDurationTooltip, setShowDurationTooltip] = useState(false);
@@ -69,6 +70,7 @@ const Alert_Settings = () => {
       if (user?.alertSettings) {
         setIsTextToSpeechAlert(user?.alertSettings?.textToSpeechALert);
         setVolume([user?.alertSettings?.speechVolume]);
+        setAlertDuration([user?.alertSettings?.alertDuration]);
       }
     }
   }, [user]);
@@ -98,6 +100,11 @@ const Alert_Settings = () => {
   const handleSliderChange = (speechVolume, value) => {
     setVolume(value);
     dispatch(updateAlertSettings({ speechVolume: `${value}` }));
+  };
+
+  const handleAlertDurationChange = (alertDuration, value) => {
+    setAlertDuration(value);
+    dispatch(updateAlertSettings({ alertDuration: `${value}` }));
   };
 
   const handleDropdownChange = (type, value) => {
@@ -131,298 +138,135 @@ const Alert_Settings = () => {
     }
   }, [dispatch, error, message]);
   return (
-    <div className="flex w-full">
-      <section className="lg:w-[15%]">
-        <Sidebar />
-      </section>
-      <section className="p-5 lg:w-[85%] flex flex-col md:flex-row md:gap-[1%] gap-5 w-full font-rajdhani">
-        <div className="md:w-[30%] w-full bg-gray-600 rounded">
-          <div className="flex justify-center w-full px-5 py-3 border-b border-gray-500">
-            <h1 className="text-lg font-extrabold text-neutral-50">
-              Customize Alert
-            </h1>
-          </div>
-          <div className="flex items-center justify-between gap-[5%] p-5 border-b border-gray-500">
-            <h1 className="text-neutral-50">Alert Image</h1>{" "}
-            <Dialog>
-              <DialogTrigger asChild>
-                <button className="flex items-center hover:bg-transparent border-2 border-transparent hover:border-redMain duration-200 transition-all justify-center w-[50%] gap-5 p-2 font-semibold bg-gray-500 rounded cursor-pointer text-neutral-50">
-                  Edit Image
-                </button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>Uplaod Image</DialogTitle>
-                  <DialogDescription></DialogDescription>
-                </DialogHeader>
-                <LazyLoadImage
-                  src={`${serverUrl}/${user?.alertSettings?.alertImage}`}
-                  className="rounded-xl"
-                />
-                <DialogFooter>
-                  {" "}
-                  <label
-                    htmlFor="alertImage"
-                    className="flex items-center justify-center w-full gap-5 p-2 font-semibold bg-gray-400 rounded cursor-pointer text-neutral-50"
-                  >
-                    Uplaod Image <FaImage className="text-xl text-redMain" />
-                  </label>
-                  <input
-                    id="alertImage"
-                    onChange={handleImageChange}
-                    className="hidden"
-                    type="file"
-                  />
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          </div>
-          <div className="flex items-center justify-between gap-5 p-5 border-b border-gray-500">
-            <h1 className="text-neutral-50">Alert Animation</h1>{" "}
-            <select
-              className="w-[50%] cursor-pointer duration-200 transition-all p-2 focus:outline-none focus:border-redMain border-2 border-transparent text-neutral-50 rounded bg-gray-500"
-              name="alertAnimation"
-              value={alertAnimation}
-              id="alertAnimation"
-              onChange={(e) =>
-                handleDropdownChange("alertAnimation", e.target.value)
-              }
-            >
-              <option value="fade in">fade in</option>
-              <option value="fade in slow">fade in slow</option>
-              <option value="fade out">fade out</option>
-              <option value="fade out slow">fade out slow</option>
-            </select>
-          </div>
-          <div className="flex items-center justify-between gap-5 p-5 border-b border-gray-500">
-            <h1 className="text-neutral-50">Text Animation</h1>{" "}
-            <select
-              className="w-[50%] duration-200 transition-all p-2 focus:outline-none focus:border-redMain border-2 border-transparent text-neutral-50 rounded bg-gray-500"
-              name="textAnimation"
-              value={textAnimation}
-              id="textAnimation"
-              onChange={(e) =>
-                handleDropdownChange("textAnimation", e.target.value)
-              }
-            >
-              <option value="bouncy">bouncy</option>
-              <option value="10">10s</option>
-              <option value="15">15s</option>
-              <option value="20">20s</option>
-              <option value="25">25s</option>
-              <option value="30">30s</option>
-            </select>
-          </div>
-          <div className="flex items-center justify-between gap-5 p-5 border-b border-gray-500">
-            <h1 className="text-neutral-50">Font Style</h1>{" "}
-            <select
-              className="w-[50%] duration-200 transition-all p-2 focus:outline-none focus:border-redMain border-2 border-transparent text-neutral-50 rounded bg-gray-500"
-              name="fontStyle"
-              value={fontStyle}
-              id="fontStyle"
-              onChange={(e) =>
-                handleDropdownChange("fontStyle", e.target.value)
-              }
-            >
-              <option value="Poppins">Poppins</option>
-              <option value="10">10s</option>
-              <option value="15">15s</option>
-              <option value="20">20s</option>
-              <option value="25">25s</option>
-              <option value="30">30s</option>
-            </select>
-          </div>
-          <div className="flex items-center justify-between gap-5 p-5">
-            <h1 className="text-neutral-50">Alert Duration</h1>{" "}
-            {/* <div className="relative w-[50%]">
-              <Slider
-                value={[alertDuration]}
-                max={100}
-                step={1}
-                onChange={(e) =>
-                  handleSliderChange("alertDuration", e.target.value)
-                }
-                onMouseEnter={() => setShowDurationTooltip(true)}
-                onMouseLeave={() => setShowDurationTooltip(false)}
-                onMouseDown={() => setShowDurationTooltip(true)}
-                onMouseUp={() => setShowDurationTooltip(false)}
-                className="relative cursor-pointer"
-              />
-
-              {showDurationTooltip && (
-                <div
-                  className="absolute p-2 text-sm text-white transform -translate-x-1/2 bg-black rounded-md shadow-md -top-[50px]"
-                  style={{ left: `${alertDuration}%` }}
-                >
-                  {alertDuration}
-
-                  <div className="absolute left-1/2 transform -translate-x-1/2 -bottom-[6px] w-3 h-3 bg-black rotate-45"></div>
-                </div>
-              )}
-            </div> */}
-          </div>
-        </div>
-        <div className="md:w-[69%] w-full flex flex-col md:flex-row flex-wrap gap-5 md:gap-[2%]">
-          <div className="bg-gray-600 md:w-[48%] w-full rounded p-5">
-            <h1 className="text-lg font-extrabold text-neutral-50">
-              Overlay Link
-            </h1>
-            <p className="text-sm text-gray-400">
-              Insert this URL into the Browser Source of your OBS/Streamlabs.
-            </p>
-            <div className="flex items-center gap-5">
-              <Input
-                value={user?.alertSettings?.overlayLink || ""}
-                className="border-gray-400"
-                readOnly
-              />
-              <div
-                onClick={() => handleCopy(user?.alertSettings?.overlayLink)}
-                className="p-[10px] cursor-pointer group bg-gray-400 rounded"
-              >
-                <FaCopy className="text-xl text-gray-600 transition-all duration-200 group-hover:text-redMain" />
+    <>
+      {loading ? (
+        <Loader />
+      ) : (
+        <div className="flex w-full">
+          <section className="lg:w-[15%]">
+            <Sidebar />
+          </section>
+          <section className="p-5 lg:w-[85%] flex flex-col md:flex-row md:gap-[1%] gap-5 w-full font-rajdhani">
+            <div className="md:w-[30%] w-full bg-gray-600 rounded">
+              <div className="flex justify-center w-full px-5 py-3 border-b border-gray-500">
+                <h1 className="text-lg font-extrabold text-neutral-50">
+                  Customize Alert
+                </h1>
               </div>
-            </div>
-          </div>
-          <div className="bg-gray-600 w-full md:w-[48%] rounded p-5">
-            <h1 className="text-lg font-extrabold text-neutral-50">
-              Superchat Link
-            </h1>
-            <p className="text-sm text-gray-400">
-              Place this link on YouTube/Facebook to allow viewers to send Super
-              Chats.
-            </p>
-            <div className="flex items-center gap-5">
-              <Input
-                value={user?.alertSettings?.superchatLink || ""}
-                className="border-gray-400"
-                readOnly
-              />
-              <div
-                onClick={() => handleCopy(user?.alertSettings?.superchatLink)}
-                className="p-[10px] cursor-pointer group bg-gray-400 rounded"
-              >
-                <FaCopy className="text-xl text-gray-600 transition-all duration-200 group-hover:text-redMain" />
-              </div>
-            </div>
-          </div>
-          <div className="bg-gray-600  w-full md:w-[48%] rounded">
-            <div className="flex justify-center p-3 border-b border-gray-500">
-              <h1 className="text-lg font-extrabold text-neutral-50">
-                {" "}
-                Superchat Management
-              </h1>
-            </div>
-            <div className="flex flex-col gap-5">
-              <div className="p-5 border-b border-gray-500">
-                <p className="text-sm text-neutral-50">
-                  Min Amount To Show Alert (Cannot Be Less Than 30 PKR)
-                </p>
-                <Input
-                  name="minMoneyForAlert"
-                  value={alertSettings.minMoneyForAlert}
-                  onChange={handleInputChange}
-                  className="border-gray-500"
-                />
-              </div>
-              <div className="px-5 ">
-                <p className="text-sm text-neutral-50">
-                  Min Amount To Show Alert With Message (Cannot Be Less Than 50
-                  PKR)
-                </p>
-                <Input
-                  name="minMoneyForMessage"
-                  value={alertSettings.minMoneyForMessage}
-                  onChange={handleInputChange}
-                  className="border-gray-500"
-                />
-              </div>
-              <div className="px-5 pb-5">
-                <Button
-                  onClick={handleSaveChanges}
-                  className="w-full rounded-none"
-                  variant="secondary"
-                >
-                  Save Changes
-                </Button>
-              </div>
-            </div>
-          </div>
-          <div className="bg-gray-600  w-full md:w-[48%] rounded">
-            <div className="flex justify-center p-3 border-b border-gray-500">
-              <h1 className="text-lg font-extrabold text-neutral-50">
-                Alert Sound
-              </h1>
-            </div>
-            <div className="flex flex-col gap-5">
-              <div className="p-5 border-b border-gray-500">
-                <div className="flex items-center justify-between">
-                  <h1 className="text-neutral-50"> Alert Sound</h1>
-                  <label
-                    htmlFor="alertSound"
-                    className="flex  font-semibold items-center gap-5 cursor-pointer justify-center w-[60%] lg:w-[50%]  p-2 bg-gray-500 rounded text-neutral-50"
-                  >
-                    Upload Alert Sound{" "}
-                    <FaMusic
-                      className="text-xl "
-                      style={{ color: "#EE82EE", fontSize: "1.25rem" }}
+              <div className="flex items-center justify-between gap-[5%] p-5 border-b border-gray-500">
+                <h1 className="text-neutral-50">Alert Image</h1>{" "}
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <button className="flex items-center hover:bg-transparent border-2 border-transparent hover:border-redMain duration-200 transition-all justify-center w-[50%] gap-5 p-2 font-semibold bg-gray-500 rounded cursor-pointer text-neutral-50">
+                      Edit Image
+                    </button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>Uplaod Image</DialogTitle>
+                      <DialogDescription></DialogDescription>
+                    </DialogHeader>
+                    <LazyLoadImage
+                      src={`${serverUrl}/${user?.alertSettings?.alertImage}`}
+                      className="rounded-xl"
                     />
-                  </label>
-
-                  <input
-                    onChange={handleSoundChange}
-                    id="alertSound"
-                    className="hidden"
-                    type="file"
-                  />
-                </div>
-                <div className="mt-4">
-                  {user && (
-                    <audio className="w-full" controls>
-                      <source
-                        src={`${serverUrl}/${user?.alertSettings?.alertSound}`}
-                        type="audio/mpeg"
+                    <DialogFooter>
+                      {" "}
+                      <label
+                        htmlFor="alertImage"
+                        className="flex items-center justify-center w-full gap-5 p-2 font-semibold bg-gray-400 rounded cursor-pointer text-neutral-50"
+                      >
+                        Uplaod Image{" "}
+                        <FaImage className="text-xl text-redMain" />
+                      </label>
+                      <input
+                        id="alertImage"
+                        onChange={handleImageChange}
+                        className="hidden"
+                        type="file"
                       />
-                      Your browser does not support the audio tag.
-                    </audio>
-                  )}
-                </div>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
               </div>
-              <div className="flex items-center justify-between gap-5 px-5">
-                <h1 className="text-neutral-50">Enable Text To Speech</h1>{" "}
-                <div>
-                  <Switch
-                    checked={isTextToSpeechAlert}
-                    onCheckedChange={handleSwitchChange}
-                  />
-                </div>
+              <div className="flex items-center justify-between gap-5 p-5 border-b border-gray-500">
+                <h1 className="text-neutral-50">Alert Animation</h1>{" "}
+                <select
+                  className="w-[50%] cursor-pointer duration-200 transition-all p-2 focus:outline-none focus:border-redMain border-2 border-transparent text-neutral-50 rounded bg-gray-500"
+                  name="alertAnimation"
+                  value={alertAnimation}
+                  id="alertAnimation"
+                  onChange={(e) =>
+                    handleDropdownChange("alertAnimation", e.target.value)
+                  }
+                >
+                  <option value="fade in">fade in</option>
+                  <option value="fade in slow">fade in slow</option>
+                  <option value="fade out">fade out</option>
+                  <option value="fade out slow">fade out slow</option>
+                </select>
               </div>
-              <div className="flex items-center justify-between gap-5 p-5 border-t border-gray-500">
-                <h1 className="text-neutral-50">Volume</h1>{" "}
+              <div className="flex items-center justify-between gap-5 p-5 border-b border-gray-500">
+                <h1 className="text-neutral-50">Text Animation</h1>{" "}
+                <select
+                  className="w-[50%] duration-200 transition-all p-2 focus:outline-none focus:border-redMain border-2 border-transparent text-neutral-50 rounded bg-gray-500"
+                  name="textAnimation"
+                  value={textAnimation}
+                  id="textAnimation"
+                  onChange={(e) =>
+                    handleDropdownChange("textAnimation", e.target.value)
+                  }
+                >
+                  <option value="bouncy">bouncy</option>
+                  <option value="10">10s</option>
+                  <option value="15">15s</option>
+                  <option value="20">20s</option>
+                  <option value="25">25s</option>
+                  <option value="30">30s</option>
+                </select>
+              </div>
+              <div className="flex items-center justify-between gap-5 p-5 border-b border-gray-500">
+                <h1 className="text-neutral-50">Font Style</h1>{" "}
+                <select
+                  className="w-[50%] duration-200 transition-all p-2 focus:outline-none focus:border-redMain border-2 border-transparent text-neutral-50 rounded bg-gray-500"
+                  name="fontStyle"
+                  value={fontStyle}
+                  id="fontStyle"
+                  onChange={(e) =>
+                    handleDropdownChange("fontStyle", e.target.value)
+                  }
+                >
+                  <option value="Poppins">Poppins</option>
+                  <option value="10">10s</option>
+                  <option value="15">15s</option>
+                  <option value="20">20s</option>
+                  <option value="25">25s</option>
+                  <option value="30">30s</option>
+                </select>
+              </div>
+              <div className="flex items-center justify-between gap-5 p-5">
+                <h1 className="text-neutral-50">Alert Duration</h1>{" "}
                 <div className="relative w-[50%]">
-                  {user && (
-                    <Slider
-                      max={100}
-                      step={1}
-                      defaultValue={[user?.alertSettings?.speechVolume]}
-                      onValueChange={(value) =>
-                        handleSliderChange("speechVolume", value[0])
-                      }
-                      onMouseEnter={() => setShowTooltip(true)}
-                      onMouseLeave={() => setShowTooltip(false)}
-                      onMouseDown={() => setShowTooltip(true)}
-                      onMouseUp={() => setShowTooltip(false)}
-                      className="relative cursor-pointer"
-                    />
-                  )}
-                  {showTooltip && (
+                  <Slider
+                    value={[alertDuration]}
+                    max={100}
+                    step={1}
+                    onValueChange={(value) =>
+                      handleAlertDurationChange("alertDuration", value[0])
+                    }
+                    onMouseEnter={() => setShowDurationTooltip(true)}
+                    onMouseLeave={() => setShowDurationTooltip(false)}
+                    onMouseDown={() => setShowDurationTooltip(true)}
+                    onMouseUp={() => setShowDurationTooltip(false)}
+                    className="relative cursor-pointer"
+                  />
+
+                  {showDurationTooltip && (
                     <div
                       className="absolute p-2 text-sm text-white transform -translate-x-1/2 bg-black rounded-md shadow-md -top-[50px]"
-                      style={{
-                        left: `${volume}%`,
-                      }}
+                      style={{ left: `${alertDuration}%` }}
                     >
-                      {volume}
+                      {alertDuration}
 
                       <div className="absolute left-1/2 transform -translate-x-1/2 -bottom-[6px] w-3 h-3 bg-black rotate-45"></div>
                     </div>
@@ -430,10 +274,183 @@ const Alert_Settings = () => {
                 </div>
               </div>
             </div>
-          </div>
+            <div className="md:w-[69%] w-full flex flex-col md:flex-row flex-wrap gap-5 md:gap-[2%]">
+              <div className="bg-gray-600 md:w-[48%] w-full rounded p-5">
+                <h1 className="text-lg font-extrabold text-neutral-50">
+                  Overlay Link
+                </h1>
+                <p className="text-sm text-gray-400">
+                  Insert this URL into the Browser Source of your
+                  OBS/Streamlabs.
+                </p>
+                <div className="flex items-center gap-5">
+                  <Input
+                    value={user?.alertSettings?.overlayLink || ""}
+                    className="border-gray-400"
+                    readOnly
+                  />
+                  <div
+                    onClick={() => handleCopy(user?.alertSettings?.overlayLink)}
+                    className="p-[10px] cursor-pointer group bg-gray-400 rounded"
+                  >
+                    <FaCopy className="text-xl text-gray-600 transition-all duration-200 group-hover:text-redMain" />
+                  </div>
+                </div>
+              </div>
+              <div className="bg-gray-600 w-full md:w-[48%] rounded p-5">
+                <h1 className="text-lg font-extrabold text-neutral-50">
+                  Superchat Link
+                </h1>
+                <p className="text-sm text-gray-400">
+                  Place this link on YouTube/Facebook to allow viewers to send
+                  Super Chats.
+                </p>
+                <div className="flex items-center gap-5">
+                  <Input
+                    value={user?.alertSettings?.superchatLink || ""}
+                    className="border-gray-400"
+                    readOnly
+                  />
+                  <div
+                    onClick={() =>
+                      handleCopy(user?.alertSettings?.superchatLink)
+                    }
+                    className="p-[10px] cursor-pointer group bg-gray-400 rounded"
+                  >
+                    <FaCopy className="text-xl text-gray-600 transition-all duration-200 group-hover:text-redMain" />
+                  </div>
+                </div>
+              </div>
+              <div className="bg-gray-600  w-full md:w-[48%] rounded">
+                <div className="flex justify-center p-3 border-b border-gray-500">
+                  <h1 className="text-lg font-extrabold text-neutral-50">
+                    {" "}
+                    Superchat Management
+                  </h1>
+                </div>
+                <div className="flex flex-col gap-5">
+                  <div className="p-5 border-b border-gray-500">
+                    <p className="text-sm text-neutral-50">
+                      Min Amount To Show Alert (Cannot Be Less Than 30 PKR)
+                    </p>
+                    <Input
+                      name="minMoneyForAlert"
+                      value={alertSettings.minMoneyForAlert}
+                      onChange={handleInputChange}
+                      className="border-gray-500"
+                    />
+                  </div>
+                  <div className="px-5 ">
+                    <p className="text-sm text-neutral-50">
+                      Min Amount To Show Alert With Message (Cannot Be Less Than
+                      50 PKR)
+                    </p>
+                    <Input
+                      name="minMoneyForMessage"
+                      value={alertSettings.minMoneyForMessage}
+                      onChange={handleInputChange}
+                      className="border-gray-500"
+                    />
+                  </div>
+                  <div className="px-5 pb-5">
+                    <Button
+                      onClick={handleSaveChanges}
+                      className="w-full rounded-none"
+                      variant="secondary"
+                    >
+                      Save Changes
+                    </Button>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-gray-600  w-full md:w-[48%] rounded">
+                <div className="flex justify-center p-3 border-b border-gray-500">
+                  <h1 className="text-lg font-extrabold text-neutral-50">
+                    Alert Sound
+                  </h1>
+                </div>
+                <div className="flex flex-col gap-5">
+                  <div className="p-5 border-b border-gray-500">
+                    <div className="flex items-center justify-between">
+                      <h1 className="text-neutral-50"> Alert Sound</h1>
+                      <label
+                        htmlFor="alertSound"
+                        className="flex  font-semibold items-center gap-5 cursor-pointer justify-center w-[60%] lg:w-[50%]  p-2 bg-gray-500 rounded text-neutral-50"
+                      >
+                        Upload Alert Sound{" "}
+                        <FaMusic
+                          className="text-xl "
+                          style={{ color: "#EE82EE", fontSize: "1.25rem" }}
+                        />
+                      </label>
+
+                      <input
+                        onChange={handleSoundChange}
+                        id="alertSound"
+                        className="hidden"
+                        type="file"
+                      />
+                    </div>
+                    <div className="mt-4">
+                      {user && (
+                        <audio className="w-full" controls>
+                          <source
+                            src={`${serverUrl}/${user?.alertSettings?.alertSound}`}
+                            type="audio/mpeg"
+                          />
+                          Your browser does not support the audio tag.
+                        </audio>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between gap-5 px-5">
+                    <h1 className="text-neutral-50">Enable Text To Speech</h1>{" "}
+                    <div>
+                      <Switch
+                        checked={isTextToSpeechAlert}
+                        onCheckedChange={handleSwitchChange}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between gap-5 p-5 border-t border-gray-500">
+                    <h1 className="text-neutral-50">Volume</h1>{" "}
+                    <div className="relative w-[50%]">
+                      {user && (
+                        <Slider
+                          max={100}
+                          step={1}
+                          defaultValue={[user?.alertSettings?.speechVolume]}
+                          onValueChange={(value) =>
+                            handleSliderChange("speechVolume", value[0])
+                          }
+                          onMouseEnter={() => setShowTooltip(true)}
+                          onMouseLeave={() => setShowTooltip(false)}
+                          onMouseDown={() => setShowTooltip(true)}
+                          onMouseUp={() => setShowTooltip(false)}
+                          className="relative cursor-pointer"
+                        />
+                      )}
+                      {showTooltip && (
+                        <div
+                          className="absolute p-2 text-sm text-white transform -translate-x-1/2 bg-black rounded-md shadow-md -top-[50px]"
+                          style={{
+                            left: `${volume}%`,
+                          }}
+                        >
+                          {volume}
+
+                          <div className="absolute left-1/2 transform -translate-x-1/2 -bottom-[6px] w-3 h-3 bg-black rotate-45"></div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
-      </section>
-    </div>
+      )}
+    </>
   );
 };
 

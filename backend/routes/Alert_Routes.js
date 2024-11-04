@@ -40,4 +40,6 @@ router
   .route("/deleteaudioalert/:id")
   .patch(authMiddleware, alert_Controller.deleteAudioAlert);
 
+router.route("/getalertsettings/:id").get(alert_Controller.getAlertSettings);
+
 export default router;

@@ -22,11 +22,12 @@ import {
 } from "@/components/ui/pagination";
 import { useParams } from "react-router-dom";
 import { getRecentDonations } from "../../store/slices/Donation_Slice";
+import Loader from "../../components/Loader/Loader";
 
 const All_Superchats = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const { totalPages, recentDonations } = useSelector(
+  const { totalPages, loading, recentDonations } = useSelector(
     (state) => state.donations
   );
 
@@ -175,80 +176,86 @@ const All_Superchats = () => {
   };
 
   return (
-    <div className="flex w-full">
-      <section className="w-[15%] hidden lg:block">
-        <Sidebar />
-      </section>
-      <section className="p-5 w-full lg:w-[85%] font-rajdhani">
-        <Table>
-          <TableCaption>
-            A list of your Top Supporters of Current Week
-          </TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[10%]">Name</TableHead>
-              <TableHead className="w-[20%]">Amount</TableHead>
-              <TableHead className="w-[60%]">Message</TableHead>
-              <TableHead className="w-[10%]">Tranasction Status</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {Array.isArray(recentDonations) &&
-              recentDonations?.map((superchat, index) => (
-                <TableRow key={index}>
-                  <TableCell className="font-medium">
-                    {superchat.donatorName}
-                  </TableCell>
-                  <TableCell className="flex gap-2 font-medium">
-                    Rs:
-                    <span className="bg-green-500 text-neutral-50 font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
-                      {superchat.amount}
-                    </span>
-                  </TableCell>
-                  <TableCell className="font-medium">
-                    {superchat.message}
-                  </TableCell>
+    <>
+      {loading ? (
+        <Loader />
+      ) : (
+        <div className="flex w-full">
+          <section className="w-[15%] hidden lg:block">
+            <Sidebar />
+          </section>
+          <section className="p-5 w-full lg:w-[85%] font-rajdhani">
+            <Table>
+              <TableCaption>
+                A list of your Top Supporters of Current Week
+              </TableCaption>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[10%]">Name</TableHead>
+                  <TableHead className="w-[20%]">Amount</TableHead>
+                  <TableHead className="w-[60%]">Message</TableHead>
+                  <TableHead className="w-[10%]">Tranasction Status</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {Array.isArray(recentDonations) &&
+                  recentDonations?.map((superchat, index) => (
+                    <TableRow key={index}>
+                      <TableCell className="font-medium">
+                        {superchat.donatorName}
+                      </TableCell>
+                      <TableCell className="flex gap-2 font-medium">
+                        Rs:
+                        <span className="bg-green-500 text-neutral-50 font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
+                          {superchat.amount}
+                        </span>
+                      </TableCell>
+                      <TableCell className="font-medium">
+                        {superchat.message}
+                      </TableCell>
 
-                  <TableCell className="font-medium">
-                    {superchat.transactionStatus}
+                      <TableCell className="font-medium">
+                        {superchat.transactionStatus}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+              <TableFooter>
+                <TableRow>
+                  <TableCell colSpan={4} className="text-right">
+                    <Pagination>
+                      <PaginationContent>
+                        <PaginationItem>
+                          <PaginationPrevious
+                            className={`hover:bg-redMain hover:text-neutral-50 ${
+                              page === 1 ? "opacity-50 cursor-not-allowed" : ""
+                            }`}
+                            onClick={handlePreviousPage}
+                          />
+                        </PaginationItem>
+
+                        {renderPaginationItems()}
+
+                        <PaginationItem>
+                          <PaginationNext
+                            className={`hover:bg-redMain hover:text-neutral-50 ${
+                              page === totalPages
+                                ? "opacity-50 cursor-not-allowed"
+                                : ""
+                            }`}
+                            onClick={handleNextPage}
+                          />
+                        </PaginationItem>
+                      </PaginationContent>
+                    </Pagination>
                   </TableCell>
                 </TableRow>
-              ))}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TableCell colSpan={4} className="text-right">
-                <Pagination>
-                  <PaginationContent>
-                    <PaginationItem>
-                      <PaginationPrevious
-                        className={`hover:bg-redMain hover:text-neutral-50 ${
-                          page === 1 ? "opacity-50 cursor-not-allowed" : ""
-                        }`}
-                        onClick={handlePreviousPage}
-                      />
-                    </PaginationItem>
-
-                    {renderPaginationItems()}
-
-                    <PaginationItem>
-                      <PaginationNext
-                        className={`hover:bg-redMain hover:text-neutral-50 ${
-                          page === totalPages
-                            ? "opacity-50 cursor-not-allowed"
-                            : ""
-                        }`}
-                        onClick={handleNextPage}
-                      />
-                    </PaginationItem>
-                  </PaginationContent>
-                </Pagination>
-              </TableCell>
-            </TableRow>
-          </TableFooter>
-        </Table>
-      </section>
-    </div>
+              </TableFooter>
+            </Table>
+          </section>
+        </div>
+      )}
+    </>
   );
 };
 

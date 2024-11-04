@@ -7,6 +7,7 @@ const initialState = {
   error: null,
   success: false,
   message: null,
+  userAlertSettings: null,
 };
 
 export const updateAlertSettings = createAsyncThunk(
@@ -150,6 +151,21 @@ export const deleteAudioAlert = createAsyncThunk(
   }
 );
 
+// Get Alert Settings
+export const getAlertSettings = createAsyncThunk(
+  "alertSettings/getAlertSettings",
+  async (id, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.get(
+        `${serverUrl}/api/alert/getalertsettings/${id}`
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
 const alertSettingsSlice = createSlice({
   name: "alertSettings",
   initialState,
@@ -240,6 +256,20 @@ const alertSettingsSlice = createSlice({
         state.message = action.payload.message;
       })
       .addCase(deleteAudioAlert.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Get Alert Settings
+      .addCase(getAlertSettings.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getAlertSettings.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.userAlertSettings = action.payload.getAlertSettingsDocument;
+      })
+      .addCase(getAlertSettings.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

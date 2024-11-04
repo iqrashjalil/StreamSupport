@@ -74,6 +74,8 @@ export const getAllDonations = createAsyncThunk(
         `${serverUrl}/api/donation/getalldonations/${id}`,
         config
       );
+      console.log(data);
+
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data.message);
@@ -118,6 +120,35 @@ export const getYearDonationsOfAllUsers = createAsyncThunk(
       );
       return data;
     } catch (error) {
+      return rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
+// Give Donation
+export const giveDonation = createAsyncThunk(
+  "donations/giveDonation",
+  async ({ id, formdata }, { rejectWithValue }) => {
+    try {
+      console.log(formdata);
+
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      };
+      const { data } = await axios.post(
+        `${serverUrl}/api/donation/givedonation/${id}`,
+        formdata,
+        config
+      );
+      console.log(formdata);
+
+      return data;
+    } catch (error) {
+      console.log(error.response.data);
+
       return rejectWithValue(error.response.data.message);
     }
   }
@@ -213,6 +244,20 @@ const donationSlice = createSlice({
         state.allUsersYearlyDonations = action.payload.donations;
       })
       .addCase(getYearDonationsOfAllUsers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(giveDonation.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(giveDonation.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.donation = action.payload.donation;
+        state.redirectUrl = action.payload.redirectUrl;
+      })
+      .addCase(giveDonation.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

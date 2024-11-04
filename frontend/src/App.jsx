@@ -7,7 +7,7 @@ import Contact from "./pages/Contact.jsx";
 import About from "./pages/About";
 import Register from "./pages/Auth/Register";
 import Login from "./pages/Auth/Login";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getUser } from "./store/slices/Users_Slice";
 import { useEffect } from "react";
 import Streamer_Dashboard from "./pages/streamer/Streamer_Dashboard";
@@ -22,13 +22,15 @@ import Withdraw_Requests from "./pages/Admin/Withdraw_Requests";
 import User_Profile from "./pages/Admin/User_Profile";
 import All_Superchats from "./pages/Admin/All_Superchats";
 import Give_Donation from "./pages/Give_Donation";
+import Show_Superchat from "./pages/Show_Superchat";
+
 function App() {
   const dispatch = useDispatch();
   const location = useLocation();
-  const { isAuthenticated } = useSelector((state) => state.users);
+  const isAuthenticated = localStorage.getItem("isAuthenticated");
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (isAuthenticated) {
       dispatch(getUser());
     }
   }, [isAuthenticated, dispatch]);
@@ -39,21 +41,27 @@ function App() {
     "/wallet",
     "/alertsettings",
     "/audioalertsettings",
-    "/audioalertsettings",
     "/admindashboard",
     "/allusers",
     "/allwithdraws",
     "/userprofile/:id",
     "/recentsuperchats/:id",
+    "/overlay/:id",
   ];
-
   const isNoFooterRoute = noFooterRoutes.some((route) => {
     return matchPath({ path: route, exact: true }, location.pathname);
   });
 
+  // Check if the current route is the overlay route
+  const isOverlayRoute = matchPath(
+    { path: "/overlay/:id", exact: true },
+    location.pathname
+  );
+
   return (
     <>
-      <Navbar />
+      {/* Conditionally render the Navbar */}
+      {!isOverlayRoute && <Navbar />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/contact" element={<Contact />} />
@@ -76,7 +84,6 @@ function App() {
             </Protected_Route>
           }
         />
-
         <Route
           path="/wallet"
           element={
@@ -101,7 +108,6 @@ function App() {
             </Protected_Route>
           }
         />
-
         <Route
           path="/admindashboard"
           element={
@@ -143,6 +149,7 @@ function App() {
           }
         />
         <Route path="/superchat/:id" element={<Give_Donation />} />
+        <Route path="/overlay/:id" element={<Show_Superchat />} />
       </Routes>
       {!isNoFooterRoute && <Footer />}
     </>

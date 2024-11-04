@@ -32,6 +32,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { FaCrown } from "react-icons/fa";
+import Loader from "../../components/Loader/Loader";
 
 ChartJS.register(
   CategoryScale,
@@ -52,15 +53,18 @@ const Streamer_Dashboard = () => {
     topDonators,
     recentDonations,
     currenWeekTopDonators,
+    loading,
   } = useSelector((state) => state.donations);
   const id = user?._id;
 
   useEffect(() => {
-    dispatch(getWeekEarnings(id));
-    dispatch(getDonationsStats(id));
-    dispatch(getYearDonations(id));
-    dispatch(getAllDonations(id));
-    dispatch(getRecentDonations(id));
+    if (id) {
+      dispatch(getWeekEarnings(id));
+      dispatch(getDonationsStats(id));
+      dispatch(getYearDonations(id));
+      dispatch(getAllDonations(id));
+      dispatch(getRecentDonations({ id, page: 1 }));
+    }
   }, [dispatch, id]);
 
   const data = {
@@ -148,210 +152,230 @@ const Streamer_Dashboard = () => {
     },
   };
   return (
-    <div className="flex w-full">
-      <section className="w-[15%] block">
-        <Sidebar />
-      </section>
-      <section className="p-5 w-full lg:w-[85%] font-rajdhani">
-        <div className="flex flex-wrap justify-center gap-10">
-          <div className="h-40 p-5 bg-gray-600 border border-gray-500 rounded w-80">
-            <div className="flex items-center justify-center w-12 h-12 bg-gray-700 rounded-full">
-              <FaHeart className="text-2xl text-neutral-50" />
+    <>
+      {loading ? (
+        <Loader />
+      ) : (
+        <div className="flex w-full">
+          <section className="w-[15%] block">
+            <Sidebar />
+          </section>
+          <section className="p-5 w-full lg:w-[85%] font-rajdhani">
+            <div className="flex flex-wrap justify-center gap-10">
+              <div className="h-40 p-5 bg-gray-600 border border-gray-500 rounded w-80">
+                <div className="flex items-center justify-center w-12 h-12 bg-gray-700 rounded-full">
+                  <FaHeart className="text-2xl text-neutral-50" />
+                </div>
+                <h1 className="text-xl text-neutral-50">
+                  Rs:
+                  <span className="text-3xl font-extrabold">
+                    {new Intl.NumberFormat().format(
+                      `${
+                        isNaN(donationsStats?.totalDonations)
+                          ? "0"
+                          : donationsStats?.totalDonations
+                      }`
+                    )}
+                  </span>
+                </h1>
+                <div className="flex justify-between">
+                  <p className="font-semibold text-slate-400">
+                    Total Superchats
+                  </p>
+                </div>
+              </div>
+              <div className="h-40 p-5 bg-gray-600 border border-gray-500 rounded w-80">
+                <div className="flex items-center justify-center w-12 h-12 bg-gray-700 rounded-full">
+                  <BsCurrencyDollar className="text-3xl text-neutral-50" />
+                </div>{" "}
+                <h1 className="text-xl text-neutral-50">
+                  Rs:{" "}
+                  <span className="text-3xl font-extrabold">
+                    {new Intl.NumberFormat().format(
+                      `${
+                        isNaN(donationsStats?.averageDonation)
+                          ? "0"
+                          : donationsStats?.averageDonation
+                      }`
+                    )}
+                  </span>
+                </h1>
+                <div className="flex justify-between">
+                  <p className="font-semibold text-slate-400">
+                    Average Superchat
+                  </p>
+                </div>
+              </div>
+              <div className="h-40 p-5 bg-gray-600 border border-gray-500 rounded w-80">
+                <div className="flex items-center justify-center w-12 h-12 bg-gray-700 rounded-full">
+                  <FaHeart className="text-2xl text-neutral-50" />
+                </div>{" "}
+                <h1 className="text-xl text-neutral-50">
+                  Rs:{" "}
+                  <span className="text-3xl font-extrabold">
+                    {new Intl.NumberFormat().format(
+                      earningStats?.previousWeekEarnings
+                    )}
+                  </span>
+                </h1>
+                <div className="flex justify-between">
+                  <p className="font-semibold text-slate-400">
+                    Previous Week Earnings
+                  </p>
+                </div>
+              </div>
+              <div className="h-40 p-5 bg-gray-600 border border-gray-500 rounded w-80">
+                <div className="flex items-center justify-center w-12 h-12 bg-gray-700 rounded-full">
+                  <BsCurrencyDollar className="text-3xl text-neutral-50" />
+                </div>{" "}
+                <h1 className="text-xl text-neutral-50">
+                  Rs:{" "}
+                  <span className="text-3xl font-extrabold">
+                    {new Intl.NumberFormat().format(
+                      earningStats?.currentWeekEarnings
+                    )}
+                  </span>
+                </h1>
+                <div className="flex justify-between">
+                  <p className="font-semibold text-slate-400">
+                    Earning This Week
+                  </p>
+                  <p
+                    className={`flex items-center font-semibold ${
+                      earningStats?.percentageDifference < 0
+                        ? "text-redMain"
+                        : "text-green-500"
+                    } `}
+                  >
+                    {earningStats?.percentageDifference < 0 ? (
+                      <IoMdArrowDown className="mb-1" />
+                    ) : (
+                      <IoMdArrowUp className="mb-1" />
+                    )}
+                    {earningStats?.percentageDifference}%
+                  </p>
+                </div>
+              </div>
             </div>
-            <h1 className="text-xl text-neutral-50">
-              Rs:
-              <span className="text-3xl font-extrabold">
-                {new Intl.NumberFormat().format(
-                  `${
-                    isNaN(donationsStats?.totalDonations)
-                      ? "0"
-                      : donationsStats?.totalDonations
-                  }`
-                )}
-              </span>
-            </h1>
-            <div className="flex justify-between">
-              <p className="font-semibold text-slate-400">Total Superchats</p>
+            <div className="flex flex-col justify-center gap-10 mt-10 lg:flex-row">
+              <div className="h-[30rem] lg:w-[60%] w-full rounded p-5 bg-gray-600">
+                <Bar data={data} options={options} />
+              </div>
+              <div className="lg:w-[30%] w-fulls rounded p-4 bg-gray-600">
+                <Table>
+                  <TableCaption>A list of your Top Supporter.</TableCaption>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[50%]">Name</TableHead>
+                      <TableHead className="w-[50%]">
+                        Amount Superchated
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {topDonators?.map((donator, index) => (
+                      <TableRow key={index}>
+                        <TableCell className="flex items-center gap-2 font-medium">
+                          {donator._id}
+                          {index === 0 && (
+                            <span>
+                              <FaCrown className="text-yellow-400" />
+                            </span>
+                          )}
+                          {index === 1 && <span>🥈</span>}
+                          {index === 2 && <span>🥉</span>}
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {donator.totalDonated}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                  <TableFooter></TableFooter>
+                </Table>
+              </div>
             </div>
-          </div>
-          <div className="h-40 p-5 bg-gray-600 border border-gray-500 rounded w-80">
-            <div className="flex items-center justify-center w-12 h-12 bg-gray-700 rounded-full">
-              <BsCurrencyDollar className="text-3xl text-neutral-50" />
-            </div>{" "}
-            <h1 className="text-xl text-neutral-50">
-              Rs:{" "}
-              <span className="text-3xl font-extrabold">
-                {new Intl.NumberFormat().format(
-                  `${
-                    isNaN(donationsStats?.averageDonation)
-                      ? "0"
-                      : donationsStats?.averageDonation
-                  }`
-                )}
-              </span>
-            </h1>
-            <div className="flex justify-between">
-              <p className="font-semibold text-slate-400">Average Superchat</p>
-            </div>
-          </div>
-          <div className="h-40 p-5 bg-gray-600 border border-gray-500 rounded w-80">
-            <div className="flex items-center justify-center w-12 h-12 bg-gray-700 rounded-full">
-              <FaHeart className="text-2xl text-neutral-50" />
-            </div>{" "}
-            <h1 className="text-xl text-neutral-50">
-              Rs:{" "}
-              <span className="text-3xl font-extrabold">
-                {new Intl.NumberFormat().format(
-                  earningStats?.previousWeekEarnings
-                )}
-              </span>
-            </h1>
-            <div className="flex justify-between">
-              <p className="font-semibold text-slate-400">
-                Previous Week Earnings
-              </p>
-            </div>
-          </div>
-          <div className="h-40 p-5 bg-gray-600 border border-gray-500 rounded w-80">
-            <div className="flex items-center justify-center w-12 h-12 bg-gray-700 rounded-full">
-              <BsCurrencyDollar className="text-3xl text-neutral-50" />
-            </div>{" "}
-            <h1 className="text-xl text-neutral-50">
-              Rs:{" "}
-              <span className="text-3xl font-extrabold">
-                {new Intl.NumberFormat().format(
-                  earningStats?.currentWeekEarnings
-                )}
-              </span>
-            </h1>
-            <div className="flex justify-between">
-              <p className="font-semibold text-slate-400">Earning This Week</p>
-              <p
-                className={`flex items-center font-semibold ${
-                  earningStats?.percentageDifference < 0
-                    ? "text-redMain"
-                    : "text-green-500"
-                } `}
-              >
-                {earningStats?.percentageDifference < 0 ? (
-                  <IoMdArrowDown className="mb-1" />
-                ) : (
-                  <IoMdArrowUp className="mb-1" />
-                )}
-                {earningStats?.percentageDifference}%
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="flex flex-col justify-center gap-10 mt-10 lg:flex-row">
-          <div className="h-[30rem] lg:w-[60%] w-full rounded p-5 bg-gray-600">
-            <Bar data={data} options={options} />
-          </div>
-          <div className="lg:w-[30%] w-fulls rounded p-4 bg-gray-600">
-            <Table>
-              <TableCaption>A list of your Top Supporter.</TableCaption>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[50%]">Name</TableHead>
-                  <TableHead className="w-[50%]">Amount Superchated</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {topDonators?.map((donator, index) => (
-                  <TableRow key={index}>
-                    <TableCell className="flex items-center gap-2 font-medium">
-                      {donator._id}
-                      {index === 0 && (
-                        <span>
-                          <FaCrown className="text-yellow-400" />
-                        </span>
-                      )}
-                      {index === 1 && <span>🥈</span>}
-                      {index === 2 && <span>🥉</span>}
-                    </TableCell>
-                    <TableCell className="font-medium">
-                      {donator.totalDonated}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-              <TableFooter></TableFooter>
-            </Table>
-          </div>
-        </div>
-        <div className="flex flex-col justify-center gap-10 mt-10 lg:flex-row ">
-          <div className="lg:w-[60%] p-5 w-full rounded bg-gray-600">
-            <Table>
-              <TableCaption>List of Recent Superchats.</TableCaption>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[10%]">Name</TableHead>
-                  <TableHead className="w-[20%]">Amount Superchated</TableHead>
-                  <TableHead className="w-[60%]">Message</TableHead>
-                  <TableHead className="w-[10%]">Transaction Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {recentDonations?.map((donator, index) => (
-                  <TableRow key={index}>
-                    <TableCell className="font-medium">
-                      {donator.donatorName}
-                    </TableCell>
-                    <TableCell className="flex gap-2 font-medium">
-                      Rs:
-                      <span className="bg-green-500 text-neutral-50 font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
-                        {donator.amount}
-                      </span>
-                    </TableCell>
-                    <TableCell className="font-medium">
-                      {donator.message}
-                    </TableCell>
+            <div className="flex flex-col justify-center gap-10 mt-10 lg:flex-row ">
+              <div className="lg:w-[60%] p-5 w-full rounded bg-gray-600">
+                <Table>
+                  <TableCaption>List of Recent Superchats.</TableCaption>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[10%]">Name</TableHead>
+                      <TableHead className="w-[20%]">
+                        Amount Superchated
+                      </TableHead>
+                      <TableHead className="w-[60%]">Message</TableHead>
+                      <TableHead className="w-[10%]">
+                        Transaction Status
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {recentDonations?.map((donator, index) => (
+                      <TableRow key={index}>
+                        <TableCell className="font-medium">
+                          {donator.donatorName}
+                        </TableCell>
+                        <TableCell className="flex gap-2 font-medium">
+                          Rs:
+                          <span className="bg-green-500 text-neutral-50 font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
+                            {donator.amount}
+                          </span>
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {donator.message}
+                        </TableCell>
 
-                    <TableCell className="font-medium">
-                      {donator.transactionStatus}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-              <TableFooter></TableFooter>
-            </Table>
-          </div>
-          <div className="lg:w-[30%] w-full rounded p-4 bg-gray-600">
-            <Table>
-              <TableCaption>
-                A list of your Top Supporters of Current Week
-              </TableCaption>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[50%]">Name</TableHead>
-                  <TableHead className="w-[50%]">Amount Superchated</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {currenWeekTopDonators?.map((donator, index) => (
-                  <TableRow key={index}>
-                    <TableCell className="flex items-center gap-2 font-medium">
-                      {donator._id}
-                      {index === 0 && (
-                        <span>
-                          <FaCrown className="text-yellow-400" />
-                        </span>
-                      )}
-                      {index === 1 && <span>🥈</span>}
-                      {index === 2 && <span>🥉</span>}
-                    </TableCell>
-                    <TableCell className="font-medium">
-                      {donator.totalDonated}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-              <TableFooter></TableFooter>
-            </Table>
-          </div>
+                        <TableCell className="font-medium">
+                          {donator.transactionStatus}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                  <TableFooter></TableFooter>
+                </Table>
+              </div>
+              <div className="lg:w-[30%] w-full rounded p-4 bg-gray-600">
+                <Table>
+                  <TableCaption>
+                    A list of your Top Supporters of Current Week
+                  </TableCaption>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[50%]">Name</TableHead>
+                      <TableHead className="w-[50%]">
+                        Amount Superchated
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {currenWeekTopDonators?.map((donator, index) => (
+                      <TableRow key={index}>
+                        <TableCell className="flex items-center gap-2 font-medium">
+                          {donator._id}
+                          {index === 0 && (
+                            <span>
+                              <FaCrown className="text-yellow-400" />
+                            </span>
+                          )}
+                          {index === 1 && <span>🥈</span>}
+                          {index === 2 && <span>🥉</span>}
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {donator.totalDonated}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                  <TableFooter></TableFooter>
+                </Table>
+              </div>
+            </div>
+          </section>
         </div>
-      </section>
-    </div>
+      )}
+    </>
   );
 };
 

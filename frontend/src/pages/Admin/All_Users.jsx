@@ -27,10 +27,12 @@ import { Button } from "@/components/ui/button";
 import { FaEye } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 
+import Loader from "../../components/Loader/Loader";
+
 const All_Users = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { allUsers, totalPages } = useSelector((state) => state.users);
+  const { allUsers, totalPages, loading } = useSelector((state) => state.users);
   const [searchQuery, setSearchQuery] = useState();
   const searchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -145,120 +147,133 @@ const All_Users = () => {
   };
 
   return (
-    <div className="flex w-full">
-      <section className="w-[15%] hidden lg:block">
-        <Sidebar />
-      </section>
-      <section className="p-5 w-full lg:w-[85%] font-rajdhani">
-        <Table>
-          <TableCaption>
-            A list of your Top Supporters of Current Week
-          </TableCaption>
-          <TableHeader>
-            <TableRow className="hidden border-none md:flex">
-              <TableCell colSpan={2} className="w-full text-right ">
-                <div className="relative">
-                  <Input
-                    value={searchQuery}
-                    onChange={searchChange}
-                    placeholder="Enter Name To Search"
-                  />
-                  <FaSearch
-                    onClick={handleSearch}
-                    className="absolute top-0 right-0 p-2 text-[40px] cursor-pointer bg-gray-500 text-redMain"
-                  />
-                </div>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell colSpan={4} className="w-full text-right md:hidden ">
-                <div className="relative">
-                  <Input
-                    value={searchQuery}
-                    onChange={searchChange}
-                    placeholder="Enter Name To Search"
-                  />
-                  <FaSearch
-                    onClick={handleSearch}
-                    className="absolute top-0 right-0 p-2 text-[40px] cursor-pointer bg-gray-500 text-redMain"
-                  />
-                </div>
-              </TableCell>
-            </TableRow>
-
-            <TableRow>
-              <TableHead className="w-[20%]">Name</TableHead>
-              <TableHead className="w-[20%]">Email</TableHead>
-              <TableHead className="w-[20%]">Wallet</TableHead>
-              <TableHead className="w-[20%]">Role</TableHead>
-              <TableHead className="w-[20%]">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {allUsers &&
-              allUsers.map((user, index) => (
-                <TableRow key={index}>
-                  <TableCell className="font-medium">{user.userName}</TableCell>
-                  <TableCell className="font-medium">{user.email}</TableCell>
-                  <TableCell className="text-xl font-bold">
-                    {new Intl.NumberFormat().format(user.wallet)}
-                  </TableCell>
-                  <TableCell
-                    className={`font-medium ${
-                      user.role === "admin"
-                        ? "text-redMain font-extrabold"
-                        : "text-lime-400"
-                    }`}
-                  >
-                    {user.role}
-                  </TableCell>
-                  <TableCell className="font-medium">
-                    {" "}
-                    <Button
-                      onClick={() => handleViewClick(user._id)}
-                      variant="secondary"
-                      className="gap-1 bg-blue-600 border-blue-600 hover:bg-blue-700 hover:border-blue-700"
-                    >
-                      View <FaEye />
-                    </Button>
+    <>
+      {loading ? (
+        <Loader />
+      ) : (
+        <div className="flex w-full">
+          <section className="w-[15%] hidden lg:block">
+            <Sidebar />
+          </section>
+          <section className="p-5 w-full lg:w-[85%] font-rajdhani">
+            <Table>
+              <TableCaption>
+                A list of your Top Supporters of Current Week
+              </TableCaption>
+              <TableHeader>
+                <TableRow className="hidden border-none md:flex">
+                  <TableCell colSpan={2} className="w-full text-right ">
+                    <div className="relative">
+                      <Input
+                        value={searchQuery}
+                        onChange={searchChange}
+                        placeholder="Enter Name To Search"
+                      />
+                      <FaSearch
+                        onClick={handleSearch}
+                        className="absolute top-0 right-0 p-2 text-[40px] cursor-pointer bg-gray-500 text-redMain"
+                      />
+                    </div>
                   </TableCell>
                 </TableRow>
-              ))}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TableCell colSpan={4} className="text-right">
-                <Pagination>
-                  <PaginationContent>
-                    <PaginationItem>
-                      <PaginationPrevious
-                        className={`hover:bg-redMain hover:text-neutral-50 ${
-                          page === 1 ? "opacity-50 cursor-not-allowed" : ""
-                        }`}
-                        onClick={handlePreviousPage}
+                <TableRow>
+                  <TableCell
+                    colSpan={4}
+                    className="w-full text-right md:hidden "
+                  >
+                    <div className="relative">
+                      <Input
+                        value={searchQuery}
+                        onChange={searchChange}
+                        placeholder="Enter Name To Search"
                       />
-                    </PaginationItem>
-
-                    {renderPaginationItems()}
-
-                    <PaginationItem>
-                      <PaginationNext
-                        className={`hover:bg-redMain hover:text-neutral-50 ${
-                          page === totalPages
-                            ? "opacity-50 cursor-not-allowed"
-                            : ""
-                        }`}
-                        onClick={handleNextPage}
+                      <FaSearch
+                        onClick={handleSearch}
+                        className="absolute top-0 right-0 p-2 text-[40px] cursor-pointer bg-gray-500 text-redMain"
                       />
-                    </PaginationItem>
-                  </PaginationContent>
-                </Pagination>
-              </TableCell>
-            </TableRow>
-          </TableFooter>
-        </Table>
-      </section>
-    </div>
+                    </div>
+                  </TableCell>
+                </TableRow>
+
+                <TableRow>
+                  <TableHead className="w-[20%]">Name</TableHead>
+                  <TableHead className="w-[20%]">Email</TableHead>
+                  <TableHead className="w-[20%]">Wallet</TableHead>
+                  <TableHead className="w-[20%]">Role</TableHead>
+                  <TableHead className="w-[20%]">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {allUsers &&
+                  allUsers.map((user, index) => (
+                    <TableRow key={index}>
+                      <TableCell className="font-medium">
+                        {user.userName}
+                      </TableCell>
+                      <TableCell className="font-medium">
+                        {user.email}
+                      </TableCell>
+                      <TableCell className="text-xl font-bold">
+                        {new Intl.NumberFormat().format(user.wallet)}
+                      </TableCell>
+                      <TableCell
+                        className={`font-medium ${
+                          user.role === "admin"
+                            ? "text-redMain font-extrabold"
+                            : "text-lime-400"
+                        }`}
+                      >
+                        {user.role}
+                      </TableCell>
+                      <TableCell className="font-medium">
+                        {" "}
+                        <Button
+                          onClick={() => handleViewClick(user._id)}
+                          variant="secondary"
+                          className="gap-1 bg-blue-600 border-blue-600 hover:bg-blue-700 hover:border-blue-700"
+                        >
+                          View <FaEye />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+              <TableFooter>
+                <TableRow>
+                  <TableCell colSpan={4} className="text-right">
+                    <Pagination>
+                      <PaginationContent>
+                        <PaginationItem>
+                          <PaginationPrevious
+                            className={`hover:bg-redMain hover:text-neutral-50 ${
+                              page === 1 ? "opacity-50 cursor-not-allowed" : ""
+                            }`}
+                            onClick={handlePreviousPage}
+                          />
+                        </PaginationItem>
+
+                        {renderPaginationItems()}
+
+                        <PaginationItem>
+                          <PaginationNext
+                            className={`hover:bg-redMain hover:text-neutral-50 ${
+                              page === totalPages
+                                ? "opacity-50 cursor-not-allowed"
+                                : ""
+                            }`}
+                            onClick={handleNextPage}
+                          />
+                        </PaginationItem>
+                      </PaginationContent>
+                    </Pagination>
+                  </TableCell>
+                </TableRow>
+              </TableFooter>
+            </Table>
+          </section>
+        </div>
+      )}
+    </>
   );
 };
 

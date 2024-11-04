@@ -12,13 +12,19 @@ import bankdetailRoutes from "./routes/Bankdetail_Routes.js";
 import alertRoutes from "./routes/Alert_Routes.js";
 import path from "path";
 import { fileURLToPath } from "url";
+import setupSocket from "./socket.js";
+import http from "http";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+
+const server = http.createServer(app);
 const PORT = process.env.PORT || 4000;
 
+const io = setupSocket(server);
+app.set("io", io);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(
   cors({
@@ -36,7 +42,7 @@ app.use("/api/donation", donationRoutes);
 app.use("/api/bankdetail", bankdetailRoutes);
 app.use("/api/alert", alertRoutes);
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 const connectDB = async () => {

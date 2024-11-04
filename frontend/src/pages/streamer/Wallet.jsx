@@ -9,10 +9,10 @@ import Received_Superchats from "../../components/wallet_components/Received_Sup
 import Bank_Details from "../../components/wallet_components/Bank_Details";
 import Withdraw from "../../components/wallet_components/Withdraw";
 import { getAllDonations } from "../../store/slices/Donation_Slice";
-
+import Loader from "../../components/Loader/Loader";
 const Wallet = () => {
   const dispatch = useDispatch();
-  const { allDonations } = useSelector((state) => state.donations);
+  const { allDonations, loading } = useSelector((state) => state.donations);
   const { user } = useSelector((state) => state.users);
   const id = user?._id;
 
@@ -38,53 +38,58 @@ const Wallet = () => {
   };
 
   return (
-    <div className="flex w-full">
-      <section className="lg:w-[15%]">
-        <Sidebar />
-      </section>
-      <section className="p-5 lg:w-[85%] w-full font-rajdhani">
-        <div className="border-b-2 border-gray-600">
-          <ul className="flex justify-center gap-4 lg:gap-10 text-neutral-50">
-            <NavLink
-              className={`flex flex-col lg:flex-row lg:items-start items-center gap-2 font-semibold transition-all duration-200 border-b-2 hover:text-redMain hover:border-redMain ${
-                activeTab === "receivedSuperchats"
-                  ? "text-redMain border-redMain"
-                  : "border-transparent"
-              }`}
-              onClick={() => setActiveTab("receivedSuperchats")}
-            >
-              <GiReceiveMoney />
-              Received Superchats
-            </NavLink>
+    <>
+      {loading ? (
+        <Loader />
+      ) : (
+        <div className="flex w-full">
+          <section className="lg:w-[15%]">
+            <Sidebar />
+          </section>
+          <section className="p-5 lg:w-[85%] w-full font-rajdhani">
+            <div className="border-b-2 border-gray-600">
+              <ul className="flex justify-center gap-4 lg:gap-10 text-neutral-50">
+                <NavLink
+                  className={`flex flex-col lg:flex-row lg:items-start items-center gap-2 font-semibold transition-all duration-200 border-b-2 hover:text-redMain hover:border-redMain ${
+                    activeTab === "receivedSuperchats"
+                      ? "text-redMain border-redMain"
+                      : "border-transparent"
+                  }`}
+                  onClick={() => setActiveTab("receivedSuperchats")}
+                >
+                  <GiReceiveMoney />
+                  Received Superchats
+                </NavLink>
 
-            <NavLink
-              className={`flex flex-col lg:flex-row lg:items-start items-center gap-2 font-semibold transition-all duration-200 border-b-2 hover:text-redMain hover:border-redMain ${
-                activeTab === "bankDetails"
-                  ? "text-redMain border-redMain"
-                  : "border-transparent"
-              }`}
-              onClick={() => setActiveTab("bankDetails")}
-            >
-              <BsBank2 /> Bank Details
-            </NavLink>
+                <NavLink
+                  className={`flex flex-col lg:flex-row lg:items-start items-center gap-2 font-semibold transition-all duration-200 border-b-2 hover:text-redMain hover:border-redMain ${
+                    activeTab === "bankDetails"
+                      ? "text-redMain border-redMain"
+                      : "border-transparent"
+                  }`}
+                  onClick={() => setActiveTab("bankDetails")}
+                >
+                  <BsBank2 /> Bank Details
+                </NavLink>
 
-            <NavLink
-              className={`flex flex-col lg:flex-row lg:items-start items-center gap-2 font-semibold transition-all duration-200 border-b-2 hover:text-redMain hover:border-redMain ${
-                activeTab === "withdraw"
-                  ? "text-redMain border-redMain"
-                  : "border-transparent"
-              }`}
-              onClick={() => setActiveTab("withdraw")}
-            >
-              <BiMoneyWithdraw /> Withdraw
-            </NavLink>
-          </ul>
+                <NavLink
+                  className={`flex flex-col lg:flex-row lg:items-start items-center gap-2 font-semibold transition-all duration-200 border-b-2 hover:text-redMain hover:border-redMain ${
+                    activeTab === "withdraw"
+                      ? "text-redMain border-redMain"
+                      : "border-transparent"
+                  }`}
+                  onClick={() => setActiveTab("withdraw")}
+                >
+                  <BiMoneyWithdraw /> Withdraw
+                </NavLink>
+              </ul>
+            </div>
+
+            <div className="mt-5">{renderContent()}</div>
+          </section>
         </div>
-
-        {/* Content that changes based on active tab */}
-        <div className="mt-5">{renderContent()}</div>
-      </section>
-    </div>
+      )}
+    </>
   );
 };
 

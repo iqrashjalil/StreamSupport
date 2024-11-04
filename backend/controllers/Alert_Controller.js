@@ -151,6 +151,27 @@ const deleteAudioAlert = catchAsyncError(async (req, res, next) => {
 
   res.status(200).json({ success: true, message: "Audio Alert Deleted" });
 });
+
+const getAlertSettings = catchAsyncError(async (req, res, next) => {
+  const streamerId = req.params.id;
+  console.log(streamerId);
+
+  // Check if streamerId is a valid ObjectId
+  if (!mongoose.Types.ObjectId.isValid(streamerId)) {
+    return next(new ErrorHandler("Invalid streamer ID", 400));
+  }
+
+  const getAlertSettingsDocument = await alertSettings.findOne({
+    streamer: streamerId,
+  });
+
+  if (!getAlertSettingsDocument) {
+    return next(new ErrorHandler("Alert settings not found", 404));
+  }
+
+  res.status(200).json({ success: true, getAlertSettingsDocument });
+});
+
 export default {
   updateAlertSettings,
   updateAlertImage,
@@ -158,4 +179,5 @@ export default {
   addAudioAlerts,
   updateAudioAlert,
   deleteAudioAlert,
+  getAlertSettings,
 };

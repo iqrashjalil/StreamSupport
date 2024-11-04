@@ -2,28 +2,31 @@ import mongoose from "mongoose";
 import { catchAsyncError } from "../middlewares/catchAsyncError.js";
 import Donation from "../models/Donation_Model.js";
 import { ErrorHandler } from "../utils/error-handler.js";
-import User from "../models/User_Model.js";
 import moment from "moment";
 
 const giveDonation = catchAsyncError(async (req, res, next) => {
   const { donatorName, amount, message } = req.body;
   const streamerId = req.params.id;
 
-  // Ensure valid donation amount
-  if (!amount || amount <= 0) {
-    return res.status(400).json({ message: "Invalid donation amount." });
-  }
-  const createDonation = await Donation.create({
+  const giveDonation = await Donation.create({
     donatorName,
     amount,
     message,
-    transactionStatus: "Ok",
+    transactionStatus: "Success",
     streamer: streamerId,
   });
-  await User.findByIdAndUpdate(streamerId, {
-    $inc: { wallet: amount, totalDonations: amount },
+  const io = req.app.get("io"); // Accessing the io instance from the app context
+  io.emit("newDonation", {
+    donatorName: giveDonation.donatorName,
+    amount: giveDonation.amount,
+    message: giveDonation.message,
   });
-  res.status(201).json({ success: true, donation: createDonation });
+
+  res.status(201).json({
+    success: true,
+    message: "Superchat Sent Successfully",
+    donation: giveDonation,
+  });
 });
 
 // Get All Donation of a Streamer
