@@ -1,6 +1,9 @@
 body {
   background-color: #1f2937;
 }
+body.transparent-bg {
+  background-color: transparent;
+}
 
 /* styles.css or a CSS module */
 .nav-link {

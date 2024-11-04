@@ -58,6 +58,14 @@ function App() {
     location.pathname
   );
 
+  useEffect(() => {
+    // Check if the current route starts with '/overlay'
+    if (location.pathname.startsWith("/overlay")) {
+      document.body.classList.add("transparent-bg");
+    } else {
+      document.body.classList.remove("transparent-bg");
+    }
+  }, [location]);
   return (
     <>
       {/* Conditionally render the Navbar */}

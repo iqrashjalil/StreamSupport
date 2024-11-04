@@ -114,6 +114,11 @@ const Show_Donation = () => {
         <ul>
           {donations.map((donation, index) => (
             <>
+              <img
+                className="w-60"
+                src={`${serverUrl}/${userAlertSettings?.alertImage}`}
+                alt=""
+              />
               <li key={index}>
                 <strong className="text-redMain">{donation.donatorName}</strong>{" "}
                 donated Rs:{" "}

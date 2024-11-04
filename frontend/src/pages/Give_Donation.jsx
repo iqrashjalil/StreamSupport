@@ -23,8 +23,6 @@ const Give_Donation = () => {
   const [donatorName, setDonatorName] = useState("");
   const [amount, setAmount] = useState("");
   const [message, setMessage] = useState("");
-  const [mobileNumber, setMobileNumber] = useState(""); // Add mobile number state
-
   useEffect(() => {
     dispatch(getSingleUser(id));
   }, [dispatch, id]);
@@ -46,7 +44,6 @@ const Give_Donation = () => {
       donatorName,
       amount,
       message,
-      mobileNumber,
     };
 
     // Dispatch the donation data with the user ID
@@ -185,22 +182,7 @@ const Give_Donation = () => {
                       />
                     </div>
                   </div>
-                  <div>
-                    <Label
-                      className="block text-sm font-bold uppercase tracking-tight text-neutral-50 dark:text-white [&:not(:empty)]:mb-2.5"
-                      htmlFor="mobileNumber"
-                    >
-                      Mobile Number <span className="text-redMain">*</span>
-                    </Label>
-                    <Input
-                      type="number"
-                      name="mobileNumber"
-                      id="mobileNumber"
-                      className="text-lg"
-                      value={mobileNumber} // Bind mobile number value
-                      onChange={(e) => setMobileNumber(e.target.value)} // Update state
-                    />
-                  </div>
+
                   <Button
                     type="submit"
                     className="w-full mt-4 rounded-none"

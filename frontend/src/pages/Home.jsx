@@ -194,7 +194,7 @@ const Home = () => {
                       </svg>
 
                       <LazyLoadImage
-                        className="relative z-[1] w-80 block "
+                        className="relative z-[1] w-96 block "
                         src={singlelogo}
                         effect="blur"
                       />

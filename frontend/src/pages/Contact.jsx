@@ -94,7 +94,7 @@ const Contact = () => {
                   <li>
                     <a
                       className="inline-flex items-center justify-center w-10 h-10 text-white transition-all bg-blue-600 hover:scale-110 hover:opacity-80"
-                      href="https://www.facebook.com/danfisher.dev/"
+                      href="https://web.facebook.com/igiqrash1"
                       title="Facebook"
                     >
                       <svg
@@ -115,28 +115,43 @@ const Contact = () => {
                   <li>
                     <a
                       className="inline-flex items-center justify-center w-10 h-10 text-white transition-all bg-blue-400 hover:scale-110 hover:opacity-80"
-                      href="https://twitter.com/danfisher_dev"
-                      title="Twitter"
+                      href="https://www.linkedin.com/in/iqrashjalil/"
+                      title="LinkedIn"
                     >
                       <svg
-                        className="w-4 h-4"
-                        aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
-                        fill="currentColor"
-                        viewBox="0 0 20 17"
+                        x="0px"
+                        y="0px"
+                        width="25"
+                        height="25"
+                        viewBox="0,0,256,256"
                       >
-                        <path
-                          fillRule="evenodd"
-                          d="M20 1.892a8.178 8.178 0 0 1-2.355.635 4.074 4.074 0 0 0 1.8-2.235 8.344 8.344 0 0 1-2.605.98A4.13 4.13 0 0 0 13.85 0a4.068 4.068 0 0 0-4.1 4.038 4 4 0 0 0 .105.919A11.705 11.705 0 0 1 1.4.734a4.006 4.006 0 0 0 1.268 5.392 4.165 4.165 0 0 1-1.859-.5v.05A4.057 4.057 0 0 0 4.1 9.635a4.19 4.19 0 0 1-1.856.07 4.108 4.108 0 0 0 3.831 2.807A8.36 8.36 0 0 1 0 14.184 11.732 11.732 0 0 0 6.291 16 11.502 11.502 0 0 0 17.964 4.5c0-.177 0-.35-.012-.523A8.143 8.143 0 0 0 20 1.892Z"
-                          clipRule="evenodd"
-                        />
+                        <g
+                          fill="#ffffff"
+                          fillRule="nonzero"
+                          stroke="none"
+                          strokeWidth="1"
+                          strokeLinecap="butt"
+                          strokeLinejoin="miter"
+                          strokeMiterlimit="10"
+                          strokeDasharray=""
+                          strokeDashoffset="0"
+                          fontFamily="none"
+                          fontWeight="none"
+                          textAnchor="none"
+                          style={{ mixBlendMode: "normal" }}
+                        >
+                          <g transform="scale(8.53333,8.53333)">
+                            <path d="M9,25h-5v-15h5zM6.501,8c-1.383,0 -2.501,-1.121 -2.501,-2.501c0,-1.38 1.12,-2.499 2.501,-2.499c1.378,0 2.499,1.121 2.499,2.499c0,1.38 -1.121,2.501 -2.499,2.501zM27,25h-4.807v-7.3c0,-1.741 -0.033,-3.98 -2.499,-3.98c-2.503,0 -2.888,1.896 -2.888,3.854v7.426h-4.806v-15.011h4.614v2.051h0.065c0.642,-1.18 2.211,-2.424 4.551,-2.424c4.87,0 5.77,3.109 5.77,7.151c0,0 0,8.233 0,8.233z"></path>
+                          </g>
+                        </g>
                       </svg>
                     </a>
                   </li>
                   <li>
                     <a
                       className="inline-flex items-center justify-center w-10 h-10 text-white transition-all bg-redMain hover:scale-110 hover:opacity-80"
-                      href="https://instagram.com/dan.fisher.dev/"
+                      href="https://www.instagram.com/iqrashjalil/"
                       title="Instagram"
                     >
                       <svg
