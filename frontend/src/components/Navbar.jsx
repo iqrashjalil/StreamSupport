@@ -300,7 +300,7 @@ const Navbar = () => {
                     {isDropdownOpen ? (
                       <div
                         ref={dropdownRef}
-                        className="absolute px-3 py-2 bg-black rounded w-28 top-16"
+                        className="absolute w-40 px-3 py-2 bg-black rounded top-16"
                       >
                         <ul className="flex flex-col gap-2">
                           {user && user?.role == "admin" ? (

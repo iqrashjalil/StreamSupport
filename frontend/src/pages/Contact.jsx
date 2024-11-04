@@ -1,10 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useDispatch, useSelector } from "react-redux";
+import { addContact } from "../store/slices/Contact_Slice";
+import { toast } from "react-toastify";
+import { resetMessage } from "../store/slices/Contact_Slice";
+
 const Contact = () => {
+  const dispatch = useDispatch();
+  const { message, error } = useSelector((state) => state.contact);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    comment: "",
+    message: "",
   });
 
   const handleChange = (e) => {
@@ -17,9 +24,19 @@ const Contact = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission logic
-    console.log(formData);
+    dispatch(addContact(formData));
   };
+
+  useEffect(() => {
+    if (message) {
+      toast.success(message);
+    }
+    if (error) {
+      toast.error(error);
+    }
+    dispatch(resetMessage());
+  }, [dispatch, error, message]);
+
   return (
     <div className="min-h-screen font-rajdhani">
       <div className="flex justify-center pt-8 page-heading sm:pt-10 md:pt-16 lg:pt-20 xl:pt-24">
@@ -197,9 +214,9 @@ const Contact = () => {
                     </label>
                     <textarea
                       className="w-full px-4 py-2 font-medium leading-8 tracking-tight transition-all duration-150 border border-gray-600 text-neutral-50 bg-backgroundColor placeholder:font-normal placeholder:text-gray-500/60 focus:border-redMain focus:text-neutral-50 focus:outline-0 focus:ring-0 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-500/80 dark:focus:border-accent dark:focus:bg-gray-900"
-                      name="comment"
-                      id="comment"
-                      value={formData.comment}
+                      name="message"
+                      id="message"
+                      value={formData.message}
                       onChange={handleChange}
                       placeholder=""
                     />

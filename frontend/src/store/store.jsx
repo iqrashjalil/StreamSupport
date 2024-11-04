@@ -4,6 +4,7 @@ import donationSlice from "./slices/Donation_Slice";
 import withdrawSlice from "./slices/Withdraw_Slice";
 import bankdetails from "./slices/Bankdetail_Slice";
 import AlertSettings_Slice from "./slices/AlertSettings_Slice";
+import contactSlice from "./slices/Contact_Slice";
 
 const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
     withdraws: withdrawSlice,
     bankdetails: bankdetails,
     alertSettings: AlertSettings_Slice,
+    contact: contactSlice,
   },
 });
 

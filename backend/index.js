@@ -10,6 +10,7 @@ import withdrawRoutes from "./routes/Withdraw_Routes.js";
 import donationRoutes from "./routes/Donation_Routes.js";
 import bankdetailRoutes from "./routes/Bankdetail_Routes.js";
 import alertRoutes from "./routes/Alert_Routes.js";
+import contactRoutes from "./routes/Contact_Routes.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import setupSocket from "./socket.js";
@@ -41,6 +42,7 @@ app.use("/api/withdraw", withdrawRoutes);
 app.use("/api/donation", donationRoutes);
 app.use("/api/bankdetail", bankdetailRoutes);
 app.use("/api/alert", alertRoutes);
+app.use("/api/contact", contactRoutes);
 
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

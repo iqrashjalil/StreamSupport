@@ -1,6 +1,6 @@
-import Contact from "../models/Contact_Model";
-import { catchAsyncError } from "../middlewares/catchAsyncError";
-import { ErrorHandler } from "../utils/error-handler";
+import Contact from "../models/Contact_Model.js";
+import { catchAsyncError } from "../middlewares/catchAsyncError.js";
+import { ErrorHandler } from "../utils/error-handler.js";
 
 const addContact = catchAsyncError(async (req, res, next) => {
   const { name, email, message } = req.body;
