@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { catchAsyncError } from "../middlewares/catchAsyncError.js";
 import Donation from "../models/Donation_Model.js";
 import { ErrorHandler } from "../utils/error-handler.js";
+import User from "../models/User_Model.js";
 import moment from "moment";
 
 const giveDonation = catchAsyncError(async (req, res, next) => {
@@ -15,7 +16,22 @@ const giveDonation = catchAsyncError(async (req, res, next) => {
     transactionStatus: "Success",
     streamer: streamerId,
   });
-  const io = req.app.get("io"); // Accessing the io instance from the app context
+  // Increment wallet and totalDonations fields directly in the database
+  const updateResult = await User.updateOne(
+    { _id: streamerId },
+    {
+      $inc: {
+        wallet: amount,
+        totalDonations: amount,
+      },
+    }
+  );
+
+  if (updateResult.matchedCount === 0) {
+    return next(new Error("Streamer not found"));
+  }
+
+  const io = req.app.get("io");
   io.emit("newDonation", {
     donatorName: giveDonation.donatorName,
     amount: giveDonation.amount,

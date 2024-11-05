@@ -255,7 +255,7 @@ const donationSlice = createSlice({
         state.loading = false;
         state.error = null;
         state.donation = action.payload.donation;
-        state.redirectUrl = action.payload.redirectUrl;
+        state.success = action.payload.success;
       })
       .addCase(giveDonation.rejected, (state, action) => {
         state.loading = false;
