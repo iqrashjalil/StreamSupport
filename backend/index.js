@@ -58,6 +58,14 @@ const connectDB = async () => {
 
 connectDB();
 
+// Reference the static files from the client build directory
+
+app.use(express.static(path.join(__dirname, "../frontend/dist")));
+
+// Catch-all route to serve the index.html
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname1, "../frontend/dist", "index.html"));
+});
 app.use(errorMiddleware);
 
 export default app;
