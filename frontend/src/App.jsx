@@ -23,6 +23,8 @@ import User_Profile from "./pages/Admin/User_Profile";
 import All_Superchats from "./pages/Admin/All_Superchats";
 import Give_Donation from "./pages/Give_Donation";
 import Show_Superchat from "./pages/Show_Superchat";
+import FAQs from "./pages/FAQs";
+import Privacy_Policy from "./pages/Privacy_Policy";
 
 function App() {
   const dispatch = useDispatch();
@@ -158,6 +160,8 @@ function App() {
         />
         <Route path="/superchat/:id" element={<Give_Donation />} />
         <Route path="/overlay/:id" element={<Show_Superchat />} />
+        <Route path="/faq" element={<FAQs />} />
+        <Route path="/privacypolicy" element={<Privacy_Policy />} />
       </Routes>
       {!isNoFooterRoute && <Footer />}
     </>

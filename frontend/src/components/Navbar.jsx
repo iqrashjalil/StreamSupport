@@ -24,6 +24,7 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+
   const [isOpen, setIsOpen] = useState(false);
   const { isAuthenticated, success, user, loading } = useSelector(
     (state) => state.users
@@ -35,7 +36,10 @@ const Navbar = () => {
     location.pathname.startsWith("/editprofile") ||
     location.pathname === "/wallet" ||
     location.pathname === "/alertsettings" ||
-    location.pathname === "/audioalertsettings";
+    location.pathname === "/audioalertsettings" ||
+    location.pathname === "/admindashboard" ||
+    location.pathname === "/allusers" ||
+    location.pathname === "/allwithdraws";
 
   const handleLogout = (e) => {
     e.preventDefault();
@@ -44,6 +48,9 @@ const Navbar = () => {
 
   const handleDropdownOpen = () => {
     setIsDropdownOpen(!isDropdownOpen);
+  };
+  const handleLinkClick = () => {
+    setIsDropdownOpen(false);
   };
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -60,6 +67,11 @@ const Navbar = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  const handleLogoClick = () => {
+    navigate("/");
+    console.log("Clicked");
+  };
 
   useEffect(() => {
     if (success === true) {
@@ -102,7 +114,12 @@ const Navbar = () => {
                   </button>
                 )}
 
-                <img className="h-8" src={logo} alt="" />
+                <img
+                  onClick={handleLogoClick}
+                  className="h-8 cursor-pointer"
+                  src={logo}
+                  alt=""
+                />
               </div>
 
               <div className="flex items-center gap-2 lg:hidden">
@@ -121,17 +138,17 @@ const Navbar = () => {
                     <BiSolidDownArrow className="transition-all duration-200 group-hover:text-redMain" />
                   </div>
                 )}
-                {isDropdownOpen ? (
+                {/* {isDropdownOpen && (
                   <div
                     ref={dropdownRef}
-                    className="absolute px-3 py-2 bg-black rounded right-6 w-28 top-16"
+                    className="absolute px-3 py-2 bg-black rounded lg:hidden right-6 w-28 top-16"
                   >
                     <ul className="flex flex-col gap-2">
                       {user && user?.role == "admin" ? (
                         <NavLink
                           className="p-1 text-sm font-medium text-gray-300 rounded hover:bg-gray-700"
                           to={"/admindashboard"}
-                          onClick={handleDropdownOpen}
+                          // onClick={handleLinkClick}
                         >
                           Dashboard
                         </NavLink>
@@ -139,32 +156,50 @@ const Navbar = () => {
                         <NavLink
                           className="p-1 text-sm font-medium text-gray-300 rounded hover:bg-gray-700"
                           to={"/streamerdashboard"}
-                          onClick={handleDropdownOpen}
+                          // onClick={handleLinkClick}
                         >
                           Dashboard
                         </NavLink>
                       )}
 
-                      <NavLink
-                        className="flex justify-between p-1 text-sm font-medium text-gray-300 rounded hover:bg-gray-700 "
-                        to={"/wallet"}
-                        onClick={handleDropdownOpen}
-                      >
-                        Wallet <span>{user?.wallet}</span>
-                      </NavLink>
+                      {user && user?.role == "admin" ? (
+                        <NavLink
+                          className="flex justify-between p-1 text-sm font-medium text-gray-300 rounded hover:bg-gray-700 "
+                          to={"/allusers"}
+                          onClick={handleLinkClick}
+                        >
+                          All Users
+                        </NavLink>
+                      ) : (
+                        <NavLink
+                          className="flex justify-between p-1 text-sm font-medium text-gray-300 rounded hover:bg-gray-700 "
+                          to={"/wallet"}
+                          onClick={handleLinkClick}
+                        >
+                          Wallet <span>{user?.wallet}</span>
+                        </NavLink>
+                      )}
 
-                      <NavLink
-                        className="p-1 text-sm font-medium text-gray-300 rounded hover:bg-gray-700"
-                        to={"/alertsettings"}
-                        onClick={handleDropdownOpen}
-                      >
-                        Settings
-                      </NavLink>
+                      {user && user?.role == "admin" ? (
+                        <NavLink
+                          className="p-1 text-sm font-medium text-gray-300 rounded hover:bg-gray-700"
+                          to={"/allwithdraws"}
+                          onClick={handleLinkClick}
+                        >
+                          Withdraw Requests
+                        </NavLink>
+                      ) : (
+                        <NavLink
+                          className="p-1 text-sm font-medium text-gray-300 rounded hover:bg-gray-700"
+                          to={"/alertsettings"}
+                          onClick={handleLinkClick}
+                        >
+                          Settings
+                        </NavLink>
+                      )}
                     </ul>
                   </div>
-                ) : (
-                  ""
-                )}
+                )} */}
 
                 <Sheet
                   className="font-bold border-none font-rajdhani"
@@ -281,7 +316,7 @@ const Navbar = () => {
                   Contact
                 </NavLink>
                 {isAuthenticated ? (
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 ">
                     {user && (
                       <div
                         onClick={handleDropdownOpen}
@@ -296,50 +331,6 @@ const Navbar = () => {
                         </div>
                         <BiSolidDownArrow className="transition-all duration-200 group-hover:text-redMain" />
                       </div>
-                    )}
-                    {isDropdownOpen ? (
-                      <div
-                        ref={dropdownRef}
-                        className="absolute w-40 px-3 py-2 bg-black rounded top-16"
-                      >
-                        <ul className="flex flex-col gap-2">
-                          {user && user?.role == "admin" ? (
-                            <NavLink
-                              className="p-1 text-sm font-medium text-gray-300 rounded hover:bg-gray-700"
-                              to={"/admindashboard"}
-                              onClick={handleDropdownOpen}
-                            >
-                              Dashboard
-                            </NavLink>
-                          ) : (
-                            <NavLink
-                              className="p-1 text-sm font-medium text-gray-300 rounded hover:bg-gray-700"
-                              to={"/streamerdashboard"}
-                              onClick={handleDropdownOpen}
-                            >
-                              Dashboard
-                            </NavLink>
-                          )}
-
-                          <NavLink
-                            className="flex justify-between p-1 text-sm font-medium text-gray-300 rounded hover:bg-gray-700 "
-                            to={"/wallet"}
-                            onClick={handleDropdownOpen}
-                          >
-                            Wallet <span>{user?.wallet}</span>
-                          </NavLink>
-
-                          <NavLink
-                            className="p-1 text-sm font-medium text-gray-300 rounded hover:bg-gray-700"
-                            to={"/alertsettings"}
-                            onClick={handleDropdownOpen}
-                          >
-                            Settings
-                          </NavLink>
-                        </ul>
-                      </div>
-                    ) : (
-                      ""
                     )}
 
                     <Button
@@ -371,6 +362,67 @@ const Navbar = () => {
             </div>
           </nav>
         </>
+      )}
+      {isDropdownOpen && (
+        <div
+          ref={dropdownRef}
+          className="absolute right-0 z-50 flex w-40 px-3 py-2 bg-black rounded xl:right-20 2xl:right-[10%] top-16"
+        >
+          <ul className="flex flex-col w-full gap-2">
+            {user && user?.role == "admin" ? (
+              <NavLink
+                className="p-1 text-sm font-medium text-gray-300 rounded hover:bg-gray-700"
+                to={"/admindashboard"}
+                onClick={handleLinkClick}
+              >
+                Dashboard
+              </NavLink>
+            ) : (
+              <NavLink
+                className="p-1 text-sm font-medium text-gray-300 rounded hover:bg-gray-700"
+                to={"/streamerdashboard"}
+                onClick={handleLinkClick}
+              >
+                Dashboard
+              </NavLink>
+            )}
+            {user && user?.role == "admin" ? (
+              <NavLink
+                className="flex justify-between p-1 text-sm font-medium text-gray-300 rounded hover:bg-gray-700 "
+                to={"/allusers"}
+                onClick={handleLinkClick}
+              >
+                All Users
+              </NavLink>
+            ) : (
+              <NavLink
+                className="flex justify-between p-1 text-sm font-medium text-gray-300 rounded hover:bg-gray-700 "
+                to={"/wallet"}
+                onClick={handleLinkClick}
+              >
+                Wallet <span>{user?.wallet}</span>
+              </NavLink>
+            )}
+
+            {user && user?.role == "admin" ? (
+              <NavLink
+                className="p-1 text-sm font-medium text-gray-300 rounded hover:bg-gray-700"
+                to={"/allwithdraws"}
+                onClick={handleLinkClick}
+              >
+                Withdraw Requests
+              </NavLink>
+            ) : (
+              <NavLink
+                className="p-1 text-sm font-medium text-gray-300 rounded hover:bg-gray-700"
+                to={"/alertsettings"}
+                onClick={handleLinkClick}
+              >
+                Settings
+              </NavLink>
+            )}
+          </ul>
+        </div>
       )}
     </>
   );

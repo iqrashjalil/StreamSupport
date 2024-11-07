@@ -142,7 +142,7 @@ const Admin_Dashboard = () => {
         <Loader />
       ) : (
         <div className="flex w-full">
-          <section className="w-[15%] block">
+          <section className="w-[15%] hidden lg:block">
             <Sidebar />
           </section>
           <section className="p-5 w-full lg:w-[85%] font-rajdhani">

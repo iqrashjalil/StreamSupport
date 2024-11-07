@@ -110,7 +110,29 @@ const Sidebar = () => {
                     </>
                   )}
                 </NavLink>
-
+                <NavLink
+                  className={({ isActive }) =>
+                    `flex items-center gap-2 p-2 text-lg transition-all duration-200 rounded group ${
+                      isActive
+                        ? "bg-gray-700 text-neutral-50"
+                        : "hover:bg-gray-700 text-neutral-50"
+                    }`
+                  }
+                  to={"/privacypolicy"}
+                >
+                  {({ isActive }) => (
+                    <>
+                      <BiSolidHelpCircle
+                        className={`text-2xl transition-all duration-200 ${
+                          isActive
+                            ? "text-redMain"
+                            : "text-white group-hover:text-redMain"
+                        }`}
+                      />
+                      Privacy Policy
+                    </>
+                  )}
+                </NavLink>
                 <NavLink
                   className={({ isActive }) =>
                     `flex items-center gap-2 p-2 text-lg transition-all duration-200 rounded group ${
@@ -175,71 +197,78 @@ const Sidebar = () => {
                         isActive ? activeLinkClass : ""
                       }`
                     }
-                    to={"/streamerdashboard"}
+                    to={
+                      user?.role === "admin"
+                        ? "/admindashboard"
+                        : "streamerdashboard"
+                    }
                   >
                     <BiSolidDashboard className="text-2xl transition-all duration-200 group-hover:text-redMain" />
                     Dashboard
                   </NavLink>
 
-                  <Accordion type="single" collapsible>
-                    <AccordionItem value="item-1">
-                      <AccordionTrigger className="flex items-center gap-2 p-2 text-lg transition-all duration-200 bg-gray-500 rounded group hover:bg-gray-700 text-neutral-50">
-                        <span className="flex gap-2">
-                          <IoMdSettings className="text-2xl transition-all duration-200 group-hover:text-redMain" />{" "}
-                          Settings
-                        </span>
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        <NavLink
-                          className={({ isActive }) =>
-                            `flex items-center gap-2 p-2 ml-5 mt-4 bg-gray-500 text-lg transition-all duration-200 rounded group ${
-                              isActive
-                                ? "bg-gray-700 text-neutral-50"
-                                : "hover:bg-gray-700 text-neutral-50"
-                            }`
-                          }
-                          to={"/alertsettings"}
-                        >
-                          {({ isActive }) => (
-                            <>
-                              <FaBell
-                                className={`text-2xl transition-all duration-200 ${
-                                  isActive
-                                    ? "text-redMain"
-                                    : "text-white group-hover:text-redMain"
-                                }`}
-                              />
-                              Alert Settings
-                            </>
-                          )}
-                        </NavLink>
+                  {user?.role === "streamer" && (
+                    <Accordion type="single" collapsible>
+                      <AccordionItem value="item-1">
+                        <AccordionTrigger className="flex items-center gap-2 p-2 text-lg transition-all duration-200 bg-gray-500 rounded group hover:bg-gray-700 text-neutral-50">
+                          <span className="flex gap-2">
+                            <IoMdSettings className="text-2xl transition-all duration-200 group-hover:text-redMain" />{" "}
+                            Settings
+                          </span>
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <NavLink
+                            className={({ isActive }) =>
+                              `flex items-center gap-2 p-2 ml-5 mt-4 bg-gray-500 text-lg transition-all duration-200 rounded group ${
+                                isActive
+                                  ? "bg-gray-700 text-neutral-50"
+                                  : "hover:bg-gray-700 text-neutral-50"
+                              }`
+                            }
+                            to={"/alertsettings"}
+                          >
+                            {({ isActive }) => (
+                              <>
+                                <FaBell
+                                  className={`text-2xl transition-all duration-200 ${
+                                    isActive
+                                      ? "text-redMain"
+                                      : "text-white group-hover:text-redMain"
+                                  }`}
+                                />
+                                Alert Settings
+                              </>
+                            )}
+                          </NavLink>
 
-                        <NavLink
-                          className={({ isActive }) =>
-                            `flex items-center gap-2 p-2 ml-5 mt-4 bg-gray-500 text-lg transition-all duration-200 rounded group ${
-                              isActive
-                                ? "bg-gray-700 text-neutral-50"
-                                : "hover:bg-gray-700 text-neutral-50"
-                            }`
-                          }
-                          to={"/audioalertsettings"}
-                        >
-                          {({ isActive }) => (
-                            <>
-                              <MdAudiotrack
-                                className={`text-2xl transition-all duration-200 ${
-                                  isActive
-                                    ? "text-redMain"
-                                    : "text-white group-hover:text-redMain"
-                                }`}
-                              />
-                              Audio Alert Settings
-                            </>
-                          )}
-                        </NavLink>
-                      </AccordionContent>
-                    </AccordionItem>
-                  </Accordion>
+                          <NavLink
+                            className={({ isActive }) =>
+                              `flex items-center gap-2 p-2 ml-5 mt-4 bg-gray-500 text-lg transition-all duration-200 rounded group ${
+                                isActive
+                                  ? "bg-gray-700 text-neutral-50"
+                                  : "hover:bg-gray-700 text-neutral-50"
+                              }`
+                            }
+                            to={"/audioalertsettings"}
+                          >
+                            {({ isActive }) => (
+                              <>
+                                <MdAudiotrack
+                                  className={`text-2xl transition-all duration-200 ${
+                                    isActive
+                                      ? "text-redMain"
+                                      : "text-white group-hover:text-redMain"
+                                  }`}
+                                />
+                                Audio Alert Settings
+                              </>
+                            )}
+                          </NavLink>
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
+                  )}
+
                   <NavLink
                     onClick={() => dispatch(toggleSidebar())}
                     className={({ isActive }) =>
@@ -247,15 +276,17 @@ const Sidebar = () => {
                         isActive ? activeLinkClass : ""
                       }`
                     }
-                    to={"/wallet"}
+                    to={user?.role === "admin" ? "/allusers" : "/wallet"}
                   >
                     <span className="flex gap-2">
                       <FaWallet className="text-2xl transition-all duration-200 group-hover:text-redMain" />
-                      Wallet{" "}
+                      {user?.role === "admin" ? "All Users" : "Wallet"}
                     </span>
-                    <span>
-                      {new Intl.NumberFormat().format(`${user?.wallet}`)}
-                    </span>
+                    {user?.role === "streamer" && (
+                      <span>
+                        {new Intl.NumberFormat().format(`${user?.wallet}`)}
+                      </span>
+                    )}
                   </NavLink>
 
                   <NavLink
@@ -265,10 +296,22 @@ const Sidebar = () => {
                         isActive ? activeLinkClass : ""
                       }`
                     }
-                    to={"/help"}
+                    to={"/allwithdraws"}
                   >
                     <FaHandsHelping className="text-2xl transition-all duration-200 group-hover:text-redMain" />
-                    Help
+                    Withdraw Requests
+                  </NavLink>
+                  <NavLink
+                    onClick={() => dispatch(toggleSidebar())}
+                    className={({ isActive }) =>
+                      `flex gap-2 p-2 bg-gray-500 rounded ${
+                        isActive ? activeLinkClass : ""
+                      }`
+                    }
+                    to={"/privacypolicy"}
+                  >
+                    <FaHandsHelping className="text-2xl transition-all duration-200 group-hover:text-redMain" />
+                    Privacy Policy
                   </NavLink>
 
                   <NavLink
@@ -415,7 +458,7 @@ const Sidebar = () => {
                         : "hover:bg-gray-700 text-neutral-50"
                     }`
                   }
-                  to={"/help"}
+                  to={"/privacypolicy"}
                 >
                   {({ isActive }) => (
                     <>
@@ -426,7 +469,7 @@ const Sidebar = () => {
                             : "text-white group-hover:text-redMain"
                         }`}
                       />
-                      Help
+                      Privacy Policy
                     </>
                   )}
                 </NavLink>
@@ -470,143 +513,6 @@ const Sidebar = () => {
               />
             </div>
           </div>
-          {/* Mobile Sidebar */}
-          {isSidebarOpen && (
-            <Sheet
-              open={isSidebarOpen}
-              onOpenChange={(open) => !open && dispatch(toggleSidebar())}
-            >
-              <SheetTrigger asChild></SheetTrigger>
-              <SheetContent
-                side="left"
-                className="font-bold bg-black font-rajdhani"
-              >
-                <SheetHeader>
-                  <SheetTitle className="flex justify-center text-redMain">
-                    <img className="h-8" src={logo} alt="" />
-                  </SheetTitle>
-                  <SheetDescription></SheetDescription>
-                </SheetHeader>
-                <ul className="flex flex-col gap-5 mt-5 text-neutral-50">
-                  <NavLink
-                    onClick={() => dispatch(toggleSidebar())}
-                    className={({ isActive }) =>
-                      `flex gap-2 p-2 bg-gray-500 rounded ${
-                        isActive ? activeLinkClass : ""
-                      }`
-                    }
-                    to={"/streamerdashboard"}
-                  >
-                    <BiSolidDashboard className="text-2xl transition-all duration-200 group-hover:text-redMain" />
-                    Dashboard
-                  </NavLink>
-
-                  <Accordion type="single" collapsible>
-                    <AccordionItem value="item-1">
-                      <AccordionTrigger className="flex items-center gap-2 p-2 text-lg transition-all duration-200 bg-gray-500 rounded group hover:bg-gray-700 text-neutral-50">
-                        <span className="flex gap-2">
-                          <IoMdSettings className="text-2xl transition-all duration-200 group-hover:text-redMain" />{" "}
-                          Settings
-                        </span>
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        <NavLink
-                          className={({ isActive }) =>
-                            `flex items-center gap-2 p-2 ml-5 mt-4 bg-gray-500 text-lg transition-all duration-200 rounded group ${
-                              isActive
-                                ? "bg-gray-700 text-neutral-50"
-                                : "hover:bg-gray-700 text-neutral-50"
-                            }`
-                          }
-                          to={"/alertsettings"}
-                        >
-                          {({ isActive }) => (
-                            <>
-                              <FaBell
-                                className={`text-2xl transition-all duration-200 ${
-                                  isActive
-                                    ? "text-redMain"
-                                    : "text-white group-hover:text-redMain"
-                                }`}
-                              />
-                              Alert Settings
-                            </>
-                          )}
-                        </NavLink>
-
-                        <NavLink
-                          className={({ isActive }) =>
-                            `flex items-center gap-2 p-2 ml-5 mt-4 bg-gray-500 text-lg transition-all duration-200 rounded group ${
-                              isActive
-                                ? "bg-gray-700 text-neutral-50"
-                                : "hover:bg-gray-700 text-neutral-50"
-                            }`
-                          }
-                          to={"/audioalertsettings"}
-                        >
-                          {({ isActive }) => (
-                            <>
-                              <MdAudiotrack
-                                className={`text-2xl transition-all duration-200 ${
-                                  isActive
-                                    ? "text-redMain"
-                                    : "text-white group-hover:text-redMain"
-                                }`}
-                              />
-                              Audio Alert Settings
-                            </>
-                          )}
-                        </NavLink>
-                      </AccordionContent>
-                    </AccordionItem>
-                  </Accordion>
-                  <NavLink
-                    onClick={() => dispatch(toggleSidebar())}
-                    className={({ isActive }) =>
-                      `flex justify-between gap-2 p-2 bg-gray-500 rounded ${
-                        isActive ? activeLinkClass : ""
-                      }`
-                    }
-                    to={"/wallet"}
-                  >
-                    <span className="flex gap-2">
-                      <FaWallet className="text-2xl transition-all duration-200 group-hover:text-redMain" />
-                      Wallet{" "}
-                    </span>
-                    <span>
-                      {new Intl.NumberFormat().format(`${user?.wallet}`)}
-                    </span>
-                  </NavLink>
-
-                  <NavLink
-                    onClick={() => dispatch(toggleSidebar())}
-                    className={({ isActive }) =>
-                      `flex gap-2 p-2 bg-gray-500 rounded ${
-                        isActive ? activeLinkClass : ""
-                      }`
-                    }
-                    to={"/help"}
-                  >
-                    <FaHandsHelping className="text-2xl transition-all duration-200 group-hover:text-redMain" />
-                    Help
-                  </NavLink>
-
-                  <NavLink
-                    onClick={() => dispatch(toggleSidebar())}
-                    className={({ isActive }) =>
-                      `flex gap-2 p-2 bg-gray-500 rounded ${
-                        isActive ? activeLinkClass : ""
-                      }`
-                    }
-                    to={"/faq"}
-                  >
-                    <BiSolidHelpCircle className="text-2xl transition-all duration-200 group-hover:text-redMain" />
-                    Faq
-                  </NavLink>
-                </ul>
-              </SheetContent>
-            </Sheet>
-          )}
         </>
       )}
     </>

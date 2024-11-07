@@ -1,3 +1,4 @@
+import { NavLink } from "react-router-dom";
 import logo from "../assets/singlelogo.png";
 const Footer = () => {
   return (
@@ -15,20 +16,23 @@ const Footer = () => {
           <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
             <div>
               <h2 className="mb-6 text-sm font-extrabold uppercase text-neutral-50 dark:text-white">
-                Resources
+                Socials
               </h2>
               <ul className="font-medium text-gray-500 dark:text-gray-400">
                 <li className="mb-4">
-                  <a href="https://flowbite.com/" className="hover:underline ">
-                    Resource 1
+                  <a
+                    href="https://www.instagram.com/iqrashjalil/"
+                    className="hover:underline "
+                  >
+                    Instagram
                   </a>
                 </li>
                 <li>
                   <a
-                    href="https://tailwindcss.com/"
+                    href="https://web.facebook.com/igiqrash1"
                     className="hover:underline"
                   >
-                    Resource 2
+                    Facebook
                   </a>
                 </li>
               </ul>
@@ -40,7 +44,7 @@ const Footer = () => {
               <ul className="font-medium text-gray-500 dark:text-gray-400">
                 <li className="mb-4">
                   <a
-                    href="https://github.com/themesberg/flowbite"
+                    href="https://github.com/iqrashjalil"
                     className="hover:underline "
                   >
                     Github
@@ -48,10 +52,10 @@ const Footer = () => {
                 </li>
                 <li>
                   <a
-                    href="https://discord.gg/4eeurUVvTy"
+                    href="https://www.linkedin.com/in/iqrashjalil/"
                     className="hover:underline"
                   >
-                    Discord
+                    LinkedIn
                   </a>
                 </li>
               </ul>
@@ -62,14 +66,14 @@ const Footer = () => {
               </h2>
               <ul className="font-medium text-gray-500 dark:text-gray-400">
                 <li className="mb-4">
-                  <a href="#" className="hover:underline">
+                  <NavLink to={"/privacypolicy"} className="hover:underline">
                     Privacy Policy
-                  </a>
+                  </NavLink>
                 </li>
                 <li>
-                  <a href="#" className="hover:underline">
-                    Terms &amp; Conditions
-                  </a>
+                  <NavLink to={"/faq"} className="hover:underline">
+                    Faqs
+                  </NavLink>
                 </li>
               </ul>
             </div>
@@ -83,7 +87,7 @@ const Footer = () => {
           </span>
           <div className="flex mt-4 sm:justify-center sm:mt-0">
             <a
-              href="#"
+              href="https://web.facebook.com/igiqrash1"
               className="text-gray-500 hover:text-blue-500 dark:hover:text-white"
             >
               <svg
@@ -102,41 +106,24 @@ const Footer = () => {
               <span className="sr-only">Facebook page</span>
             </a>
             <a
-              href="#"
+              href="https://www.linkedin.com/in/iqrashjalil/"
               className="text-gray-500 hover:text-blue-500 dark:hover:text-white ms-5"
             >
               <svg
+                xmlns="http://www.w3.org/2000/svg"
                 className="w-4 h-4"
                 aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
                 fill="currentColor"
-                viewBox="0 0 21 16"
+                viewBox="0,0,256,256"
               >
-                <path d="M16.942 1.556a16.3 16.3 0 0 0-4.126-1.3 12.04 12.04 0 0 0-.529 1.1 15.175 15.175 0 0 0-4.573 0 11.585 11.585 0 0 0-.535-1.1 16.274 16.274 0 0 0-4.129 1.3A17.392 17.392 0 0 0 .182 13.218a15.785 15.785 0 0 0 4.963 2.521c.41-.564.773-1.16 1.084-1.785a10.63 10.63 0 0 1-1.706-.83c.143-.106.283-.217.418-.33a11.664 11.664 0 0 0 10.118 0c.137.113.277.224.418.33-.544.328-1.116.606-1.71.832a12.52 12.52 0 0 0 1.084 1.785 16.46 16.46 0 0 0 5.064-2.595 17.286 17.286 0 0 0-2.973-11.59ZM6.678 10.813a1.941 1.941 0 0 1-1.8-2.045 1.93 1.93 0 0 1 1.8-2.047 1.919 1.919 0 0 1 1.8 2.047 1.93 1.93 0 0 1-1.8 2.045Zm6.644 0a1.94 1.94 0 0 1-1.8-2.045 1.93 1.93 0 0 1 1.8-2.047 1.918 1.918 0 0 1 1.8 2.047 1.93 1.93 0 0 1-1.8 2.045Z" />
+                <g transform="scale(8.53333,8.53333)">
+                  <path d="M9,25h-5v-15h5zM6.501,8c-1.383,0 -2.501,-1.121 -2.501,-2.501c0,-1.38 1.12,-2.499 2.501,-2.499c1.378,0 2.499,1.121 2.499,2.499c0,1.38 -1.121,2.501 -2.499,2.501zM27,25h-4.807v-7.3c0,-1.741 -0.033,-3.98 -2.499,-3.98c-2.503,0 -2.888,1.896 -2.888,3.854v7.426h-4.806v-15.011h4.614v2.051h0.065c0.642,-1.18 2.211,-2.424 4.551,-2.424c4.87,0 5.77,3.109 5.77,7.151c0,0 0,8.233 0,8.233z"></path>
+                </g>
               </svg>
-              <span className="sr-only">Discord community</span>
+              <span className="sr-only">LinkedIn</span>
             </a>
             <a
-              href="#"
-              className="text-gray-500 hover:text-blue-400 dark:hover:text-white ms-5"
-            >
-              <svg
-                className="w-4 h-4"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 20 17"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M20 1.892a8.178 8.178 0 0 1-2.355.635 4.074 4.074 0 0 0 1.8-2.235 8.344 8.344 0 0 1-2.605.98A4.13 4.13 0 0 0 13.85 0a4.068 4.068 0 0 0-4.1 4.038 4 4 0 0 0 .105.919A11.705 11.705 0 0 1 1.4.734a4.006 4.006 0 0 0 1.268 5.392 4.165 4.165 0 0 1-1.859-.5v.05A4.057 4.057 0 0 0 4.1 9.635a4.19 4.19 0 0 1-1.856.07 4.108 4.108 0 0 0 3.831 2.807A8.36 8.36 0 0 1 0 14.184 11.732 11.732 0 0 0 6.291 16 11.502 11.502 0 0 0 17.964 4.5c0-.177 0-.35-.012-.523A8.143 8.143 0 0 0 20 1.892Z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              <span className="sr-only">Twitter page</span>
-            </a>
-            <a
-              href="#"
+              href="https://github.com/iqrashjalil"
               className="text-gray-500 hover:text-neutral-50 dark:hover:text-white ms-5"
             >
               <svg
@@ -155,7 +142,7 @@ const Footer = () => {
               <span className="sr-only">GitHub account</span>
             </a>
             <a
-              href="#"
+              href="https://www.instagram.com/iqrashjalil/"
               className="text-gray-500 hover:text-redMain dark:hover:text-white ms-5"
             >
               <svg

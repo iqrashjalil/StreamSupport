@@ -135,25 +135,25 @@ const Home = () => {
                       </h2>
                     </div>
                   </div>
-                  <div className="lg:max-w-sm xl:max-w-[402px] xl:-mt-4">
-                    <p className="font-bold text-neutral-50 font-rajdhani">
+                  <div className="lg:max-w-sm flex gap-5 flex-col xl:max-w-[402px] xl:-mt-4">
+                    <p className="text-lg font-bold md:text-xl text-neutral-50 font-rajdhani">
                       <span className="text-lime-400">&#10003;</span> Fees As
                       Low As Just{" "}
-                      <span className="text-xl text-redMain"> 10%</span>
+                      <span className="text-3xl text-redMain"> 10%</span>
                     </p>
-                    <p className="font-bold text-neutral-50 font-rajdhani">
+                    <p className="text-lg font-bold md:text-xl text-neutral-50 font-rajdhani">
                       <span className="text-lime-400">&#10003;</span> Premium
                       Customization Options
                     </p>
-                    <p className="font-bold capitalize text-neutral-50 font-rajdhani">
+                    <p className="text-lg font-bold capitalize md:text-xl text-neutral-50 font-rajdhani">
                       <span className="text-lime-400">&#10003;</span> Seamless
                       local and global payment options
                     </p>
-                    <p className="font-bold capitalize text-neutral-50 font-rajdhani">
+                    <p className="text-lg font-bold capitalize md:text-xl text-neutral-50 font-rajdhani">
                       <span className="text-lime-400">&#10003;</span> Quick And
                       Secure Withdraw
                     </p>
-                    <p className="font-bold capitalize text-neutral-50 font-rajdhani">
+                    <p className="text-lg font-bold capitalize md:text-xl text-neutral-50 font-rajdhani">
                       <span className="text-lime-400">&#10003;</span> Advanced
                       and refined features
                     </p>
