@@ -30,12 +30,8 @@ coverage/
 # SvelteKit build / dev output
 .svelte-kit/
 
-# Nuxt.js build output
-.nuxt/
-dist/
 
-# Build directory
-build/
+
 
 # Dependency directories
 jspm_packages/

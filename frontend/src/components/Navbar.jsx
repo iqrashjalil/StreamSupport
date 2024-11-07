@@ -19,6 +19,7 @@ import {
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { serverUrl } from "../serverUrl";
 import { BiSolidDownArrow } from "react-icons/bi";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -44,6 +45,8 @@ const Navbar = () => {
   const handleLogout = (e) => {
     e.preventDefault();
     dispatch(logout());
+    navigate("/");
+    toast.success("Logout Successfully");
   };
 
   const handleDropdownOpen = () => {
