@@ -110,9 +110,12 @@ export const getUser = createAsyncThunk(
       };
 
       const { data } = await axios.get(`${serverUrl}/api/user/getUser`, config);
+      console.log(data);
 
       return data;
     } catch (error) {
+      console.log(error);
+
       return rejectWithValue(error.response.data.message);
     }
   }
