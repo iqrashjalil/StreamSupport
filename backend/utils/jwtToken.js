@@ -3,7 +3,7 @@ const sendToken = (user, statusCode, res) => {
 
   const options = {
     httpOnly: true, // Makes the cookie inaccessible to JavaScript on the client side
-    secure: process.env.NODE_ENV === "production", // Ensures the cookie is sent only over HTTPS
+    secure: true, // Ensures the cookie is sent only over HTTPS
     sameSite: "Lax", // Helps prevent CSRF attacks
     maxAge: 24 * 60 * 60 * 1000,
   };
