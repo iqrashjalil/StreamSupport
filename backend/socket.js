@@ -5,7 +5,7 @@ const setupSocket = (server) => {
 
   const io = new Server(server, {
     cors: {
-      origin: "https://stereamsupport.netlify.app",
+      origin: "https://streamsupport.vercel.app",
       methods: ["GET", "POST"],
       credentials: true,
     },

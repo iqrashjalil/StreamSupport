@@ -2,7 +2,7 @@
 import { io } from "socket.io-client";
 
 // The URL of your backend server running Socket.IO
-const URL = "http://localhost:3000"; // Replace with your backend server URL and port
+const URL = "https://streamsupport-production.up.railway.app"; // Replace with your backend server URL and port
 
 // Initialize the socket connection with options
 const socket = io(URL, {

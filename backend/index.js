@@ -29,7 +29,7 @@ app.set("io", io);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(
   cors({
-    origin: "https://stereamsupport.netlify.app",
+    origin: "https://streamsupport.vercel.app",
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
   })
