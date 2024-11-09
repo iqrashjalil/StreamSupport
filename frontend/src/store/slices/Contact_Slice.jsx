@@ -12,7 +12,6 @@ export const addContact = createAsyncThunk(
   "contact/addContact",
   async (contactData, { rejectWithValue }) => {
     try {
-      console.log(contactData);
       const config = {
         headers: {
           "Content-Type": "application/json",

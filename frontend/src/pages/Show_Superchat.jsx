@@ -28,8 +28,6 @@ const Show_Donation = () => {
     });
 
     socket.on("newDonation", (donationData) => {
-      console.log("New donation received:", donationData);
-
       setDonations((prevDonations) => [donationData, ...prevDonations]);
 
       playAlertSound(donationData);
@@ -51,10 +49,7 @@ const Show_Donation = () => {
     audio
       .play()
       .then(() => {
-        console.log("Alert sound played successfully");
-
         audio.addEventListener("ended", () => {
-          console.log("Alert sound finished, starting TTS");
           playTextToSpeech(donationData);
         });
       })
@@ -67,7 +62,6 @@ const Show_Donation = () => {
     const message = `${donationData.donatorName} donated $${
       donationData.amount
     }. ${donationData.message || ""}`;
-    console.log("Preparing to speak:", message);
 
     const speak = () => {
       if ("speechSynthesis" in window) {
@@ -76,23 +70,8 @@ const Show_Donation = () => {
         utterance.rate = userAlertSettings?.ttsRate || 0.9;
         utterance.pitch = userAlertSettings?.ttsPitch || 1;
 
-        // Add error handling for utterance
-        utterance.addEventListener("error", (error) => {
-          console.log("TTS Error:", error);
-        });
-
-        utterance.addEventListener("start", () => {
-          console.log("TTS started speaking.");
-        });
-
-        utterance.addEventListener("end", () => {
-          console.log("TTS finished speaking.");
-        });
-
-        // Force stop any previous utterances and then speak
         window.speechSynthesis.cancel(); // Clear the queue
         window.speechSynthesis.speak(utterance);
-        console.log("Speaking:", message);
       } else {
         console.log("SpeechSynthesis API is not supported in this browser.");
       }

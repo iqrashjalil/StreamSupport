@@ -143,7 +143,6 @@ const deleteAudioAlert = catchAsyncError(async (req, res, next) => {
     { $pull: { audioAlerts: { _id: objectId } } },
     { new: true }
   );
-  console.log(updatedAlertSettings);
 
   if (!updatedAlertSettings) {
     return next(new ErrorHandler("Alert settings not found", 404));
@@ -154,7 +153,6 @@ const deleteAudioAlert = catchAsyncError(async (req, res, next) => {
 
 const getAlertSettings = catchAsyncError(async (req, res, next) => {
   const streamerId = req.params.id;
-  console.log(streamerId);
 
   // Check if streamerId is a valid ObjectId
   if (!mongoose.Types.ObjectId.isValid(streamerId)) {

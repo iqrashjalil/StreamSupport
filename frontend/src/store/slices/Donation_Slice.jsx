@@ -74,8 +74,6 @@ export const getAllDonations = createAsyncThunk(
         `${serverUrl}/api/donation/getalldonations/${id}`,
         config
       );
-      console.log(data);
-
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data.message);
@@ -97,10 +95,9 @@ export const getRecentDonations = createAsyncThunk(
       }
 
       const { data } = await axios.get(url, config);
-      console.log(data);
+
       return data;
     } catch (error) {
-      console.log(error);
       return rejectWithValue(error.response.data.message);
     }
   }
@@ -130,8 +127,6 @@ export const giveDonation = createAsyncThunk(
   "donations/giveDonation",
   async ({ id, formdata }, { rejectWithValue }) => {
     try {
-      console.log(formdata);
-
       const config = {
         headers: {
           "Content-Type": "application/json",
@@ -143,12 +138,9 @@ export const giveDonation = createAsyncThunk(
         formdata,
         config
       );
-      console.log(formdata);
 
       return data;
     } catch (error) {
-      console.log(error.response.data);
-
       return rejectWithValue(error.response.data.message);
     }
   }

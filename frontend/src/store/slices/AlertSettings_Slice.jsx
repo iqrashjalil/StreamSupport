@@ -14,8 +14,6 @@ export const updateAlertSettings = createAsyncThunk(
   "alertSettings/updateAlertSettings",
   async (updateData, { rejectWithValue }) => {
     try {
-      console.log(updateData);
-
       const config = {
         headers: {
           "Content-Type": "application/json",
@@ -87,8 +85,6 @@ export const addAudioAlert = createAsyncThunk(
   "alertSettings/addAudioAlert",
   async (alertSound, { rejectWithValue }) => {
     try {
-      console.log(alertSound);
-
       const config = {
         headers: {
           "Content-Type": "multipart/form-data",

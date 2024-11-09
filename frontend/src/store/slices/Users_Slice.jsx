@@ -30,7 +30,6 @@ export const register = createAsyncThunk(
       localStorage.setItem("role", data.user.role);
       return data;
     } catch (error) {
-      console.log(error);
       return rejectWithValue(error.response?.data?.message || error.message);
     }
   }
@@ -55,7 +54,6 @@ export const login = createAsyncThunk(
       localStorage.setItem("role", data.user.role);
       return data;
     } catch (error) {
-      console.log(error);
       return rejectWithValue(error.response.data.message);
     }
   }
@@ -77,7 +75,6 @@ export const logout = createAsyncThunk(
       localStorage.removeItem("role");
       return data;
     } catch (error) {
-      console.log(error);
       return rejectWithValue(error.response.data.message);
     }
   }
@@ -110,12 +107,9 @@ export const getUser = createAsyncThunk(
       };
 
       const { data } = await axios.get(`${serverUrl}/api/user/getUser`, config);
-      console.log(data);
 
       return data;
     } catch (error) {
-      console.log(error);
-
       return rejectWithValue(error.response.data.message);
     }
   }
@@ -126,7 +120,6 @@ export const getUser = createAsyncThunk(
 export const updateProfile = createAsyncThunk(
   "users/updateProfile",
   async (formdata, { rejectWithValue }) => {
-    console.log(formdata);
     try {
       const config = {
         headers: {
@@ -139,10 +132,9 @@ export const updateProfile = createAsyncThunk(
         formdata,
         config
       );
-      console.log(data);
+
       return data;
     } catch (error) {
-      console.log(error);
       return rejectWithValue(error.response?.data?.message || error.message);
     }
   }
@@ -189,10 +181,9 @@ export const getSingleUser = createAsyncThunk(
         `${serverUrl}/api/user/getsingleuser/${id}`,
         config
       );
-      console.log(data);
+
       return data;
     } catch (error) {
-      console.log(error);
       return rejectWithValue(error.response?.data?.message || error.message);
     }
   }

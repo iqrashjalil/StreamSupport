@@ -13,7 +13,6 @@ const register = catchAsyncError(async (req, res, next) => {
   if (!req.file) {
     return next(new ErrorHandler("Please upload an image", 400));
   }
-  console.log(req.body);
 
   const date = Date.now();
   let fileName = "uploads/profiles/" + date + req.file.originalname;
@@ -35,8 +34,8 @@ const register = catchAsyncError(async (req, res, next) => {
 
   const defaultAlertSettings = new alertSettings({
     streamer: user._id,
-    overlayLink: `https://www.localhost:5173/overlay/${user._id}`,
-    superchatLink: `https://www.localhost:5173/supechat/${user._id}`,
+    overlayLink: `https://streamsupport.vercel.app/superchat/${user._id}`,
+    superchatLink: `https://streamsupport.vercel.app/overlay/${user._id}`,
   });
 
   const savedAlertSettings = await defaultAlertSettings.save();

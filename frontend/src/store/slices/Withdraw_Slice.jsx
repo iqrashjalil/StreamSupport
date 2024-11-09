@@ -73,7 +73,6 @@ export const getAllWithdrawRequests = createAsyncThunk(
 
       return data;
     } catch (error) {
-      console.log(error);
       return rejectWithValue(error.response?.data?.message || error.message);
     }
   }
@@ -84,8 +83,6 @@ export const updateWithdrawRequest = createAsyncThunk(
   "withdraws/updateWithdrawRequest",
   async ({ updateData, id }, { rejectWithValue }) => {
     try {
-      console.log(updateData);
-      console.log(id);
       const config = {
         headers: {
           "Content-Type": "application/json",

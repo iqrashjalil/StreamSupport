@@ -18,6 +18,7 @@ import { getTopStreamers } from "../store/slices/Users_Slice.jsx";
 import { serverUrl } from "../serverUrl";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
+import Loader from "../components/Loader/Loader";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -28,7 +29,7 @@ const Home = () => {
   return (
     <>
       {loading ? (
-        <h1>Loading...</h1>
+        <Loader></Loader>
       ) : (
         <>
           {" "}

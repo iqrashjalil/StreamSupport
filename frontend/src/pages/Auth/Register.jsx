@@ -34,7 +34,6 @@ const Register = () => {
   };
   const handleSubmit = () => {
     dispatch(register(formData));
-    console.log(formData);
   };
 
   useEffect(() => {

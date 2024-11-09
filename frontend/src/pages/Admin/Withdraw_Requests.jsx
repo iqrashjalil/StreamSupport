@@ -85,7 +85,6 @@ const Withdraw_Requests = () => {
 
   const handleRejectReasonChange = (e) => {
     setRejectReason(e.target.value);
-    console.log(rejectReason);
   };
 
   const handleUpdateStatus = (id) => {

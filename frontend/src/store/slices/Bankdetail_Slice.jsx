@@ -14,8 +14,6 @@ export const addBankdetail = createAsyncThunk(
   "bankdetails/addBankdetail",
   async (bankDetails, { rejectWithValue }) => {
     try {
-      console.log(bankDetails);
-
       const config = {
         headers: {
           "Content-Type": "application/json",
