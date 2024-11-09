@@ -29,7 +29,7 @@ const Home = () => {
   return (
     <>
       {loading ? (
-        <Loader></Loader>
+        <Loader />
       ) : (
         <>
           {" "}
