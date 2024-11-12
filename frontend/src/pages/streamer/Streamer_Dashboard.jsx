@@ -157,7 +157,7 @@ const Streamer_Dashboard = () => {
         <Loader />
       ) : (
         <div className="flex w-full">
-          <section className="w-[15%] block">
+          <section className="w-[15%] hidden lg:block">
             <Sidebar />
           </section>
           <section className="p-5 w-full lg:w-[85%] font-rajdhani">
@@ -258,7 +258,7 @@ const Streamer_Dashboard = () => {
               </div>
             </div>
             <div className="flex flex-col justify-center gap-10 mt-10 lg:flex-row">
-              <div className="h-[30rem] lg:w-[60%] w-full rounded p-5 bg-gray-600">
+              <div className="lg:w-[60%] w-full rounded p-5 bg-gray-600">
                 <Bar data={data} options={options} />
               </div>
               <div className="lg:w-[30%] w-fulls rounded p-4 bg-gray-600">
