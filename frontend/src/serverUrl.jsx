@@ -1,1 +1,1 @@
-export const serverUrl = "https://streamsupport-production.up.railway.app";
+export const serverUrl = "https://stream-support-backend.vercel.app";
