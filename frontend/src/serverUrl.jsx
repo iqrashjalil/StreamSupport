@@ -1,1 +1,1 @@
-export const serverUrl = "https://stream-support-backend.vercel.app";
+export const serverUrl = "https://streamsupportbackend.onrender.com";

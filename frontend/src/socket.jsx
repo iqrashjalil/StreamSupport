@@ -2,7 +2,7 @@
 import { io } from "socket.io-client";
 
 // The URL of your backend server running Socket.IO
-const URL = "https://stream-support-backend.vercel.app"; // Replace with your backend server URL and port
+const URL = "https://streamsupportbackend.onrender.com"; // Replace with your backend server URL and port
 
 // Initialize the socket connection with options
 const socket = io(URL, {
