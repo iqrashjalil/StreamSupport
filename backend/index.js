@@ -26,14 +26,14 @@ const PORT = process.env.PORT || 4000;
 
 const io = setupSocket(server);
 app.set("io", io);
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(
   cors({
-    origin: "*",
+    origin: "https://streamsupport.vercel.app",
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
   })
 );
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(cookieParser());
 app.use(express.json());
 
