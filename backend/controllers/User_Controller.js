@@ -34,8 +34,8 @@ const register = catchAsyncError(async (req, res, next) => {
 
   const defaultAlertSettings = new alertSettings({
     streamer: user._id,
-    overlayLink: `https://streamsupport.vercel.app/superchat/${user._id}`,
-    superchatLink: `https://streamsupport.vercel.app/overlay/${user._id}`,
+    overlayLink: `https://streamsupport.vercel.app/overlay/${user._id}`,
+    superchatLink: `https://streamsupport.vercel.app/superchat/${user._id}`,
   });
 
   const savedAlertSettings = await defaultAlertSettings.save();

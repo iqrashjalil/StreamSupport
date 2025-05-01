@@ -218,11 +218,9 @@ const Alert_Settings = () => {
                   }
                 >
                   <option value="bouncy">bouncy</option>
-                  <option value="10">10s</option>
-                  <option value="15">15s</option>
-                  <option value="20">20s</option>
-                  <option value="25">25s</option>
-                  <option value="30">30s</option>
+                  <option value="floating">Floating</option>
+                  <option value="wavy">Wavy</option>
+                  <option value="pulse">Pulse</option>
                 </select>
               </div>
               <div className="flex items-center justify-between gap-5 p-5 border-b border-gray-500">
@@ -236,12 +234,12 @@ const Alert_Settings = () => {
                     handleDropdownChange("fontStyle", e.target.value)
                   }
                 >
-                  <option value="Poppins">Poppins</option>
-                  <option value="10">10s</option>
-                  <option value="15">15s</option>
-                  <option value="20">20s</option>
-                  <option value="25">25s</option>
-                  <option value="30">30s</option>
+                  <option value="poppins">Poppins</option>
+                  <option value="arial">Arial</option>
+                  <option value="courier">Courier New</option>
+                  <option value="georgia">Georgia</option>
+                  <option value="comic">Comic Sans MS</option>
+                  <option value="times">Times New Roman</option>
                 </select>
               </div>
               <div className="flex items-center justify-between gap-5 p-5">
