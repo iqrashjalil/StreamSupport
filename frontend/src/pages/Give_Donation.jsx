@@ -40,11 +40,18 @@ const Give_Donation = () => {
     e.preventDefault(); // Prevent default form submission
 
     // Create form data object
+
     const formdata = {
       donatorName,
       amount,
       message,
     };
+    if (formdata.amount < userDetails?.alertSettings?.minMoneyForAlert) {
+      toast.error(
+        `Minimum amount for alert is ${userDetails?.alertSettings?.minMoneyForAlert} pkr`
+      );
+      return;
+    }
 
     // Dispatch the donation data with the user ID
     dispatch(giveDonation({ id, formdata }));

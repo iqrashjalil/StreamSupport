@@ -16,6 +16,16 @@ const updateAlertSettings = catchAsyncError(async (req, res, next) => {
     updatedFields,
     { new: true }
   );
+  if (updatedFields.minMoneyForAlert > 30) {
+    return next(
+      new ErrorHandler("Minimum money for alert should be less than 30", 400)
+    );
+  }
+  if (updatedFields.minMoneyForMessage > 50) {
+    return next(
+      new ErrorHandler("Minimum money for alert should be less than 30", 400)
+    );
+  }
   if (!newAlertSettings) {
     return next(new ErrorHandler("Alert settings not found", 404));
   }
